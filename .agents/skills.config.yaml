@@ -1,0 +1,38 @@
+project:
+  name: "edge-yolox-optimization"
+  canonical_model: "yolox-nano"
+  input_resolution: [1, 3, 416, 416]
+  coco_classes: 80
+  output_channels: 85 # 80 classes + 4 bbox coords + 1 obj score
+
+dataset:
+  train_full: "datasets/coco/train2017"
+  val_full: "datasets/coco/val2017"
+  nas_proxy_subset: "datasets/coco/proxy10k"
+  calibration_size: 500
+
+nas:
+  proxy_epochs: 10
+  candidates_count: 50
+  width_multipliers: [0.75, 1.0, 1.25]
+  depth_multipliers: [-1, 0, 1]
+  resolutions: [320, 352, 384, 416]
+
+pruning:
+  method: "structured_channel"
+  default_sparsity: 0.30
+  pruning_ratios: [0.10, 0.20, 0.30, 0.40]
+  finetune_epochs: 20
+  finetune_lr_ratio: 0.10
+
+quantization:
+  format: "QDQ"
+  activation_type: "QUInt8"
+  weight_type: "QInt8"
+  accuracy_drop_threshold_map: 1.0 # Delta mAP trigger for QAT
+  qat_epochs: 20
+
+benchmarking:
+  warmup_frames: 100
+  eval_frames: 5000
+  batch_size: 1
