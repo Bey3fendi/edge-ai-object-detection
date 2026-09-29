@@ -1,0 +1,4 @@
+[submodule "YOLOX"]
+	path = YOLOX
+	url = https://github.com/Bey3fendi/YOLOX.git
+	branch = edge-ai-thesis

@@ -1,0 +1,2 @@
+run_id,device,device_mode,model_variant,backend,precision,input_size,batch,threads,map5095,ap50,latency_mean_ms,latency_p50_ms,latency_p95_ms,latency_p99_ms,fps,power_idle_w,power_load_w,power_dynamic_w,fps_per_watt,joule_per_frame,peak_ram_mb,temperature_start,temperature_end
+baseline_001,workstation,rtx_gpu,yolox_nano_baseline,pytorch,fp32,416,8,1,25.8,41.4,,,,,,,,,,,,,,
