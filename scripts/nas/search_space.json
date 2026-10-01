@@ -1,0 +1,4 @@
+{
+    "depth": {"_type": "choice", "_value": [0.33, 0.67, 1.0]},
+    "width": {"_type": "choice", "_value": [0.25, 0.50, 0.75, 1.0]}
+}

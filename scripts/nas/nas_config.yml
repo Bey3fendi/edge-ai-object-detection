@@ -1,0 +1,13 @@
+experimentName: YOLOX_Nano_Edge_NAS
+searchSpaceFile: search_space.json
+trialCommand: python3 nas_trial.py
+trialCodeDirectory: .
+trialGpuNumber: 1
+trialConcurrency: 1
+maxTrialNumber: 20
+tuner:
+  name: TPE
+  classArgs:
+    optimize_mode: maximize
+trainingService:
+  platform: local
