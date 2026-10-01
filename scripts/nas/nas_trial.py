@@ -34,7 +34,7 @@ class Exp(MyExp):
         # Override for fast proxy training
         self.max_epoch = 10
         self.no_aug_epochs = 2
-        self.data_dir = "../../datasets/coco"
+        self.data_dir = "datasets/coco"
         self.train_ann = "instances_proxy10k.json"
         
         # Edge friendly options
@@ -48,7 +48,7 @@ class Exp(MyExp):
         # Run YOLOX train tool using subprocess
         # Assuming we are running this in Colab, we use torch.distributed.run
         train_cmd = [
-            "python3", "../../YOLOX/tools/train.py",
+            "python3", "YOLOX/tools/train.py",
             "-f", exp_file_path,
             "-d", "1",
             "-b", "16",

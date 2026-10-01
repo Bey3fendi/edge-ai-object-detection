@@ -11,3 +11,7 @@ tuner:
     optimize_mode: maximize
 trainingService:
   platform: local
+  useActiveGpu: false
+trial:
+  command: python3 nas_trial.py
+  codeDir: .
