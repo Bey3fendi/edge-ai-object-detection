@@ -1,17 +1,14 @@
-experimentName: YOLOX_Nano_Edge_NAS
-searchSpaceFile: search_space.json
-trialCommand: python3 nas_trial.py
-trialCodeDirectory: .
-trialGpuNumber: 1
-trialConcurrency: 1
-maxTrialNumber: 20
+experiment_name: YOLOX_Nano_Edge_NAS
+search_space_file: scripts/nas/search_space.json
+trial_concurrency: 1
+max_trial_number: 20
+trial_command: python3 scripts/nas/nas_trial.py
+trial_code_directory: .
+trial_gpu_number: 1
 tuner:
   name: TPE
-  classArgs:
+  class_args:
     optimize_mode: maximize
-trainingService:
+training_service:
   platform: local
-  useActiveGpu: false
-trial:
-  command: python3 nas_trial.py
-  codeDir: .
+  use_active_gpu: false
