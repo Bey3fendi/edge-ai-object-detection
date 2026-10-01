@@ -1,9 +1,9 @@
 experiment_name: YOLOX_Nano_Edge_NAS
-search_space_file: scripts/nas/search_space.json
+search_space_file: search_space.json
 trial_concurrency: 1
 max_trial_number: 20
 trial_command: python3 scripts/nas/nas_trial.py
-trial_code_directory: .
+trial_code_directory: ../..
 trial_gpu_number: 1
 tuner:
   name: TPE
