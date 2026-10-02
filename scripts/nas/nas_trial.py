@@ -35,7 +35,8 @@ class Exp(MyExp):
         self.max_epoch = 10
         self.no_aug_epochs = 2
         self.data_dir = "datasets/coco"
-        self.train_ann = "instances_proxy10k.json"
+        self.train_ann = "instances_val2017.json"
+        self.val_ann = "instances_val2017.json"
         
         # Edge friendly options
         self.input_size = (416, 416)
@@ -78,8 +79,22 @@ class Exp(MyExp):
             
         print(f"Trial finished. Final mAP: {map_50_95}")
         
-        # Report the final result back to NNI
-        nni.report_final_result(map_50_95)
+        # Estimate theoretical FLOPs and Params based on scaling rules (for YOLOX)
+        # Base YOLOX-S has ~9M params, 26.8G FLOPs.
+        est_params = 9.0 * (params['width'] ** 2) * params['depth']
+        est_flops = 26.8 * (params['width'] ** 2) * params['depth']
+        
+        # Report the final result back to NNI with detailed naming!
+        metrics = {
+            "default": map_50_95, # Required by tuner
+            "mAP (50-95)": map_50_95,
+            "Est. Params (M)": round(est_params, 2),
+            "Est. FLOPs (G)": round(est_flops, 2),
+            "Width Multiplier": params['width'],
+            "Depth Multiplier": params['depth']
+        }
+        
+        nni.report_final_result(metrics)
         
     except Exception as e:
         print(f"Trial failed: {e}")

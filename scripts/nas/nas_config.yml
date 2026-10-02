@@ -5,6 +5,7 @@ max_trial_number: 20
 trial_command: python3 scripts/nas/nas_trial.py
 trial_code_directory: ../..
 trial_gpu_number: 1
+nni_manager_ip: 127.0.0.1
 tuner:
   name: TPE
   class_args:
