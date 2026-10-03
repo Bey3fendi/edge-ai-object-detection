@@ -1,25 +1,28 @@
+# Büyük veriler, üretilen artefaktlar ve loglar repoya girmez
 datasets/
 artifacts/
-logs/*.log
+logs/
+YOLOX_outputs/
+
+# Model ve motor dosyaları (yanlışlıkla başka klasöre düşerse)
+*.pth
+*.pt
+*.onnx
 *.plan
+*.engine
 *.bin
 *.param
-*.engine
-*.pt
-*.pth
-*.onnx
 
-# Byte-compiled / optimized / DLL files
+# Python / Jupyter
 __pycache__/
 *.py[cod]
 *$py.class
-
-# Pytest & Coverage
+.ipynb_checkpoints/
 .pytest_cache/
 .coverage
 htmlcov/
 
-# Environments
+# Ortamlar
 .venv/
 venv/
 env/
@@ -29,4 +32,3 @@ ENV/
 .vscode/
 .idea/
 .DS_Store
-
