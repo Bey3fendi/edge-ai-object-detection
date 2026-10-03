@@ -66,6 +66,8 @@ git commit -m "feat: init workspace structure and git repo"
 
 **Ne Değişti:** Sistematik ve versiyonlanabilir bir çalışma alanı yaratıldı. İlerleyen tüm komutlar bu ana dizin (~/edge_ai_workspace) temel alınarak yürütülecektir.
 
+> **Uygulama (2026-10-04):** Çalışma alanı, mevcut GitHub deposu `Bey3fendi/edge-ai-object-detection` (public) klonlanarak Windows'ta `C:\projects\edge_ai_workspace` konumunda tutulur. Obsidian vault'unun **dışındadır**: vault içindeki hafıza dizini YOLOX'un `.md` dosyalarını da tarıyordu ve notlar git deposuna karışmamalı. Belgedeki klasörlere ek olarak `notebooks/` (Colab notebook'ları, `NN_asama_konu.ipynb` adlandırması) ve `results/` (ölçüm CSV'leri ve değerlendirme logları, git'te izlenir) vardır. Bu belgenin asıl kopyası vault'tadır; depodaki `project_information/` kopyası vault'tan eşitlenir.
+
 ## Üçüncü Aşama: Model Seçimi ve YOLOX Depolama Alanının Klonlanması
 
 Nesne tespiti alanında YOLO ailesi sürekli bir evrim içerisindedir. YOLOv1'den başlayarak YOLOv6, v7, v8, v9, v10, v11, v12 ve v26'ya kadar uzanan gelişim sürecinde; her yeni sürüm farklı omurga (backbone) yapıları, dikkat mekanizmaları (attention mechanisms) ve kayıp fonksiyonları (loss functions) ile hem hızı hem de doğruluğu artırmayı hedeflemiştir. Örneğin, YOLOv9 Programlanabilir Gradyan Bilgisi (PGI) ve GELAN mimarisini sunarken, YOLOv10 NMS (Non-Maximum Suppression) adımını ortadan kaldıran birebir atama (one-to-one assignment) stratejisini getirmiştir. YOLOv12 ise gecikme odaklı yapılandırılmış, YOLO26 ise CPU üzerinde daha yüksek hızlara ulaşabilmiştir.
@@ -97,6 +99,8 @@ git commit -m "feat: add YOLOX submodule and install extra dependencies"
 
 **Neden Yapılıyor:** YOLOX'u salt bir kütüphane olarak indirmek yerine kaynak kodlarını submodule olarak ekleyip -e (editable) bayrağı ile kurmak, modelin iç katmanlarına müdahale etmemizi sağlar. Python dosyalarında (örneğin export kodlarında) yapacağımız herhangi bir düzenleme, sistemi yeniden kurmaya gerek kalmadan anında geçerli olacaktır. Alt modül mantığı sayesinde ise YOLOX'un orijinal versiyonunu güncelleyebilir veya kendi yaptığımız değişiklikleri ana projemizin geçmişinde temiz bir şekilde tutabiliriz.
 
+> **Sürüm sabitleme (2026-10-04):** YOLOX submodule'ü Furkan'ın fork'u `Bey3fendi/YOLOX` (dal `edge-ai-thesis`) üzerinden `3ec62638119e272203c7672e0aaf770e20d3f7b0` commit'ine sabitlidir. Fork, upstream `6ddff48`'in üzerine iki düzeltme ekler: CPU'da değerlendirme desteği (`tools/eval.py`) ve güncel `torch.onnx.export` API'si (`tools/export_onnx.py`). Eğitim Colab'da yapılacağı için bağımlılıklar notebook içinde kurulur.
+
 **Ne Değişti:** Çalışma alanımızda YOLOX mimarisini eğitebileceğimiz, test edebileceğimiz ve dışa aktarabileceğimiz tam donanımlı ve versiyon kontrollü bir PyTorch ortamı ayağa kalkmış oldu.
 
 ### Referans Ağırlıkların İndirilmesi ve Temel Test (Smoke Test)
@@ -113,19 +117,36 @@ python3 YOLOX/tools/demo.py image -n yolox-nano -c artifacts/pytorch/yolox_nano.
 
 **Ne Değişti:** YOLOX_outputs/ klasöründe üzerinde tespit kutuları olan bir dog.jpg görseli oluştu. Sistemin fabrikadan çıktığı haliyle eksiksiz çalıştığı kanıtlandı.
 
-## Dördüncü Aşama: Donanıma Duyarlı Mimari Arama (Hardware-Aware NAS)
+## Dördüncü Aşama: Donanıma Duyarlı Makro-Mimari Araması (Hardware-Aware NAS)
 
-İndirdiğimiz YOLOX-Nano modeli her ne kadar küçük olsa da, bulut GPU'ları düşünülerek standart kanal genişlikleri ile tasarlanmıştır. Uç donanımlardaki L2/L3 önbellek (cache) sınırlarına uyması için model mimarisinin yeniden yapılandırılması gerekir. Geleneksel modellerin Floating Point Operations (FLOPs) değerlerini küçültmeye odaklanan yaklaşımlar, gerçek dünyada çoğu zaman gecikmeyi (latency) düzeltmez; çünkü işlemcinin veriyi bellekten getirme süresi (memory access cost) genellikle hesaplamadan daha uzun sürer. Bu nedenle Donanıma Duyarlı Mimari Arama (Hardware-Aware NAS) süreci başlatılır.
+Geleneksel modellerin Floating Point Operations (FLOPs) değerlerini küçültmeye odaklanan yaklaşımlar, gerçek dünyada çoğu zaman gecikmeyi (latency) düzeltmez; çünkü işlemcinin veriyi bellekten getirme süresi (memory access cost) ve işlemlerin donanımdaki maliyeti (ör. SiLU aktivasyonu) FLOPs'a yansımaz. Bu nedenle mimari seçimi, hedef donanımda **ölçülen gecikmeye** göre yapılır.
 
-**Ne Yapılıyor:** Bu işlem bulut ve uç cihazın birlikte kullanıldığı **hibrit (karma) bir yapıda** yürütülür:
+> **Kapsam kararı (Karar 5, 2026-10-03):** Klasik NAS uygulanmaz. Klasik NAS'ta her aday sıfırdan eğitilir; YOLOX'un COCO'daki tam eğitimi ~300 epoch'tur ve tek bir tam eğitim bile Colab Pro bütçesini (~400 kredi) aşar (kaba tahmin: 100-150 A100 saati). PASCAL VOC üzerinde klasik NAS da değerlendirildi; sıfırdan baseline gerektirdiği, COCO tabanlı kabul eşiklerini (Karar 2) geçersiz kıldığı ve tezin sorusunu değiştirdiği için reddedildi. Bunun yerine, önceden eğitilmiş ağırlıklarla uyumlu **ayrık bir makro-mimari araması** yapılır. Tezde yöntem "donanıma duyarlı makro-mimari araması" olarak adlandırılır.
 
-- **Bulut/İş İstasyonu Ortamı (Örn: Google Colab, Yerel GPU'lu PC):** Arama uzayının belirlenmesi, aday mimarilerin oluşturulması ve ağır donanım gerektiren eğitim işlemleri burada yapılır. PyTorch ve Microsoft NNI gibi bir hiperparametre optimizasyon aracı kullanılarak, omurga katman genişlikleri, boyun (neck) genişlikleri ve girdi çözünürlükleri bir arama uzayına sokulur. Arama süresini aylardan günlere indirmek için COCO veri setinin tamamı yerine 10.000 görselden oluşan, sınıf dağılımı korunmuş bir vekil (proxy) alt küme kullanılır. NNI arama algoritması her aday modeli bu alt küme üzerinde 10 epoch boyunca eğitir. Uç cihazlarda doğrudan eğitim yapmak (backpropagation) termal ve kısıtlı kaynaklar sebebiyle imkansız olduğundan ağır iş yükü bulutta kalır.
+**Görev ayrımı:** Bu aşama **mimariyi** (işlemler, derinlik, çözünürlük) belirler; **kanal genişliğine dokunmaz**. Genişlik, Beşinci Aşama'daki yapısal budamanın işidir. Böylece iki yöntem çakışmaz ve ablasyonda etkileri ayrı ölçülebilir.
 
-- **Uç Ortam (Raspberry Pi 5 / Jetson Orin Nano):** Uç cihazlar sadece donanıma duyarlı "fiziksel gecikme ölçümü" (hardware-aware measurement) aşaması için kullanılır. Bulutta üretilip anında ONNX formatına çevrilen aday model uç cihaza gönderilir. Uç cihaz bu modeli çalıştırarak gerçek gecikme süresini (milisaniye) ölçer. Bulunan bu donanım metriği tekrar bulut ortamındaki NAS algoritmasına geri beslenerek (feedback) bir sonraki arama döngüsünün daha iyi optimize edilmesi sağlanır.
+**Arama uzayı** (tüm boyutlar önceden eğitilmiş YOLOX-Nano ağırlıklarıyla uyumludur):
 
-**Neden Yapılıyor:** En az FLOPs değerine sahip olan değil, fiziksel donanımın bellek yollarına ve vektör işlemcilerine en çok uyan mimariyi bulmak hedeflenir. Gecikme süresi ve ortalama hassasiyet (mAP) değerleri üzerinden bir Pareto cephesi (Pareto front) oluşturulur.
+| Boyut | Seçenekler | Ağırlık aktarımı |
+| --- | --- | --- |
+| Giriş çözünürlüğü | 320 / 416 / 512 | Ağırlıklar değişmez |
+| Aktivasyon | SiLU / ReLU / HardSwish | Tensör boyutları aynı, doğrudan yüklenir |
+| CSP blok derinliği | mevcut / bir blok eksik | Kalan bloklar aynen yüklenir |
+| Depthwise kernel boyutu | 3 / 5 | Kernel merkezden kesilir / sıfırla doldurulur |
 
-**Ne Değişti:** Sadece Raspberry Pi 5 ve Jetson Orin Nano'nun mimari kısıtlarına hitap eden, sıfırdan eğitilmiş yeni bir YOLOX konfigürasyon dosyası (nas_optimized.py) ve buna ait bir ağırlık dosyası (nas_optimized.pth) elde edildi. Bu model artık "Genel Geçer" bir model değil, "Donanım Odaklı" bir varyanttır.
+**Ne Yapılıyor:** Bu işlem bulut ve uç cihazın birlikte kullanıldığı **hibrit bir yapıda** yürütülür:
+
+- **Bulut (Google Colab Pro):** Her aday, önceden eğitilmiş YOLOX-Nano ağırlıklarından başlatılır ve 10.000 görsellik, sınıf dağılımı korunmuş COCO alt kümesinde **10 epoch** eğitilir. mAP, COCO val2017 üzerinde mAP@[.5:.95] olarak ölçülür (Karar 2).
+- **Uç cihaz:** Aday ONNX'e çevrilir ve **gecikme ölçütü olarak Raspberry Pi 5 üzerinde ONNX Runtime CPU** ile ölçülür (Stage-1 ayarı; Karar 3 protokolü). Jetson Orin Nano gecikmesi de ölçülür ve raporlanır, ancak seçime girmez.
+- **Seçim kuralı:** Baseline'a göre **mAP kaybı ≤ 1,0 puan** olan adaylar arasında RPi 5'te en hızlı olan seçilir. İki cihaz için **tek mimari** seçilir.
+- **Durdurma kuralı:** En fazla 2 tur. Bir tur, (mAP, RPi gecikmesi) Pareto cephesini iyileştirmezse arama durur.
+- **Seçilen mimari** tam COCO'da ~20-30 epoch fine-tune edilir (aktivasyon değiştiyse 10k alt küme yeterli olmayabilir).
+
+**İlk somut adım (bütçe kalibrasyonu):** Aramaya başlamadan önce Colab'da 1 epoch'luk pilot eğitim yapılarak gerçek epoch süresi ve kredi tüketimi ölçülür; tüm eğitim bütçesi bu ölçümle hesaplanır.
+
+**Neden Yapılıyor:** En az FLOPs değerine sahip olan değil, hedef donanımda en hızlı çalışan ve doğruluğu bütçe içinde kalan mimariyi bulmak hedeflenir. mAP ve gecikme üzerinden bir Pareto cephesi oluşturulur.
+
+**Ne Değişti:** Önceden eğitilmiş ağırlıklardan türetilmiş, fine-tune edilmiş yeni bir YOLOX konfigürasyon dosyası (`nas_optimized.py`) ve ağırlık dosyası (`nas_optimized.pth`) elde edildi. Bu model artık "genel geçer" değil, "donanım odaklı" bir varyanttır.
 
 ## Beşinci Aşama: Bağımlılık Grafiği Destekli Yapısal Budama (Structured Pruning)
 
@@ -162,30 +183,38 @@ DG = tp.DependencyGraph().build_dependency(model, example_inputs=torch.randn(1, 
 imp = tp.importance.MagnitudeImportance(p=1)
 
 # 4. YOLO Tespit Başlıklarını (Heads) Budamadan Koru
+# YOLOX'ta başlık tek bir 85 kanallı katman DEĞİLDİR: her ölçek için ayrı
+# cls_preds (num_classes), reg_preds (4) ve obj_preds (1) konvolüsyonları vardır
+# (yolox/models/yolo_head.py). Bu yüzden doğrudan bu modüller korunur.
 ignored_layers = []
-for m in model.modules():
-    if isinstance(m, torch.nn.Conv2d) and m.out_channels == 85: # COCO (80) + bbox(4) + obj(1)
-        ignored_layers.append(m)
+for preds in (model.head.cls_preds, model.head.reg_preds, model.head.obj_preds):
+    ignored_layers.extend(preds)
 
 # 5. Budayıcıyı (Pruner) Tanımla ve Çalıştır
 pruner = tp.pruner.MagnitudePruner(
     model,
     example_inputs=torch.randn(1, 3, 416, 416),
     importance=imp,
-    ch_sparsity=0.3, # Ağdaki kanalların %30'unu sil
+    ch_sparsity=0.3, # Örnek değer; gerçek oran aşağıdaki taramayla seçilir (Karar 5)
     ignored_layers=ignored_layers,
 )
 pruner.step()
-print("Model kanalları %30 oranında fiziksel olarak silindi.")
+print("Kanallar seçilen oranda fiziksel olarak silindi.")
 
 # 6. SADECE AĞIRLIKLARI DEĞİL, TÜM MODELİ KAYDET
 # Katman boyutları değiştiği için state_dict yerine model objesi kaydedilmelidir.
 torch.save(model, '../artifacts/pytorch/nas_pruned_model.pth')
 ```
 
-**Neden Yapılıyor:** Ağdaki düğüm sayıları azaldığında, işlemcinin (ALU) yapması gereken Çarpma-Biriktirme (MAC) operasyonları doğrudan %30-40 civarında düşer. Modelin boyutu RAM üzerinde çok daha az yer kaplar.
+**Neden Yapılıyor:** Ağdaki düğüm sayıları azaldığında, işlemcinin (ALU) yapması gereken Çarpma-Biriktirme (MAC) operasyonları budama oranıyla orantılı olarak azalır (gerçek gecikme kazancı cihazda ölçülür). Modelin boyutu RAM üzerinde çok daha az yer kaplar.
 
 **Ne Değişti:** Orijinalinden çok daha ince, hızlı ve hafif bir nas_pruned_model.pth objesi üretildi. Ancak kanalların silinmesi modelin kafasını karıştırıp doğruluğunu (mAP) düşürdüğü için, bu model tüm COCO eğitim seti ile düşük öğrenme hızında (örneğin 1/10 oranında) 20 epoch boyunca yeniden eğitilir (Fine-Tuning). İnce ayar sonrasında hızlanmış ve doğruluğunu geri kazanmış nihai FP32 (32-bit kayan nokta) PyTorch modeli hazır hale gelir.
+
+**Budama oranının seçimi (Karar 5):** Sabit %30 kullanılmaz. YOLOX-Nano zaten depthwise konvolüsyonlarla küçültülmüş, 0,91M parametrelik bir model olduğu için yüksek oranlar doğruluğu hızla düşürebilir. Oranlar **%10 / %20 / %30 / %40** olarak kısa bir fine-tune ile taranır. Budama bütçesi içinde kalan (**mAP kaybı ≤ 1,0 puan**, budama öncesi modele göre) en yüksek oran seçilir. Tam COCO, düşük öğrenme hızı, 20 epoch fine-tune yalnız seçilen oranla yapılır.
+
+**mAP bütçesi (Karar 2 ve 5):** Referans YOLOX-Nano val2017 mAP@[.5:.95] = 25,8 (416). Aşama başına sınırlar NAS ≤ 1,0 · budama ≤ 1,0 · INT8 ≤ 2,0 puan; orijinal baseline'a göre toplam kayıp ≤ 4,0 puan (alt sınır ≈ 21,8).
+
+**Ablasyon:** Her yöntemin katkısını ayırmak için dört model ayrı ayrı ölçülür: baseline · yalnız NAS · yalnız budama · NAS + budama.
 
 ## Altıncı Aşama: Evrensel Formata Geçiş (ONNX Dönüşümü)
 
@@ -193,13 +222,31 @@ PyTorch, araştırma ve geliştirme için mükemmeldir ancak C++ tabanlı donan�
 
 **Ne Yapılıyor:** YOLOX'un sunduğu dışa aktarma betiği kullanılarak, budanmış ve ince ayarı yapılmış model ONNX'e dönüştürülür. Dönüşüm sırasında giriş tensörünün boyutu sabit (fixed shape) olarak tanımlanır (örneğin 1x3x416x416) ve dinamik eksenlerden (dynamic axes) kaçınılır.
 
-```bash
-python3 tools/export_onnx.py \
--n yolox-nano \
--c ../artifacts/pytorch/nas_pruned_finetuned.pth \
---output-name ../artifacts/onnx/yolox_fp32.onnx \
---no-onnxsim
+> **Not:** YOLOX'un `tools/export_onnx.py` betiği modeli `-n yolox-nano` (veya `-f exp_dosyası`) tanımından kurup `state_dict` yükler. Budanmış modelde katman boyutları değiştiği ve model `torch.save(model)` ile **bütün nesne** olarak kaydedildiği için bu betik doğrudan çalışmaz (boyut uyuşmazlığı). Bu yüzden kaydedilen model nesnesi doğrudan dışa aktarılır; betiğin varsayılanları (giriş adı `images`, çıkış adı `output`, `decode_in_inference=False`) korunur.
+
+```python
+import numpy as np
+import onnxruntime as ort
+import torch
+
+# Budanmış + fine-tune edilmiş TAM model nesnesi (state_dict değil)
+model = torch.load("../artifacts/pytorch/nas_pruned_finetuned.pth", weights_only=False).eval()
+model.head.decode_in_inference = False  # export_onnx.py ile aynı davranış
+
+dummy = torch.randn(1, 3, 416, 416)  # NAS'ın seçtiği çözünürlük kullanılır
+torch.onnx.export(model, dummy, "../artifacts/onnx/yolox_fp32.onnx",
+                  input_names=["images"], output_names=["output"],
+                  opset_version=11)  # opset henüz sabitlenmedi; YOLOX varsayılanı 11
+
+# Eşdeğerlik kontrolü: PyTorch ve ONNX Runtime çıktıları aynı olmalı
+with torch.no_grad():
+    ref = model(dummy).numpy()
+out = ort.InferenceSession("../artifacts/onnx/yolox_fp32.onnx",
+                           providers=["CPUExecutionProvider"]).run(None, {"images": dummy.numpy()})[0]
+print("maks. mutlak fark:", np.abs(ref - out).max())
 ```
+
+**Canonical model (Karar 1):** `yolox_fp32.onnx` tezin asıl referansıdır. INT8 model (`yolox_int8_qdq.onnx`) bundan türetilir ve ayrıca ölçülür.
 
 **Neden Yapılıyor:** Cihaz üzerinde çalışacak derleyiciler (TensorRT ve ncnn) dinamik şekilleri desteklese de, sabit boyutlu bir tensör grafiği, donanımın önbellek ve register atamalarını çalışma zamanından önce optimize etmesine imkan verir. Bu da inference hızını doğrudan artırır.
 
@@ -242,7 +289,7 @@ quantize_static(
     model_input="../artifacts/onnx/yolox_fp32.onnx",
     model_output="../artifacts/onnx/yolox_int8_qdq.onnx",
     calibration_data_reader=calibrator,
-    quant_format=QuantFormat.QDQ, # TensorRT/ncnn için kritik format
+    quant_format=QuantFormat.QDQ, # TensorRT explicit quantization için gerekli (ncnn QDQ'yu desteklemez, bkz. 9.1)
     activation_type=QuantType.QUInt8, # Aktivasyonlar için 8-bit işaretsiz tamsayı
     weight_type=QuantType.QInt8, # Ağırlıklar için 8-bit işaretli tamsayı
     per_channel=False # Başlangıç için tensör bazlı ölçekleme
@@ -254,7 +301,15 @@ print("QDQ formatında statik INT8 kuantizasyonu tamamlandı.")
 
 **Ne Değişti:** Orijinal model boyutuna yakın ama içine yüzlerce QuantizeLinear ve DeQuantizeLinear düğümü ile Scale/Zero_Point sabitleri eklenmiş yeni bir yolox_int8_qdq.onnx dosyası oluşturuldu.
 
-*Not:* Bu işlemden sonra modelin mAP (Ortalama Hassasiyet) değeri hızla değerlendirilmelidir (Accuracy Gate). Eğer kayıp kabul edilemeyecek kadar büyükse, torchao kullanılarak model PyTorch seviyesindeyken Kuantizasyon Farkındalıklı Eğitime (Quantization-Aware Training - QAT) sokularak ağırlıkların INT8 formatına uygun şekilde yeniden eğitilmesi sağlanmalıdır.
+**Doğruluk kapısı (Accuracy Gate, Karar 2):**
+
+- **Ölçüt:** COCO val2017 mAP@[.5:.95] (ana) ve mAP@.5 (yardımcı); FP32 ve INT8 modellerde aynı ön/son işlem ve NMS ayarları.
+- **Kabul:** INT8 modelin `yolox_fp32.onnx`'e göre kaybı **≤ 2,0 puan** (mutlak).
+- **Eşik aşılırsa:** Kuantizasyon Farkındalıklı Eğitim (QAT), **en fazla 2 deneme × 10 epoch**.
+- **QAT de yetmezse:** Mixed precision (hassas katmanlar, özellikle tespit başlığı, FP16/FP32'de bırakılır); o da yetmezse sonuç olduğu gibi raporlanır.
+- **Toplam bütçe:** Orijinal YOLOX-Nano'ya göre NAS + budama + INT8 toplam kaybı ≤ 4,0 puan.
+
+*Açık noktalar (henüz karar verilmedi):* (1) YOLOX-Nano depthwise konvolüsyon kullandığı için tensör bazlı (`per_channel=False`) ağırlık kuantizasyonu doğruluğu belirgin düşürebilir; `per_channel=True` ile karşılaştırılması önerilir. (2) QAT için kullanılacak araç (ör. torchao) ve QAT modelinin QDQ ONNX'e nasıl dışa aktarılacağı henüz belirlenmedi.
 
 ## Sekizinci Aşama (Stage-1 Benchmark): Donanımdan Bağımsız Ortak CPU Karşılaştırması
 
@@ -262,32 +317,42 @@ Test ortamlarında yapılan en büyük hata, yazılımdan kaynaklanan hız artı
 
 **Ne Yapılıyor:** Geliştirilen ONNX modeli, hem Raspberry Pi 5 hem de Jetson Orin Nano üzerinde ONNX Runtime CPU Execution Provider (CPU EP) kullanılarak çalıştırılır. Jetson cihazındaki devasa GPU ve CUDA çekirdekleri bu testte kasıtlı olarak devre dışı bırakılır.
 
+Stage-1'de iki model ölçülür (Karar 1): **ana veri** `yolox_fp32.onnx`, **ek veri** `yolox_int8_qdq.onnx`. Ölçüm protokolü Karar 3'e göredir: 100 çıkarım ısınma atılır, ardından 60 saniyelik kararlı ölçüm **3 kez** tekrarlanır ve ortalama ± standart sapma raporlanır. İş parçacığı sayısı iki cihazda da sabitlenir.
+
 ```python
-import onnxruntime as ort
-import numpy as np
 import time
+import numpy as np
+import onnxruntime as ort
 
-# Sadece CPU Sağlayıcısı aktif edilerek donanım hızlandırıcılar izole edilir
-session = ort.InferenceSession(
-    "../artifacts/onnx/yolox_fp32.onnx",
-    providers=["CPUExecutionProvider"]
-)
+WARMUP, DURATION_S, REPEATS, THREADS = 100, 60, 3, 4
 
-input_name = session.get_inputs()[0].name
-dummy_input = np.random.randn(1, 3, 416, 416).astype(np.float32)
+def bench(model_path):
+    so = ort.SessionOptions()
+    so.intra_op_num_threads = THREADS  # iki cihazda aynı değer
+    # Sadece CPU Sağlayıcısı aktif edilerek donanım hızlandırıcılar izole edilir
+    session = ort.InferenceSession(model_path, so, providers=["CPUExecutionProvider"])
+    name = session.get_inputs()[0].name
+    x = np.random.randn(1, 3, 416, 416).astype(np.float32)  # seçilen çözünürlük
 
-# Isınma Turları (Bellek Tahsisatının Stabilizasyonu)
-for _ in range(50):
-    session.run(None, {input_name: dummy_input})
+    for _ in range(WARMUP):  # ısınma: bellek tahsisatının stabilizasyonu
+        session.run(None, {name: x})
 
-# Ölçüm Döngüsü (Sadece Model Gecikmesi, Post-Process Hariç)
-start = time.perf_counter()
-for _ in range(1000):
-    session.run(None, {input_name: dummy_input})
-end = time.perf_counter()
+    runs = []
+    for _ in range(REPEATS):  # her tekrar 60 sn; güç ölçer aynı pencereyi kaydeder
+        lat, t_end = [], time.perf_counter() + DURATION_S
+        while time.perf_counter() < t_end:
+            t0 = time.perf_counter()
+            session.run(None, {name: x})  # yalnız model (post-process hariç)
+            lat.append((time.perf_counter() - t0) * 1000)
+        runs.append((np.mean(lat), 1000 / np.mean(lat)))
+    ms, fps = np.array(runs).T
+    print(f"{model_path}: {ms.mean():.2f} ± {ms.std():.2f} ms, {fps.mean():.1f} FPS (yalnız model)")
 
-print(f"Stage-1 Ortalama Gecikme: {((end - start) * 1000) / 1000:.2f} ms")
+for path in ("../artifacts/onnx/yolox_fp32.onnx", "../artifacts/onnx/yolox_int8_qdq.onnx"):
+    bench(path)
 ```
+
+**Uçtan uca FPS (Karar 3):** Yukarıdaki ölçüm yalnız model penceresidir. Ayrıca gerçek görüntülerle ön işlem + model + NMS süresini kapsayan uçtan uca FPS ayrı bir sütun olarak ölçülür.
 
 **Neden Yapılıyor:** Raspberry Pi'nin Cortex-A76 çekirdekleri ile Jetson Orin Nano'nun ARM çekirdekleri arasındaki saf CPU taşıma kapasitesi (portability baseline) ölçülür.
 
@@ -295,13 +360,17 @@ print(f"Stage-1 Ortalama Gecikme: {((end - start) * 1000) / 1000:.2f} ms")
 
 ## Dokuzuncu Aşama (Stage-2 Benchmark): Platforma Özel Maksimum Optimizasyon
 
-Ortak CPU referansı alındıktan sonra, cihazların kendi sınırlarını çizebilmeleri için üreticilerin sağladığı özel donanım hızlandırıcı kütüphanelere geçiş yapılır. Model ağırlıkları ve mantıksal mimari tamamen aynıdır; değişen tek şey hesaplamayı yöneten derleyici (compiler) mantığıdır.
+Ortak CPU referansı alındıktan sonra, cihazların kendi sınırlarını çizebilmeleri için üreticilerin sağladığı özel donanım hızlandırıcı kütüphanelere geçiş yapılır. Tüm Stage-2 modelleri aynı FP32 ağırlıklardan (canonical `yolox_fp32.onnx` ile aynı checkpoint) türetilir ve mantıksal mimari aynıdır. **Ancak INT8 modeller aynı değildir:** Jetson'daki TensorRT INT8, Stage-1'de ölçülen `yolox_int8_qdq.onnx`'in kuantizasyon parametrelerini kullanırken, Raspberry Pi'deki ncnn INT8 kendi araçlarıyla ayrıca kalibre edilir (bkz. 9.1). Bu nedenle her INT8 modelin mAP'i hedef cihazda ayrıca ölçülür ve Karar 2'deki eşik (FP32'ye göre ΔmAP ≤ 2,0 puan) her birine ayrı uygulanır.
+
+**Stage-2 benchmark satırları:** RPi 5 → ncnn FP32 (dönüşüm doğrulaması) ve ncnn INT8; Jetson Orin Nano → TensorRT FP16 ve TensorRT INT8 (QDQ).
 
 ### 9.1 Raspberry Pi 5 Optimizasyonu: ncnn
 
 Raspberry Pi 5 üzerindeki ARM Cortex çekirdekleri GPU barındırmasa da, içlerinde NEON isimli güçlü bir vektör işlem komut seti bulundurur. Bu mimariyi sömürmek için Tencent tarafından açık kaynak kodlu olarak geliştirilen, üçüncü taraf kütüphane bağımlılığı olmayan (no dependencies) ve uç cihazlar için optimize edilmiş ncnn çerçevesi kullanılır.
 
-ONNX'ten ncnn'e dönüşüm yaparken, uyumsuz operatör hatalarını ve dinamik eksen sorunlarını önlemek için aracı bir çevirici olan pnnx (PyTorch to Neural Network Exchange) modülü kullanılır.
+ncnn'e dönüşümde, uyumsuz operatör hatalarını ve dinamik eksen sorunlarını önlemek için pnnx (PyTorch Neural Network Exchange) kullanılır. Bu yol ONNX'ten değil, aynı FP32 checkpoint'ten üretilen TorchScript'ten başlar.
+
+> **Neden QDQ ONNX modeli ncnn'de kullanılmıyor? (araştırma, 2026-10-03)** ncnn'in iki ONNX dönüştürücüsü de ONNX `QuantizeLinear` / `DequantizeLinear` düğümlerini desteklemez. ncnn kaynak kodunda (master, commit `9f9d4ec`, son sürüm `20260526`) `tools/onnx/onnx2ncnn.cpp` bu düğümler için `"QuantizeLinear not supported yet!"` uyarısı basar ve tanımadığı düğümü geçersiz bir katman olarak yazar. pnnx'in ONNX yolunda (`tools/pnnx/src`) bu düğümleri işleyen bir pass yoktur. pnnx'in ncnn arka ucu (`pass_ncnn`) PyTorch quantized modüllerini de INT8 katmana çevirmez. Aynı sorun ncnn issue #5183'te 2023'ten beri açıktır; 2025-11 tarihli yorum da desteğin hâlâ olmadığını teyit eder. Sonuç olarak ncnn'de INT8'in resmi yolu, FP32 modelden `ncnn2table` + `ncnn2int8` ile yapılan kendi PTQ'sudur.
 
 **Ne Yapılıyor:** Raspberry Pi üzerinde uçbirim açılarak doğrudan TorchScript üzerinden ncnn dönüşümü sağlanır.
 
@@ -315,7 +384,26 @@ python3 tools/export_torchscript.py -n yolox-nano -c ../artifacts/pytorch/nas_pr
 pnnx ../artifacts/ncnn/yolox_ts.pt inputshape=[1,3,416,416]
 ```
 
-**Neden Yapılıyor:** pnnx kullanmak, geleneksel ONNX dönüştürücüsünün (onnx2ncnn) takıldığı operatör (Slice, Concat) hatalarını bertaraf eder. **Ne Değişti:** Model, Raspberry Pi 5'in 4 çekirdeğine paralel iş parçacıkları (threads) atayarak %100 CPU ve NEON verimliliği ile çalışabilecek .param ve .bin formatlarına çevrildi.
+**Neden Yapılıyor:** pnnx kullanmak, geleneksel ONNX dönüştürücüsünün (onnx2ncnn) takıldığı operatör (Slice, Concat) hatalarını bertaraf eder. **Ne Değişti:** Model, Raspberry Pi 5'in 4 çekirdeğine paralel iş parçacıkları (threads) atayarak %100 CPU ve NEON verimliliği ile çalışabilecek .param ve .bin formatlarına çevrildi. Bu FP32 ncnn modeli ayrı bir satır olarak ölçülür: mAP'i ONNX FP32 ile (ölçüm toleransı içinde) aynı çıkmalıdır, aksi halde dönüşüm hatalıdır.
+
+#### 9.1.1 ncnn INT8: kendi kalibrasyonu (ncnn2table + ncnn2int8)
+
+**Ne Yapılıyor:** FP32 ncnn modeli, ncnn'in kendi PTQ araçlarıyla INT8'e çevrilir. Kalibrasyon için **ONNX PTQ'da kullanılan 500 COCO görselinin aynısı** kullanılır. Böylece iki INT8 modelin kalibrasyon verisi ortak olur.
+
+```bash
+# pnnx çıktısı: yolox_ts.ncnn.param / yolox_ts.ncnn.bin (pnnx ile üretildiği için ncnnoptimize adımı atlanır)
+find ../data/calib_500/ -type f > calib_list.txt
+
+# Kalibrasyon tablosu. mean/norm/pixel değerleri YOLOX'un çıkarım ön işlemesiyle BİREBİR aynı olmalı.
+# Kurulu YOLOX sürümünün ValTransform'u kontrol edilip doldurulacak (doğrulanmadı).
+ncnn2table yolox_ts.ncnn.param yolox_ts.ncnn.bin calib_list.txt yolox.table \
+  mean=[<yolox_mean>] norm=[<yolox_norm>] shape=[416,416,3] pixel=BGR thread=4 method=kl
+
+# INT8 modeli üret
+ncnn2int8 yolox_ts.ncnn.param yolox_ts.ncnn.bin yolox_int8.param yolox_int8.bin yolox.table
+```
+
+**Bilinmesi gerekenler:** `ncnn2int8` yalnızca Convolution, ConvolutionDepthWise, InnerProduct/Gemm ve birkaç dizi/dikkat katmanını INT8'e çevirir; diğer katmanlar FP32 kalır. ncnn belgeleri kalibrasyon için 5000'den fazla görsel önerir. 500 görsel, ONNX PTQ ile ortak veri kullanmak için bilinçli bir seçimdir ve tezde gerekçesiyle belirtilmelidir. INT8 ncnn modelinin mAP'i RPi üzerinde ayrıca ölçülür ve aynı ΔmAP ≤ 2,0 eşiği uygulanır. Tezde, RPi INT8 modelinin QDQ modelinin aynısı olmadığı, aynı FP32 ağırlıklar ve aynı kalibrasyon verisiyle ayrıca kuantize edildiği açıkça yazılmalıdır.
 
 ### 9.2 Jetson Orin Nano Optimizasyonu: TensorRT
 
@@ -333,7 +421,21 @@ NVIDIA'nın Jetson sistemlerindeki muazzam başarısı salt donanımdan değil, 
 --duration=60
 ```
 
-**Neden Yapılıyor:** Modeldeki FP32 yükü, GPU'daki Tensor Çekirdeklerinde koşacak INT8 operasyonlarına dönüştürülmektedir. --int8 parametresi ve QDQ formatı birleştiğinde, TensorRT hangi katmanların hassasiyetinden ödün verilmeyeceğini (Örn: YOLO tespit başlıkları) çok iyi anlar ve performansı uç noktaya taşır. **Ne Değişti:** Jetson üzerinde çalışan yolox_int8.plan motoru oluşturuldu. Uçbirim çıktısında, cihazın sağladığı "Ortalama Gecikme" (Mean Latency) ve "Kare Sayısı/Saniye" (Throughput/FPS) raporu otomatik olarak görüntülendi. Hızlanma faktörü (Speedup), Stage-1 CPU ölçümüne göre 10 kata kadar varan farklılıklar gösterebilir.
+**Ek satır: TensorRT FP16.** INT8'in FP16'ya göre kazancını göstermek için canonical FP32 ONNX modeli FP16 motoruna da derlenir:
+
+```bash
+/usr/src/tensorrt/bin/trtexec \
+--onnx=../artifacts/onnx/yolox_fp32.onnx \
+--saveEngine=../artifacts/tensorrt/yolox_fp16.plan \
+--shapes=images:1x3x416x416 \
+--fp16 \
+--warmUp=3000 \
+--duration=60
+```
+
+**Karar (2026-10-03):** TensorRT INT8, TensorRT'nin kendi kalibratörüyle değil, **QDQ modelinden (explicit quantization)** üretilir. Böylece Karar 2'deki doğruluk kontrolü (PTQ/QAT) ile Jetson'da çalışan kuantizasyon aynı parametreleri kullanır. Kurulu TensorRT sürümünde implicit (kalibratörlü) INT8'in durumu ayrıca kontrol edilmelidir. **Risk:** ONNX Runtime'ın yerleştirdiği QDQ düğümleri TensorRT için en uygun yerleşim olmayabilir; bazı katmanlar FP32'de kalıp hız beklenenden düşük çıkabilir. Motorun mAP'i ve hızı Jetson'da ayrıca ölçülür. (`trtexec` hız ölçümü yalnız model penceresidir; uçtan uca FPS Karar 3'e göre ayrı ölçülür.)
+
+**Neden Yapılıyor:** Modeldeki FP32 yükü, GPU'daki Tensor Çekirdeklerinde koşacak INT8 operasyonlarına dönüştürülmektedir. QDQ formatında hangi katmanların INT8'de çalışacağını TensorRT değil, QDQ düğümlerinin yerleşimi belirler. QDQ içermeyen katmanlar (ör. hassasiyet için dışarıda bırakılan tespit başlıkları) daha yüksek hassasiyette kalır. **Ne Değişti:** Jetson üzerinde çalışan yolox_int8.plan motoru oluşturuldu. Uçbirim çıktısında, cihazın sağladığı "Ortalama Gecikme" (Mean Latency) ve "Kare Sayısı/Saniye" (Throughput/FPS) raporu otomatik olarak görüntülendi. Hızlanma faktörü (Speedup), Stage-1 CPU ölçümüne göre 10 kata kadar varan farklılıklar gösterebilir.
 
 ## Onuncu Aşama: Güç Ölçümü, Telemetri ve Pareto Analizi
 
@@ -341,9 +443,17 @@ Uç yapay zekâda asıl başarı kriteri, sistemin en yüksek FPS'yi alması de�
 
 **Ne Yapılıyor:** İki cihazın donanımsal telemetri yöntemleri birbirinden farklıdır. En doğru sonuç için dışarıdan (harici) bir güç ölçüm metodu kullanılmalıdır.
 
-- **Raspberry Pi 5:** Type-C besleme hattına donanımsal bir USB-C Güç Analizörü (Power Meter) takılır. Sistem boşta (idle) iken ve inference (load) sırasında iken amperaj farkları ölçülerek $P_{dynamic}$ (Dinamik Güç Tüketimi) bulunur. Arka planda /usr/bin/time -v ve htop ile Pik RAM kullanımı ölçülür.
+**Ölçüm protokolü (Karar 3):**
 
-- **Jetson Orin Nano:** Güç girişine takılan cihazın yanı sıra, NVIDIA'nın dahili aracı olan tegrastats ile güç hatlarındaki (rail) milisaniyelik tüketim log (kayıt) dosyasına dökülür:
+- **Ana güç ölçümü (iki cihaz):** Besleme girişine takılan USB-C güç ölçer ile **toplam kart gücü**. Cihazlar arası karşılaştırmada yalnız bu değer kullanılır. Güç ölçerin örnekleme hızı kaydedilir.
+- **Idle güç:** Her ölçüm oturumunda, çıkarım başlamadan önce ayrıca ölçülür.
+- **Enerji iki türlü raporlanır:**
+  - $J/frame_{toplam} = W_{çıkarım} / FPS$ (cihazın gerçekte harcadığı)
+  - $J/frame_{artımsal} = (W_{çıkarım} - W_{idle}) / FPS$ (yalnız çıkarımın payı; eski adıyla $P_{dynamic}$)
+- **Pencere:** 100 çıkarım ısınma atılır → 60 sn kararlı ölçüm × 3 tekrar, ortalama ± std. Güç ve FPS **aynı pencerede** ölçülür.
+- **Sabit tutulanlar:** Jetson güç modu (`nvpmodel`) ve `jetson_clocks` durumu, RPi CPU governor, soğutma (fan) koşulları. Ekran vb. çevre birimleri bağlı değil.
+- **RAM:** Pik RAM (MB) `/usr/bin/time -v` ile ölçülür.
+- **Jetson ek telemetrisi:** tegrastats, kart içi güç hatlarını (rail) **ayrı bir sütun** olarak kaydeder. USB-C ölçerle aynı şeyi ölçmediği için cihazlar arası karşılaştırmaya girmez:
 
   ```bash
   tegrastats --interval 100 --logfile ../logs/tegrastats_load.log
@@ -355,16 +465,20 @@ Uç yapay zekâda asıl başarı kriteri, sistemin en yüksek FPS'yi alması de�
 
 ### Çıktıların Karşılaştırmalı Tablosu
 
-Tüm aşamalardan elde edilen veriler, bilimsel bir raporlama standardına (CSV) oturtulmalıdır. Tablo yapısı aşağıdaki formatta sunulmalıdır:
+Tüm aşamalardan elde edilen veriler, bilimsel bir raporlama standardına (CSV) oturtulmalıdır. Her satır bir **cihaz × aşama × arka uç × hassasiyet × giriş boyutu × ölçüm** birleşimidir. Aşağıdaki değerler semboliktir; hiçbiri ölçülmüş değildir. 416×416 örnek değerdir; gerçek değer NAS'ın seçtiği çözünürlüktür.
 
-| **Cihaz**        | **Optimizasyon Aşaması** | **Arka Uç (Runtime)** | **Model Tipi** | **Input Boyutu** | **Ortalama Gecikme (ms)** | **Througput (FPS)** | **Yük Gücü (Watt)** | **Verimlilik (FPS/W)** | **Enerji (Joule/Frame)** |
-|------------------|--------------------------|-----------------------|----------------|------------------|---------------------------|---------------------|---------------------|------------------------|--------------------------|
-| RPi 5            | Stage-1                  | ORT CPU               | FP32           | 416x416          | *Ölçüm 1*                 | *F1*                | *W1*                | *F1/W1*                | *W1/F1*                  |
-| Jetson Orin Nano | Stage-1                  | ORT CPU               | FP32           | 416x416          | *Ölçüm 2*                 | *F2*                | *W2*                | *F2/W2*                | *W2/F2*                  |
-| RPi 5            | Stage-2                  | ncnn                  | INT8           | 416x416          | *Ölçüm 3*                 | *F3*                | *W3*                | *F3/W3*                | *W3/F3*                  |
-| Jetson Orin Nano | Stage-2                  | TensorRT              | INT8 (QDQ)     | 416x416          | *Ölçüm 4*                 | *F4*                | *W4*                | *F4/W4*                | *W4/F4*                  |
+| Cihaz | Aşama | Arka uç | Model tipi | Giriş | mAP | Gecikme (ms) | FPS (model) | FPS (uçtan uca) | Güç (W) | Idle (W) | FPS/W | J/frame (toplam) | J/frame (artımsal) | RAM (MB) | tegrastats (W) |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| RPi 5 | Stage-1 | ORT CPU | FP32 | 416×416 | mAP1 | Ölçüm 1 | F1 | E1 | W1 | I1 | F1/W1 | W1/F1 | (W1−I1)/F1 | R1 | — |
+| Jetson Orin Nano | Stage-1 | ORT CPU | FP32 | 416×416 | mAP2 | Ölçüm 2 | F2 | E2 | W2 | I2 | F2/W2 | W2/F2 | (W2−I2)/F2 | R2 | T2 |
+| RPi 5 | Stage-1 | ORT CPU | INT8 (QDQ) — ek | 416×416 | mAP1b | Ölçüm 1b | F1b | E1b | W1b | I1b | F1b/W1b | W1b/F1b | (W1b−I1b)/F1b | R1b | — |
+| Jetson Orin Nano | Stage-1 | ORT CPU | INT8 (QDQ) — ek | 416×416 | mAP2b | Ölçüm 2b | F2b | E2b | W2b | I2b | F2b/W2b | W2b/F2b | (W2b−I2b)/F2b | R2b | T2b |
+| RPi 5 | Stage-2 | ncnn | FP32 (dönüşüm doğrulaması) | 416×416 | mAP3a | Ölçüm 3a | F3a | E3a | W3a | I3a | F3a/W3a | W3a/F3a | (W3a−I3a)/F3a | R3a | — |
+| RPi 5 | Stage-2 | ncnn | INT8 (ncnn2int8) | 416×416 | mAP3 | Ölçüm 3 | F3 | E3 | W3 | I3 | F3/W3 | W3/F3 | (W3−I3)/F3 | R3 | — |
+| Jetson Orin Nano | Stage-2 | TensorRT | FP16 | 416×416 | mAP4a | Ölçüm 4a | F4a | E4a | W4a | I4a | F4a/W4a | W4a/F4a | (W4a−I4a)/F4a | R4a | T4a |
+| Jetson Orin Nano | Stage-2 | TensorRT | INT8 (QDQ) | 416×416 | mAP4 | Ölçüm 4 | F4 | E4 | W4 | I4 | F4/W4 | W4/F4 | (W4−I4)/F4 | R4 | T4 |
 
-Bu tablo aracılığıyla hesaplanan *Marjinal Verimlilik* formülü: $\mathrm{Speedup} = \frac{FPS_{Stage2}}{FPS_{Stage1}}$ şeklindedir. Böylece TensorRT veya ncnn kütüphanelerinin donanım üzerine eklediği salt yazılım/derleyici katkısı matematiksel olarak kanıtlanmış olur.
+Bu tablo aracılığıyla hesaplanan *Marjinal Verimlilik* formülü: $\mathrm{Speedup} = \frac{FPS_{Stage2}}{FPS_{Stage1}}$ şeklindedir. Salt yazılım/derleyici katkısını göstermek için **aynı cihazda ve aynı hassasiyette** karşılaştırılmalıdır (ör. RPi: ncnn FP32 ÷ ORT FP32). Hassasiyet de değişiyorsa (ör. TensorRT FP16 ÷ ORT FP32) hız artışı derleyici ile hassasiyetin birleşik etkisidir ve öyle raporlanmalıdır. Stage-2'de amaç cihazları birbiriyle yarıştırmak değil, her yöntemin kendi cihazındaki etkisini belgelemektir (Karar 5).
 
 ## On Birinci Aşama: Sürekli Öğrenme ve Canlı Sistem Entegrasyonu Vizyonu
 
