@@ -138,12 +138,17 @@ Geleneksel modellerin Floating Point Operations (FLOPs) değerlerini küçültme
 
 - **Bulut (Google Colab Pro):** Her aday, önceden eğitilmiş YOLOX-Nano ağırlıklarından başlatılır ve 10.000 görsellik, sınıf dağılımı korunmuş COCO alt kümesinde **10 epoch** eğitilir. mAP, COCO val2017 üzerinde mAP@[.5:.95] olarak ölçülür (Karar 2).
 - **10k alt küme yöntemi (2026-10-04):** COCO train2017'den sınıf dağılımı korunarak (stratified) seçilir: anotasyonlu her görsel, içerdiği en nadir sınıfa (train2017 örnek sayısına göre) atanır ve bu katmanlardan orantılı (largest remainder yuvarlama) örnek çekilir; anotasyonsuz görseller dışarıda kalır. Sabit seed yoktur; seçilen görsel ID listesi sürümlenir (`results/pilot/subset_10k_image_ids.json`, Drive `edge_ai/data/coco_train2017_10k_stratified.zip`), alt küme bu listeden yeniden kurulur. Kontrol: 10.000 görsel, 73.757 örnek, 80 sınıfın tamamı mevcut; sınıf başına örnek payının tam train2017'den sapması ortalama 0,05, en fazla 0,54 puan.
+- **Eğitim tarifi (2026-10-04):** Tüm adaylar ve kontrol koşusu için aynıdır: 10 epoch, batch 64, fp16, çoklu ölçek açık; **son 2 epoch mosaic'siz** (L1 kaybı açık), değerlendirme bu iki epoch'un sonunda yapılır. YOLOX'ta mosaic'siz epoch sayısı `no_aug_epochs + 1` olduğu için ayar `no_aug_epochs = 1`'dir; varsayılan 15 kullanılırsa 10 epoch'un tamamı mosaic'siz geçer.
+- **Aday sayısı (2026-10-04):** İlk turda arama uzayının **tam ızgarası** (3 × 3 × 2 × 2 = 36 aday) eğitilir; örnekleme yapılmaz.
+- **Kontrol koşusu (2026-10-04):** Değişmemiş YOLOX-Nano aynı tarifle (10k alt küme, 10 epoch) eğitilir. Adayların mAP kaybı orijinal 25,8 yerine bu kontrole göre hesaplanır; böylece mimarinin etkisi kısa fine-tune'un etkisinden ayrılır.
 - **Uç cihaz:** Aday ONNX'e çevrilir ve **gecikme ölçütü olarak Raspberry Pi 5 üzerinde ONNX Runtime CPU** ile ölçülür (Stage-1 ayarı; Karar 3 protokolü). Jetson Orin Nano gecikmesi de ölçülür ve raporlanır, ancak seçime girmez.
-- **Seçim kuralı:** Baseline'a göre **mAP kaybı ≤ 1,0 puan** olan adaylar arasında RPi 5'te en hızlı olan seçilir. İki cihaz için **tek mimari** seçilir.
+- **Seçim kuralı:** Kontrol koşusuna göre **mAP kaybı ≤ 1,0 puan** olan adaylar arasında RPi 5'te en hızlı olan seçilir. İki cihaz için **tek mimari** seçilir.
 - **Durdurma kuralı:** En fazla 2 tur. Bir tur, (mAP, RPi gecikmesi) Pareto cephesini iyileştirmezse arama durur.
 - **Seçilen mimari** tam COCO'da ~20-30 epoch fine-tune edilir (aktivasyon değiştiyse 10k alt küme yeterli olmayabilir).
 
 **İlk somut adım (bütçe kalibrasyonu):** Aramaya başlamadan önce Colab'da 1 epoch'luk pilot eğitim yapılarak gerçek epoch süresi ve kredi tüketimi ölçülür; tüm eğitim bütçesi bu ölçümle hesaplanır.
+
+**Pilot sonucu (2026-10-04, Colab L4, ~1,54 CU/saat; `notebooks/00_pilot_1epoch_sure_olcumu.ipynb`, `results/pilot/`):** 10k alt kümede 1 epoch (157 iterasyon, batch 64, fp16) 214 sn (0,092 CU); bunun ≈ 200 sn'si cuDNN'in 11 giriş boyutunun her biri için ilk görüldüğünde yaptığı tek seferlik algoritma aramasıdır, kararlı epoch ≈ 69 sn. val2017 değerlendirmesi (fp32, batch 64) 88 sn (0,037 CU); önceden eğitilmiş Nano bu ortamda mAP 25,8 / AP50 41,4 verdi (baseline birebir tekrar üretildi). **Bütçe tahmini** (ölçümlerden türetilmiştir): aday başına ≈ 0,45 CU (≈ 18 dk); 36 adaylık tur ≈ 16 CU, 2 tur ≤ ≈ 33 CU; tam COCO fine-tune (~25 epoch) ≈ 9 CU; budama + QAT ≈ 15–30 CU; toplam ≈ 60–75 CU, ~400 kredilik Colab Pro bütçesinin çok altında.
 
 **Neden Yapılıyor:** En az FLOPs değerine sahip olan değil, hedef donanımda en hızlı çalışan ve doğruluğu bütçe içinde kalan mimariyi bulmak hedeflenir. mAP ve gecikme üzerinden bir Pareto cephesi oluşturulur.
 
