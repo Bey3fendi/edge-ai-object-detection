@@ -180,7 +180,7 @@ Symbolic values only; nothing has been measured.
 Status as of 2026-10-03.
 
 1. **Open:** Pin YOLOX revision, pretrained weights, dependencies, device software versions, and exact device configurations.
-2. **Partly resolved:** mAP definition and subsets resolved (Decisions 2 and 5). Open: exact 10k subset sampling procedure, YOLOX pre-processing values (also needed as `mean`/`norm` for `ncnn2table`).
+2. **Partly resolved:** mAP definition and subsets resolved (Decisions 2 and 5). **10k subset sampling resolved (2026-10-04):** class-distribution-preserving (stratified) sample of COCO train2017 — each annotated image is assigned to its rarest category (by train2017 instance count), and images are drawn from these strata proportionally (largest-remainder rounding); images without annotations are excluded. No fixed seed; the selected image-ID list is versioned (`results/pilot/subset_10k_image_ids.json`, Drive `edge_ai/data/coco_train2017_10k_stratified.zip`), so the subset is reproducible from the list. Check: 10,000 images, 73,757 instances, all 80 classes present, per-class instance-share deviation from full train2017 mean 0.05 / max 0.54 percentage points. Open: YOLOX pre-processing values (also needed as `mean`/`norm` for `ncnn2table`).
 3. **Resolved:** Search space, hardware objective, acceptance criterion and stopping rule (Decision 5). Open: Colab budget, to be computed after the 1-epoch pilot (P0).
 4. **Partly resolved:** T1 is a fine-tune (~20–30 epochs on full COCO) of the selected architecture, not training from scratch. Open: learning rates.
 5. **Resolved:** Pruning structure, ratio selection and acceptable loss (Decision 5).
