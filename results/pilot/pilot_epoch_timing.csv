@@ -1,0 +1,2 @@
+run_id,gpu,torch,yolox_commit,weights_sha256,subset_images,batch,workers,iters_per_epoch,epoch_s,iter_time_mean_s,data_time_mean_s,wall_s_total,steady_iter_s,steady_epoch_s_est,cudnn_first_shape_cost_s,n_input_sizes,cu_per_hour,cu_per_epoch_10k,cu_per_epoch_10k_steady
+pilot_20261004T180128Z,"NVIDIA L4, 23034 MiB, 580.82.07",2.11.0+cu130,3ec6263,cd28f55fbbc1829f99d9ac9b38a16d259a22889739c8728ea877610201feff7b,10000,64,12,157,214.1,1.4072,0.0027,236.8,0.4384,68.8,18.2,11,1.54,0.0916,0.0294
