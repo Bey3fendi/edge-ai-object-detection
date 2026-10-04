@@ -1,0 +1,2 @@
+run_id,gpu,torch,yolox_commit,weights_sha256,val_images,batch,precision,input_size,conf,eval_s,eval_wall_s,forward_ms_per_img,nms_ms_per_img,map5095,ap50,cu_per_eval
+pilot_eval_20261004T185107Z,"NVIDIA L4, 23034 MiB, 580.82.07",2.11.0+cu130,3ec6263,cd28f55fbbc1829f99d9ac9b38a16d259a22889739c8728ea877610201feff7b,5000,64,fp32,416,0.001,87.6,99.9,1.79,0.86,25.8,41.4,0.0375
