@@ -37,5 +37,7 @@ değişiklik gerekiyorsa söyle.
 - Budanmış model `torch.save(model)` ile tam nesne olarak kaydedilir; ONNX'e `tools/export_onnx.py`
   ile değil, kaydedilen nesne doğrudan dışa aktarılır ve PyTorch/ORT çıktı eşdeğerliği kontrol edilir.
 - Statik giriş şekli `1×3×H×W`; dağıtım artefaktlarında dinamik eksen yok.
+- ONNX **opset 13** (NAS adayları dahil tüm dışa aktarımlar; per-channel QDQ için gereken en düşük opset).
+- ONNX Runtime CPU ölçümlerinde `intra_op_num_threads = 4`, iki cihazda ve NAS gecikme ölçümünde aynı.
 - Notebook'lar `notebooks/NN_asama_konu.ipynb` adlandırmasıyla tutulur; ölçümler `results/` altına CSV olarak.
 - Ölçülmemiş değeri ölçülmüş gibi yazma; tablo şablonlarındaki semboller (F1, W1 …) veri değildir.

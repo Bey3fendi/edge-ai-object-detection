@@ -185,7 +185,7 @@ Status as of 2026-10-03.
 4. **Partly resolved:** T1 is a fine-tune (~20–30 epochs on full COCO) of the selected architecture, not training from scratch. Open: learning rates.
 5. **Resolved:** Pruning structure, ratio selection and acceptable loss (Decision 5).
 6. **Partly resolved:** Calibration data (500 COCO train images), acceptable PTQ loss, QAT limit and fallback (Decision 2). Open: `per_channel` weight quantization (per-tensor may hurt depthwise convolutions), QAT tool and QAT-to-QDQ export path.
-7. **Partly resolved:** Static input shape; INT8/FP16 path per backend (Decision 4). Open: ONNX opset (YOLOX default 11 used for now).
-8. **Resolved:** Warm-up, run count, latency statistic, FPS method, power window, idle-power treatment, RAM unit (Decision 3). Open: ORT thread count value (fixed and identical on both devices).
+7. **Resolved:** Static input shape; INT8/FP16 path per backend (Decision 4). **ONNX opset 13 (2026-10-04)** for every ONNX export, including NAS candidates (N3) and `yolox_fp32.onnx`: it is the minimum opset with per-axis `QuantizeLinear`/`DequantizeLinear`, so per-channel PTQ can be derived from the same canonical FP32 file without re-export (Decision 1). Support on ORT, TensorRT and pnnx is to be confirmed in the device smoke test (B2).
+8. **Resolved:** Warm-up, run count, latency statistic, FPS method, power window, idle-power treatment, RAM unit (Decision 3). **ORT `intra_op_num_threads = 4` (2026-10-04)** on both devices (RPi 5 core count; Orin Nano uses 4 of its 6 cores), including NAS latency measurement (N4).
 
 **Agent execution rule:** Do not fill unspecified settings or placeholder metrics as facts. Record chosen settings, artifacts, failed steps, and measurements with provenance; stop at decision gates when their thresholds are not supplied.

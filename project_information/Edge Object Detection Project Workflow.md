@@ -237,7 +237,7 @@ model.head.decode_in_inference = False  # export_onnx.py ile aynı davranış
 dummy = torch.randn(1, 3, 416, 416)  # NAS'ın seçtiği çözünürlük kullanılır
 torch.onnx.export(model, dummy, "../artifacts/onnx/yolox_fp32.onnx",
                   input_names=["images"], output_names=["output"],
-                  opset_version=11)  # opset henüz sabitlenmedi; YOLOX varsayılanı 11
+                  opset_version=13)  # sabit (2026-10-04): per-channel QDQ için gereken en düşük opset
 
 # Eşdeğerlik kontrolü: PyTorch ve ONNX Runtime çıktıları aynı olmalı
 with torch.no_grad():
@@ -248,6 +248,8 @@ print("maks. mutlak fark:", np.abs(ref - out).max())
 ```
 
 **Canonical model (Karar 1):** `yolox_fp32.onnx` tezin asıl referansıdır. INT8 model (`yolox_int8_qdq.onnx`) bundan türetilir ve ayrıca ölçülür.
+
+**ONNX opset (2026-10-04): 13.** NAS adayları (N3) dahil tüm ONNX dışa aktarımlarında kullanılır. Per-channel (eksen bazlı) `QuantizeLinear`/`DequantizeLinear` ilk kez opset 13'te geldiği için per-channel PTQ, yeniden dışa aktarma gerekmeden aynı canonical FP32 dosyadan türetilebilir. ORT, TensorRT ve pnnx desteği cihaz smoke testinde (B2) doğrulanır.
 
 **Neden Yapılıyor:** Cihaz üzerinde çalışacak derleyiciler (TensorRT ve ncnn) dinamik şekilleri desteklese de, sabit boyutlu bir tensör grafiği, donanımın önbellek ve register atamalarını çalışma zamanından önce optimize etmesine imkan verir. Bu da inference hızını doğrudan artırır.
 
@@ -318,7 +320,7 @@ Test ortamlarında yapılan en büyük hata, yazılımdan kaynaklanan hız artı
 
 **Ne Yapılıyor:** Geliştirilen ONNX modeli, hem Raspberry Pi 5 hem de Jetson Orin Nano üzerinde ONNX Runtime CPU Execution Provider (CPU EP) kullanılarak çalıştırılır. Jetson cihazındaki devasa GPU ve CUDA çekirdekleri bu testte kasıtlı olarak devre dışı bırakılır.
 
-Stage-1'de iki model ölçülür (Karar 1): **ana veri** `yolox_fp32.onnx`, **ek veri** `yolox_int8_qdq.onnx`. Ölçüm protokolü Karar 3'e göredir: 100 çıkarım ısınma atılır, ardından 60 saniyelik kararlı ölçüm **3 kez** tekrarlanır ve ortalama ± standart sapma raporlanır. İş parçacığı sayısı iki cihazda da sabitlenir.
+Stage-1'de iki model ölçülür (Karar 1): **ana veri** `yolox_fp32.onnx`, **ek veri** `yolox_int8_qdq.onnx`. Ölçüm protokolü Karar 3'e göredir: 100 çıkarım ısınma atılır, ardından 60 saniyelik kararlı ölçüm **3 kez** tekrarlanır ve ortalama ± standart sapma raporlanır. İş parçacığı sayısı iki cihazda da **4**'tür (2026-10-04; RPi 5'in çekirdek sayısı, Orin Nano'da 6 çekirdeğin 4'ü). NAS gecikme ölçümü (N4) de aynı ayarı kullanır.
 
 ```python
 import time
