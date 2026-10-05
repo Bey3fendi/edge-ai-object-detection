@@ -131,16 +131,20 @@ Geleneksel modellerin Floating Point Operations (FLOPs) değerlerini küçültme
 | --- | --- | --- |
 | Giriş çözünürlüğü | 320 / 416 / 512 | Ağırlıklar değişmez |
 | Aktivasyon | SiLU / ReLU / HardSwish | Tensör boyutları aynı, doğrudan yüklenir |
-| CSP blok derinliği | mevcut / bir blok eksik | Kalan bloklar aynen yüklenir |
-| Depthwise kernel boyutu | 3 / 5 | Kernel merkezden kesilir / sıfırla doldurulur |
+| CSP blok derinliği | mevcut / bir blok eksik (backbone dark3 ve dark4: 3 → 2; son Bottleneck çıkarılır, tek bloklu aşamalara dokunulmaz) | Kalan bloklar aynen yüklenir |
+| Depthwise kernel boyutu | 3 / 5 (tüm depthwise katmanlar) | 3×3 ağırlık 5×5'in merkezine konur, kenarlar sıfır: eğitim öncesi çıktı orijinalle birebir aynıdır (2026-10-05 doğrulandı) |
 
 **Ne Yapılıyor:** Bu işlem bulut ve uç cihazın birlikte kullanıldığı **hibrit bir yapıda** yürütülür:
 
 - **Bulut (Google Colab Pro):** Her aday, önceden eğitilmiş YOLOX-Nano ağırlıklarından başlatılır ve 10.000 görsellik, sınıf dağılımı korunmuş COCO alt kümesinde **10 epoch** eğitilir. mAP, COCO val2017 üzerinde mAP@[.5:.95] olarak ölçülür (Karar 2).
 - **10k alt küme yöntemi (2026-10-04):** COCO train2017'den sınıf dağılımı korunarak (stratified) seçilir: anotasyonlu her görsel, içerdiği en nadir sınıfa (train2017 örnek sayısına göre) atanır ve bu katmanlardan orantılı (largest remainder yuvarlama) örnek çekilir; anotasyonsuz görseller dışarıda kalır. Sabit seed yoktur; seçilen görsel ID listesi sürümlenir (`results/pilot/subset_10k_image_ids.json`, Drive `edge_ai/data/coco_train2017_10k_stratified.zip`), alt küme bu listeden yeniden kurulur. Kontrol: 10.000 görsel, 73.757 örnek, 80 sınıfın tamamı mevcut; sınıf başına örnek payının tam train2017'den sapması ortalama 0,05, en fazla 0,54 puan.
 - **Eğitim tarifi (2026-10-04):** Tüm adaylar ve kontrol koşusu için aynıdır: 10 epoch, batch 64, fp16, çoklu ölçek açık; **son 2 epoch mosaic'siz** (L1 kaybı açık), değerlendirme bu iki epoch'un sonunda yapılır. YOLOX'ta mosaic'siz epoch sayısı `no_aug_epochs + 1` olduğu için ayar `no_aug_epochs = 1`'dir; varsayılan 15 kullanılırsa 10 epoch'un tamamı mosaic'siz geçer.
-- **Aday sayısı (2026-10-04):** İlk turda arama uzayının **tam ızgarası** (3 × 3 × 2 × 2 = 36 aday) eğitilir; örnekleme yapılmaz.
-- **Kontrol koşusu (2026-10-04):** Değişmemiş YOLOX-Nano aynı tarifle (10k alt küme, 10 epoch) eğitilir. Adayların mAP kaybı orijinal 25,8 yerine bu kontrole göre hesaplanır; böylece mimarinin etkisi kısa fine-tune'un etkisinden ayrılır.
+- **Aday sayısı (2026-10-04):** İlk turda arama uzayının **tam ızgarası** (3 × 3 × 2 × 2 = 36 aday) değerlendirilir; örnekleme yapılmaz.
+- **Çözünürlük yalnız değerlendirmede (Furkan, 2026-10-05):** YOLOX-Nano zaten 320–640 arası çok ölçekli eğitildiği için çözünürlük bir dağıtım ayarı olarak ele alınır: **12 mimari** (aktivasyon × derinlik × kernel) eğitilir, her biri val2017'de 320, 416 ve 512'de değerlendirilir → 36 aday. Eğitim maliyeti ≈ üçte bire iner (≈ 4,5 saat, ≈ 7 CU).
+- **Aday mAP'i (Furkan, 2026-10-05):** Son epoch (EMA) ağırlığı, ayrı **fp32** `eval.py` ile (batch 64, conf 0,001; P0 baseline protokolü). Eğitim içi fp16 değerlendirme kapalıdır; iki değerlendirmeden iyisini seçmek adaylara şans avantajı vereceği için kullanılmaz.
+- **Isınma (öneri, onay bekliyor):** `warmup_epochs = 1` (YOLOX varsayılanı 5, 10 epoch'luk koşunun yarısı olurdu; YOLOX'un COCO→VOC fine-tune örneği 1 kullanır). Öğrenme hızı YOLOX varsayılanı (0,01 / 64 görsel, cos, min_lr_ratio 0,05).
+- **Kontrol koşusu (2026-10-04):** Değişmemiş YOLOX-Nano aynı tarifle (10k alt küme, 10 epoch) eğitilir. Adayların mAP kaybı orijinal 25,8 yerine bu kontrole göre hesaplanır; böylece mimarinin etkisi kısa fine-tune'un etkisinden ayrılır. Kontrol, ızgaradaki `416 · SiLU · mevcut · k3` adayıyla aynı koşudur; **gürültüyü** (aynı tarifle tekrar eğitimde mAP'nin kendiliğinden oynaması) ölçmek için **ikinci kez** koşulur (Furkan, 2026-10-05).
+- **Uygulama ve kayıt (2026-10-05):** `notebooks/02_makro_mimari_arama.ipynb`, `exps/nas/nano_macro.py` (model cerrahisi; YOLOX fork'una dokunulmaz), `scripts/nas_search.py`. Kayıtlar `results/nas_r1/`: `manifest.json` (tarif, ızgara, commit ve hash'ler), `runs/<koşu>/` (config, durum, log), `candidates.csv`. Koşular kesintiye dayanıklıdır (epoch başına Drive'a atomik checkpoint, kaldığı yerden devam).
 - **Uç cihaz:** Aday ONNX'e çevrilir ve **gecikme ölçütü olarak Raspberry Pi 5 üzerinde ONNX Runtime CPU** ile ölçülür (Stage-1 ayarı; Karar 3 protokolü). Jetson Orin Nano gecikmesi de ölçülür ve raporlanır, ancak seçime girmez.
 - **Seçim kuralı:** Kontrol koşusuna göre **mAP kaybı ≤ 1,0 puan** olan adaylar arasında RPi 5'te en hızlı olan seçilir. İki cihaz için **tek mimari** seçilir.
 - **Durdurma kuralı:** En fazla 2 tur. Bir tur, (mAP, RPi gecikmesi) Pareto cephesini iyileştirmezse arama durur.
