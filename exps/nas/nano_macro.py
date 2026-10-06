@@ -111,9 +111,11 @@ class Exp(_Base):
         self.val_ann = "instances_val2017.json"
         self.max_epoch = 10
         self.no_aug_epochs = 1
-        # Öğrenme hızı: YOLOX varsayılanı (0.01/64 görsel başına, min_lr_ratio 0.05, cos). Isınma 5 yerine
-        # 1 epoch: önceden eğitilmiş ağırlıktan başlanıyor, YOLOX'un COCO→VOC fine-tune örneği de 1 kullanır
-        # (exps/example/yolox_voc/yolox_voc_s.py); 5 epoch 10 epoch'luk koşunun yarısı olurdu.
+        # Öğrenme hızı (Furkan, 2026-10-06): 0.001/64 görsel (YOLOX varsayılanı 0.01'in onda biri; min_lr_ratio
+        # 0.05, cos aynı). nas_r1'de varsayılan lr ile kontrol 416 mAP 25,8 → 20,4 düştü (erken kontrol eşiği 23).
+        # Isınma 5 yerine 1 epoch: önceden eğitilmiş ağırlıktan başlanıyor, YOLOX'un COCO→VOC fine-tune örneği
+        # de 1 kullanır (exps/example/yolox_voc/yolox_voc_s.py); 5 epoch 10 epoch'luk koşunun yarısı olurdu.
+        self.basic_lr_per_img = 0.001 / 64.0
         self.warmup_epochs = 1
         self.eval_interval = 10_000   # eğitim içi değerlendirme yok; ayrı fp32 eval.py (bkz. trainer)
         self.data_num_workers = 8
