@@ -29,7 +29,7 @@ STATUSES = ("pending", "training", "trained", "evaluated")
 
 
 def now_utc():
-    return dt.datetime.now(dt.UTC).isoformat(timespec="seconds")
+    return dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds")
 
 
 def sha256(path):
