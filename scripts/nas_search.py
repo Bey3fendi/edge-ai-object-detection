@@ -90,14 +90,14 @@ def exp_opts(run_id, **extra):
 
 # ---- manifest ---------------------------------------------------------------------------------
 
-def ensure_manifest(path, manifest):
-    """Yoksa yazar; varsa parmak izi alanlarının aynı olduğunu doğrular ve mevcut olanı döndürür."""
+def ensure_manifest(path, manifest, keys=FINGERPRINT_KEYS):
+    """Yoksa yazar; varsa parmak izi alanlarının (keys) aynı olduğunu doğrular ve mevcut olanı döndürür."""
     old = read_json(path)
     if old is None:
         manifest = {**manifest, "created_utc": now_utc()}
         write_json(path, manifest)
         return manifest
-    diff = [k for k in FINGERPRINT_KEYS if json.dumps(old.get(k), sort_keys=True, default=str)
+    diff = [k for k in keys if json.dumps(old.get(k), sort_keys=True, default=str)
             != json.dumps(manifest.get(k), sort_keys=True, default=str)]
     if diff:
         raise RuntimeError(f"Manifest farklı ({diff}): tur ortasında tarif/sürüm değişmiş. "
