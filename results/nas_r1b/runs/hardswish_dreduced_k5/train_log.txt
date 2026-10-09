@@ -1,0 +1,839 @@
+2026-10-07 01:52:45.424 | INFO     | yolox.core.trainer:before_train:132 - args: Namespace(experiment_name='hardswish_dreduced_k5', name=None, dist_backend='nccl', dist_url=None, batch_size=64, devices=1, exp_file='/content/edge_ai_workspace/exps/nas/nano_macro.py', resume=False, ckpt=None, start_epoch=None, num_machines=1, machine_rank=0, fp16=True, cache=None, occupy=False, logger='tensorboard', opts=['nas_act', 'hardswish', 'nas_depth', 'reduced', 'nas_dw_k', '5', 'nas_pretrained', '/content/yolox_nano.pth', 'nas_mirror_dir', '/content/drive/MyDrive/edge_ai/results/nas_r1b/runs/hardswish_dreduced_k5', 'output_dir', '/content/edge_ai_workspace/YOLOX_outputs/nas_r1b', 'data_num_workers', '12'])
+2026-10-07 01:52:45.427 | INFO     | yolox.core.trainer:before_train:133 - exp value:
+╒═══════════════════╤═════════════════════════════════════════════════════════════════════════════╕
+│ keys              │ values                                                                      │
+╞═══════════════════╪═════════════════════════════════════════════════════════════════════════════╡
+│ seed              │ None                                                                        │
+├───────────────────┼─────────────────────────────────────────────────────────────────────────────┤
+│ output_dir        │ '/content/edge_ai_workspace/YOLOX_outputs/nas_r1b'                          │
+├───────────────────┼─────────────────────────────────────────────────────────────────────────────┤
+│ print_interval    │ 10                                                                          │
+├───────────────────┼─────────────────────────────────────────────────────────────────────────────┤
+│ eval_interval     │ 10000                                                                       │
+├───────────────────┼─────────────────────────────────────────────────────────────────────────────┤
+│ dataset           │ None                                                                        │
+├───────────────────┼─────────────────────────────────────────────────────────────────────────────┤
+│ num_classes       │ 80                                                                          │
+├───────────────────┼─────────────────────────────────────────────────────────────────────────────┤
+│ depth             │ 0.33                                                                        │
+├───────────────────┼─────────────────────────────────────────────────────────────────────────────┤
+│ width             │ 0.25                                                                        │
+├───────────────────┼─────────────────────────────────────────────────────────────────────────────┤
+│ act               │ 'silu'                                                                      │
+├───────────────────┼─────────────────────────────────────────────────────────────────────────────┤
+│ data_num_workers  │ 12                                                                          │
+├───────────────────┼─────────────────────────────────────────────────────────────────────────────┤
+│ input_size        │ (416, 416)                                                                  │
+├───────────────────┼─────────────────────────────────────────────────────────────────────────────┤
+│ multiscale_range  │ 5                                                                           │
+├───────────────────┼─────────────────────────────────────────────────────────────────────────────┤
+│ data_dir          │ '/content/datasets/COCO'                                                    │
+├───────────────────┼─────────────────────────────────────────────────────────────────────────────┤
+│ train_ann         │ 'instances_train2017_10k.json'                                              │
+├───────────────────┼─────────────────────────────────────────────────────────────────────────────┤
+│ val_ann           │ 'instances_val2017.json'                                                    │
+├───────────────────┼─────────────────────────────────────────────────────────────────────────────┤
+│ test_ann          │ 'instances_test2017.json'                                                   │
+├───────────────────┼─────────────────────────────────────────────────────────────────────────────┤
+│ mosaic_prob       │ 0.5                                                                         │
+├───────────────────┼─────────────────────────────────────────────────────────────────────────────┤
+│ mixup_prob        │ 1.0                                                                         │
+├───────────────────┼─────────────────────────────────────────────────────────────────────────────┤
+│ hsv_prob          │ 1.0                                                                         │
+├───────────────────┼─────────────────────────────────────────────────────────────────────────────┤
+│ flip_prob         │ 0.5                                                                         │
+├───────────────────┼─────────────────────────────────────────────────────────────────────────────┤
+│ degrees           │ 10.0                                                                        │
+├───────────────────┼─────────────────────────────────────────────────────────────────────────────┤
+│ translate         │ 0.1                                                                         │
+├───────────────────┼─────────────────────────────────────────────────────────────────────────────┤
+│ mosaic_scale      │ (0.5, 1.5)                                                                  │
+├───────────────────┼─────────────────────────────────────────────────────────────────────────────┤
+│ enable_mixup      │ False                                                                       │
+├───────────────────┼─────────────────────────────────────────────────────────────────────────────┤
+│ mixup_scale       │ (0.5, 1.5)                                                                  │
+├───────────────────┼─────────────────────────────────────────────────────────────────────────────┤
+│ shear             │ 2.0                                                                         │
+├───────────────────┼─────────────────────────────────────────────────────────────────────────────┤
+│ warmup_epochs     │ 1                                                                           │
+├───────────────────┼─────────────────────────────────────────────────────────────────────────────┤
+│ max_epoch         │ 10                                                                          │
+├───────────────────┼─────────────────────────────────────────────────────────────────────────────┤
+│ warmup_lr         │ 0                                                                           │
+├───────────────────┼─────────────────────────────────────────────────────────────────────────────┤
+│ min_lr_ratio      │ 0.05                                                                        │
+├───────────────────┼─────────────────────────────────────────────────────────────────────────────┤
+│ basic_lr_per_img  │ 1.5625e-05                                                                  │
+├───────────────────┼─────────────────────────────────────────────────────────────────────────────┤
+│ scheduler         │ 'yoloxwarmcos'                                                              │
+├───────────────────┼─────────────────────────────────────────────────────────────────────────────┤
+│ no_aug_epochs     │ 1                                                                           │
+├───────────────────┼─────────────────────────────────────────────────────────────────────────────┤
+│ ema               │ True                                                                        │
+├───────────────────┼─────────────────────────────────────────────────────────────────────────────┤
+│ weight_decay      │ 0.0005                                                                      │
+├───────────────────┼─────────────────────────────────────────────────────────────────────────────┤
+│ momentum          │ 0.9                                                                         │
+├───────────────────┼─────────────────────────────────────────────────────────────────────────────┤
+│ save_history_ckpt │ False                                                                       │
+├───────────────────┼─────────────────────────────────────────────────────────────────────────────┤
+│ exp_name          │ 'nano_macro'                                                                │
+├───────────────────┼─────────────────────────────────────────────────────────────────────────────┤
+│ test_size         │ (416, 416)                                                                  │
+├───────────────────┼─────────────────────────────────────────────────────────────────────────────┤
+│ test_conf         │ 0.01                                                                        │
+├───────────────────┼─────────────────────────────────────────────────────────────────────────────┤
+│ nmsthre           │ 0.65                                                                        │
+├───────────────────┼─────────────────────────────────────────────────────────────────────────────┤
+│ random_size       │ (10, 20)                                                                    │
+├───────────────────┼─────────────────────────────────────────────────────────────────────────────┤
+│ nas_act           │ 'hardswish'                                                                 │
+├───────────────────┼─────────────────────────────────────────────────────────────────────────────┤
+│ nas_depth         │ 'reduced'                                                                   │
+├───────────────────┼─────────────────────────────────────────────────────────────────────────────┤
+│ nas_dw_k          │ 5                                                                           │
+├───────────────────┼─────────────────────────────────────────────────────────────────────────────┤
+│ nas_pretrained    │ '/content/yolox_nano.pth'                                                   │
+├───────────────────┼─────────────────────────────────────────────────────────────────────────────┤
+│ nas_mirror_dir    │ '/content/drive/MyDrive/edge_ai/results/nas_r1b/runs/hardswish_dreduced_k5' │
+├───────────────────┼─────────────────────────────────────────────────────────────────────────────┤
+│ nas_summary       │ {}                                                                          │
+╘═══════════════════╧═════════════════════════════════════════════════════════════════════════════╛
+2026-10-07 01:52:45.918 | INFO     | yolox.core.trainer:before_train:138 - Model Summary: Params: 0.93M, Gflops: 1.15
+2026-10-07 01:52:45.938 | INFO     | yolox.data.datasets.coco:__init__:63 - loading annotations into memory...
+2026-10-07 01:52:46.983 | INFO     | yolox.data.datasets.coco:__init__:63 - Done (t=1.05s)
+2026-10-07 01:52:46.984 | INFO     | pycocotools.coco:__init__:86 - creating index...
+2026-10-07 01:52:47.048 | INFO     | pycocotools.coco:__init__:86 - index created!
+2026-10-07 01:52:50.244 | INFO     | yolox.core.trainer:before_train:157 - init prefetcher, this might take one minute or less...
+2026-10-07 01:52:54.784 | INFO     | yolox.data.datasets.coco:__init__:63 - loading annotations into memory...
+2026-10-07 01:52:55.457 | INFO     | yolox.data.datasets.coco:__init__:63 - Done (t=0.67s)
+2026-10-07 01:52:55.457 | INFO     | pycocotools.coco:__init__:86 - creating index...
+2026-10-07 01:52:55.492 | INFO     | pycocotools.coco:__init__:86 - index created!
+2026-10-07 01:52:56.961 | INFO     | yolox.core.trainer:before_train:196 - Training start...
+2026-10-07 01:52:56.965 | INFO     | yolox.core.trainer:before_train:197 - 
+YOLOX(
+  (backbone): YOLOPAFPN(
+    (backbone): CSPDarknet(
+      (stem): Focus(
+        (conv): BaseConv(
+          (conv): Conv2d(12, 16, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+          (bn): BatchNorm2d(16, eps=0.001, momentum=0.03, affine=True, track_running_stats=True)
+          (act): Hardswish()
+        )
+      )
+      (dark2): Sequential(
+        (0): DWConv(
+          (dconv): BaseConv(
+            (conv): Conv2d(16, 16, kernel_size=(5, 5), stride=(2, 2), padding=(2, 2), groups=16, bias=False)
+            (bn): BatchNorm2d(16, eps=0.001, momentum=0.03, affine=True, track_running_stats=True)
+            (act): Hardswish()
+          )
+          (pconv): BaseConv(
+            (conv): Conv2d(16, 32, kernel_size=(1, 1), stride=(1, 1), bias=False)
+            (bn): BatchNorm2d(32, eps=0.001, momentum=0.03, affine=True, track_running_stats=True)
+            (act): Hardswish()
+          )
+        )
+        (1): CSPLayer(
+          (conv1): BaseConv(
+            (conv): Conv2d(32, 16, kernel_size=(1, 1), stride=(1, 1), bias=False)
+            (bn): BatchNorm2d(16, eps=0.001, momentum=0.03, affine=True, track_running_stats=True)
+            (act): Hardswish()
+          )
+          (conv2): BaseConv(
+            (conv): Conv2d(32, 16, kernel_size=(1, 1), stride=(1, 1), bias=False)
+            (bn): BatchNorm2d(16, eps=0.001, momentum=0.03, affine=True, track_running_stats=True)
+            (act): Hardswish()
+          )
+          (conv3): BaseConv(
+            (conv): Conv2d(32, 32, kernel_size=(1, 1), stride=(1, 1), bias=False)
+            (bn): BatchNorm2d(32, eps=0.001, momentum=0.03, affine=True, track_running_stats=True)
+            (act): Hardswish()
+          )
+          (m): Sequential(
+            (0): Bottleneck(
+              (conv1): BaseConv(
+                (conv): Conv2d(16, 16, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                (bn): BatchNorm2d(16, eps=0.001, momentum=0.03, affine=True, track_running_stats=True)
+                (act): Hardswish()
+              )
+              (conv2): DWConv(
+                (dconv): BaseConv(
+                  (conv): Conv2d(16, 16, kernel_size=(5, 5), stride=(1, 1), padding=(2, 2), groups=16, bias=False)
+                  (bn): BatchNorm2d(16, eps=0.001, momentum=0.03, affine=True, track_running_stats=True)
+                  (act): Hardswish()
+                )
+                (pconv): BaseConv(
+                  (conv): Conv2d(16, 16, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                  (bn): BatchNorm2d(16, eps=0.001, momentum=0.03, affine=True, track_running_stats=True)
+                  (act): Hardswish()
+                )
+              )
+            )
+          )
+        )
+      )
+      (dark3): Sequential(
+        (0): DWConv(
+          (dconv): BaseConv(
+            (conv): Conv2d(32, 32, kernel_size=(5, 5), stride=(2, 2), padding=(2, 2), groups=32, bias=False)
+            (bn): BatchNorm2d(32, eps=0.001, momentum=0.03, affine=True, track_running_stats=True)
+            (act): Hardswish()
+          )
+          (pconv): BaseConv(
+            (conv): Conv2d(32, 64, kernel_size=(1, 1), stride=(1, 1), bias=False)
+            (bn): BatchNorm2d(64, eps=0.001, momentum=0.03, affine=True, track_running_stats=True)
+            (act): Hardswish()
+          )
+        )
+        (1): CSPLayer(
+          (conv1): BaseConv(
+            (conv): Conv2d(64, 32, kernel_size=(1, 1), stride=(1, 1), bias=False)
+            (bn): BatchNorm2d(32, eps=0.001, momentum=0.03, affine=True, track_running_stats=True)
+            (act): Hardswish()
+          )
+          (conv2): BaseConv(
+            (conv): Conv2d(64, 32, kernel_size=(1, 1), stride=(1, 1), bias=False)
+            (bn): BatchNorm2d(32, eps=0.001, momentum=0.03, affine=True, track_running_stats=True)
+            (act): Hardswish()
+          )
+          (conv3): BaseConv(
+            (conv): Conv2d(64, 64, kernel_size=(1, 1), stride=(1, 1), bias=False)
+            (bn): BatchNorm2d(64, eps=0.001, momentum=0.03, affine=True, track_running_stats=True)
+            (act): Hardswish()
+          )
+          (m): Sequential(
+            (0): Bottleneck(
+              (conv1): BaseConv(
+                (conv): Conv2d(32, 32, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                (bn): BatchNorm2d(32, eps=0.001, momentum=0.03, affine=True, track_running_stats=True)
+                (act): Hardswish()
+              )
+              (conv2): DWConv(
+                (dconv): BaseConv(
+                  (conv): Conv2d(32, 32, kernel_size=(5, 5), stride=(1, 1), padding=(2, 2), groups=32, bias=False)
+                  (bn): BatchNorm2d(32, eps=0.001, momentum=0.03, affine=True, track_running_stats=True)
+                  (act): Hardswish()
+                )
+                (pconv): BaseConv(
+                  (conv): Conv2d(32, 32, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                  (bn): BatchNorm2d(32, eps=0.001, momentum=0.03, affine=True, track_running_stats=True)
+                  (act): Hardswish()
+                )
+              )
+            )
+            (1): Bottleneck(
+              (conv1): BaseConv(
+                (conv): Conv2d(32, 32, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                (bn): BatchNorm2d(32, eps=0.001, momentum=0.03, affine=True, track_running_stats=True)
+                (act): Hardswish()
+              )
+              (conv2): DWConv(
+                (dconv): BaseConv(
+                  (conv): Conv2d(32, 32, kernel_size=(5, 5), stride=(1, 1), padding=(2, 2), groups=32, bias=False)
+                  (bn): BatchNorm2d(32, eps=0.001, momentum=0.03, affine=True, track_running_stats=True)
+                  (act): Hardswish()
+                )
+                (pconv): BaseConv(
+                  (conv): Conv2d(32, 32, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                  (bn): BatchNorm2d(32, eps=0.001, momentum=0.03, affine=True, track_running_stats=True)
+                  (act): Hardswish()
+                )
+              )
+            )
+          )
+        )
+      )
+      (dark4): Sequential(
+        (0): DWConv(
+          (dconv): BaseConv(
+            (conv): Conv2d(64, 64, kernel_size=(5, 5), stride=(2, 2), padding=(2, 2), groups=64, bias=False)
+            (bn): BatchNorm2d(64, eps=0.001, momentum=0.03, affine=True, track_running_stats=True)
+            (act): Hardswish()
+          )
+          (pconv): BaseConv(
+            (conv): Conv2d(64, 128, kernel_size=(1, 1), stride=(1, 1), bias=False)
+            (bn): BatchNorm2d(128, eps=0.001, momentum=0.03, affine=True, track_running_stats=True)
+            (act): Hardswish()
+          )
+        )
+        (1): CSPLayer(
+          (conv1): BaseConv(
+            (conv): Conv2d(128, 64, kernel_size=(1, 1), stride=(1, 1), bias=False)
+            (bn): BatchNorm2d(64, eps=0.001, momentum=0.03, affine=True, track_running_stats=True)
+            (act): Hardswish()
+          )
+          (conv2): BaseConv(
+            (conv): Conv2d(128, 64, kernel_size=(1, 1), stride=(1, 1), bias=False)
+            (bn): BatchNorm2d(64, eps=0.001, momentum=0.03, affine=True, track_running_stats=True)
+            (act): Hardswish()
+          )
+          (conv3): BaseConv(
+            (conv): Conv2d(128, 128, kernel_size=(1, 1), stride=(1, 1), bias=False)
+            (bn): BatchNorm2d(128, eps=0.001, momentum=0.03, affine=True, track_running_stats=True)
+            (act): Hardswish()
+          )
+          (m): Sequential(
+            (0): Bottleneck(
+              (conv1): BaseConv(
+                (conv): Conv2d(64, 64, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                (bn): BatchNorm2d(64, eps=0.001, momentum=0.03, affine=True, track_running_stats=True)
+                (act): Hardswish()
+              )
+              (conv2): DWConv(
+                (dconv): BaseConv(
+                  (conv): Conv2d(64, 64, kernel_size=(5, 5), stride=(1, 1), padding=(2, 2), groups=64, bias=False)
+                  (bn): BatchNorm2d(64, eps=0.001, momentum=0.03, affine=True, track_running_stats=True)
+                  (act): Hardswish()
+                )
+                (pconv): BaseConv(
+                  (conv): Conv2d(64, 64, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                  (bn): BatchNorm2d(64, eps=0.001, momentum=0.03, affine=True, track_running_stats=True)
+                  (act): Hardswish()
+                )
+              )
+            )
+            (1): Bottleneck(
+              (conv1): BaseConv(
+                (conv): Conv2d(64, 64, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                (bn): BatchNorm2d(64, eps=0.001, momentum=0.03, affine=True, track_running_stats=True)
+                (act): Hardswish()
+              )
+              (conv2): DWConv(
+                (dconv): BaseConv(
+                  (conv): Conv2d(64, 64, kernel_size=(5, 5), stride=(1, 1), padding=(2, 2), groups=64, bias=False)
+                  (bn): BatchNorm2d(64, eps=0.001, momentum=0.03, affine=True, track_running_stats=True)
+                  (act): Hardswish()
+                )
+                (pconv): BaseConv(
+                  (conv): Conv2d(64, 64, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                  (bn): BatchNorm2d(64, eps=0.001, momentum=0.03, affine=True, track_running_stats=True)
+                  (act): Hardswish()
+                )
+              )
+            )
+          )
+        )
+      )
+      (dark5): Sequential(
+        (0): DWConv(
+          (dconv): BaseConv(
+            (conv): Conv2d(128, 128, kernel_size=(5, 5), stride=(2, 2), padding=(2, 2), groups=128, bias=False)
+            (bn): BatchNorm2d(128, eps=0.001, momentum=0.03, affine=True, track_running_stats=True)
+            (act): Hardswish()
+          )
+          (pconv): BaseConv(
+            (conv): Conv2d(128, 256, kernel_size=(1, 1), stride=(1, 1), bias=False)
+            (bn): BatchNorm2d(256, eps=0.001, momentum=0.03, affine=True, track_running_stats=True)
+            (act): Hardswish()
+          )
+        )
+        (1): SPPBottleneck(
+          (conv1): BaseConv(
+            (conv): Conv2d(256, 128, kernel_size=(1, 1), stride=(1, 1), bias=False)
+            (bn): BatchNorm2d(128, eps=0.001, momentum=0.03, affine=True, track_running_stats=True)
+            (act): Hardswish()
+          )
+          (m): ModuleList(
+            (0): MaxPool2d(kernel_size=5, stride=1, padding=2, dilation=1, ceil_mode=False)
+            (1): MaxPool2d(kernel_size=9, stride=1, padding=4, dilation=1, ceil_mode=False)
+            (2): MaxPool2d(kernel_size=13, stride=1, padding=6, dilation=1, ceil_mode=False)
+          )
+          (conv2): BaseConv(
+            (conv): Conv2d(512, 256, kernel_size=(1, 1), stride=(1, 1), bias=False)
+            (bn): BatchNorm2d(256, eps=0.001, momentum=0.03, affine=True, track_running_stats=True)
+            (act): Hardswish()
+          )
+        )
+        (2): CSPLayer(
+          (conv1): BaseConv(
+            (conv): Conv2d(256, 128, kernel_size=(1, 1), stride=(1, 1), bias=False)
+            (bn): BatchNorm2d(128, eps=0.001, momentum=0.03, affine=True, track_running_stats=True)
+            (act): Hardswish()
+          )
+          (conv2): BaseConv(
+            (conv): Conv2d(256, 128, kernel_size=(1, 1), stride=(1, 1), bias=False)
+            (bn): BatchNorm2d(128, eps=0.001, momentum=0.03, affine=True, track_running_stats=True)
+            (act): Hardswish()
+          )
+          (conv3): BaseConv(
+            (conv): Conv2d(256, 256, kernel_size=(1, 1), stride=(1, 1), bias=False)
+            (bn): BatchNorm2d(256, eps=0.001, momentum=0.03, affine=True, track_running_stats=True)
+            (act): Hardswish()
+          )
+          (m): Sequential(
+            (0): Bottleneck(
+              (conv1): BaseConv(
+                (conv): Conv2d(128, 128, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                (bn): BatchNorm2d(128, eps=0.001, momentum=0.03, affine=True, track_running_stats=True)
+                (act): Hardswish()
+              )
+              (conv2): DWConv(
+                (dconv): BaseConv(
+                  (conv): Conv2d(128, 128, kernel_size=(5, 5), stride=(1, 1), padding=(2, 2), groups=128, bias=False)
+                  (bn): BatchNorm2d(128, eps=0.001, momentum=0.03, affine=True, track_running_stats=True)
+                  (act): Hardswish()
+                )
+                (pconv): BaseConv(
+                  (conv): Conv2d(128, 128, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                  (bn): BatchNorm2d(128, eps=0.001, momentum=0.03, affine=True, track_running_stats=True)
+                  (act): Hardswish()
+                )
+              )
+            )
+          )
+        )
+      )
+    )
+    (upsample): Upsample(scale_factor=2.0, mode='nearest')
+    (lateral_conv0): BaseConv(
+      (conv): Conv2d(256, 128, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (bn): BatchNorm2d(128, eps=0.001, momentum=0.03, affine=True, track_running_stats=True)
+      (act): Hardswish()
+    )
+    (C3_p4): CSPLayer(
+      (conv1): BaseConv(
+        (conv): Conv2d(256, 64, kernel_size=(1, 1), stride=(1, 1), bias=False)
+        (bn): BatchNorm2d(64, eps=0.001, momentum=0.03, affine=True, track_running_stats=True)
+        (act): Hardswish()
+      )
+      (conv2): BaseConv(
+        (conv): Conv2d(256, 64, kernel_size=(1, 1), stride=(1, 1), bias=False)
+        (bn): BatchNorm2d(64, eps=0.001, momentum=0.03, affine=True, track_running_stats=True)
+        (act): Hardswish()
+      )
+      (conv3): BaseConv(
+        (conv): Conv2d(128, 128, kernel_size=(1, 1), stride=(1, 1), bias=False)
+        (bn): BatchNorm2d(128, eps=0.001, momentum=0.03, affine=True, track_running_stats=True)
+        (act): Hardswish()
+      )
+      (m): Sequential(
+        (0): Bottleneck(
+          (conv1): BaseConv(
+            (conv): Conv2d(64, 64, kernel_size=(1, 1), stride=(1, 1), bias=False)
+            (bn): BatchNorm2d(64, eps=0.001, momentum=0.03, affine=True, track_running_stats=True)
+            (act): Hardswish()
+          )
+          (conv2): DWConv(
+            (dconv): BaseConv(
+              (conv): Conv2d(64, 64, kernel_size=(5, 5), stride=(1, 1), padding=(2, 2), groups=64, bias=False)
+              (bn): BatchNorm2d(64, eps=0.001, momentum=0.03, affine=True, track_running_stats=True)
+              (act): Hardswish()
+            )
+            (pconv): BaseConv(
+              (conv): Conv2d(64, 64, kernel_size=(1, 1), stride=(1, 1), bias=False)
+              (bn): BatchNorm2d(64, eps=0.001, momentum=0.03, affine=True, track_running_stats=True)
+              (act): Hardswish()
+            )
+          )
+        )
+      )
+    )
+    (reduce_conv1): BaseConv(
+      (conv): Conv2d(128, 64, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (bn): BatchNorm2d(64, eps=0.001, momentum=0.03, affine=True, track_running_stats=True)
+      (act): Hardswish()
+    )
+    (C3_p3): CSPLayer(
+      (conv1): BaseConv(
+        (conv): Conv2d(128, 32, kernel_size=(1, 1), stride=(1, 1), bias=False)
+        (bn): BatchNorm2d(32, eps=0.001, momentum=0.03, affine=True, track_running_stats=True)
+        (act): Hardswish()
+      )
+      (conv2): BaseConv(
+        (conv): Conv2d(128, 32, kernel_size=(1, 1), stride=(1, 1), bias=False)
+        (bn): BatchNorm2d(32, eps=0.001, momentum=0.03, affine=True, track_running_stats=True)
+        (act): Hardswish()
+      )
+      (conv3): BaseConv(
+        (conv): Conv2d(64, 64, kernel_size=(1, 1), stride=(1, 1), bias=False)
+        (bn): BatchNorm2d(64, eps=0.001, momentum=0.03, affine=True, track_running_stats=True)
+        (act): Hardswish()
+      )
+      (m): Sequential(
+        (0): Bottleneck(
+          (conv1): BaseConv(
+            (conv): Conv2d(32, 32, kernel_size=(1, 1), stride=(1, 1), bias=False)
+            (bn): BatchNorm2d(32, eps=0.001, momentum=0.03, affine=True, track_running_stats=True)
+            (act): Hardswish()
+          )
+          (conv2): DWConv(
+            (dconv): BaseConv(
+              (conv): Conv2d(32, 32, kernel_size=(5, 5), stride=(1, 1), padding=(2, 2), groups=32, bias=False)
+              (bn): BatchNorm2d(32, eps=0.001, momentum=0.03, affine=True, track_running_stats=True)
+              (act): Hardswish()
+            )
+            (pconv): BaseConv(
+              (conv): Conv2d(32, 32, kernel_size=(1, 1), stride=(1, 1), bias=False)
+              (bn): BatchNorm2d(32, eps=0.001, momentum=0.03, affine=True, track_running_stats=True)
+              (act): Hardswish()
+            )
+          )
+        )
+      )
+    )
+    (bu_conv2): DWConv(
+      (dconv): BaseConv(
+        (conv): Conv2d(64, 64, kernel_size=(5, 5), stride=(2, 2), padding=(2, 2), groups=64, bias=False)
+        (bn): BatchNorm2d(64, eps=0.001, momentum=0.03, affine=True, track_running_stats=True)
+        (act): Hardswish()
+      )
+      (pconv): BaseConv(
+        (conv): Conv2d(64, 64, kernel_size=(1, 1), stride=(1, 1), bias=False)
+        (bn): BatchNorm2d(64, eps=0.001, momentum=0.03, affine=True, track_running_stats=True)
+        (act): Hardswish()
+      )
+    )
+    (C3_n3): CSPLayer(
+      (conv1): BaseConv(
+        (conv): Conv2d(128, 64, kernel_size=(1, 1), stride=(1, 1), bias=False)
+        (bn): BatchNorm2d(64, eps=0.001, momentum=0.03, affine=True, track_running_stats=True)
+        (act): Hardswish()
+      )
+      (conv2): BaseConv(
+        (conv): Conv2d(128, 64, kernel_size=(1, 1), stride=(1, 1), bias=False)
+        (bn): BatchNorm2d(64, eps=0.001, momentum=0.03, affine=True, track_running_stats=True)
+        (act): Hardswish()
+      )
+      (conv3): BaseConv(
+        (conv): Conv2d(128, 128, kernel_size=(1, 1), stride=(1, 1), bias=False)
+        (bn): BatchNorm2d(128, eps=0.001, momentum=0.03, affine=True, track_running_stats=True)
+        (act): Hardswish()
+      )
+      (m): Sequential(
+        (0): Bottleneck(
+          (conv1): BaseConv(
+            (conv): Conv2d(64, 64, kernel_size=(1, 1), stride=(1, 1), bias=False)
+            (bn): BatchNorm2d(64, eps=0.001, momentum=0.03, affine=True, track_running_stats=True)
+            (act): Hardswish()
+          )
+          (conv2): DWConv(
+            (dconv): BaseConv(
+              (conv): Conv2d(64, 64, kernel_size=(5, 5), stride=(1, 1), padding=(2, 2), groups=64, bias=False)
+              (bn): BatchNorm2d(64, eps=0.001, momentum=0.03, affine=True, track_running_stats=True)
+              (act): Hardswish()
+            )
+            (pconv): BaseConv(
+              (conv): Conv2d(64, 64, kernel_size=(1, 1), stride=(1, 1), bias=False)
+              (bn): BatchNorm2d(64, eps=0.001, momentum=0.03, affine=True, track_running_stats=True)
+              (act): Hardswish()
+            )
+          )
+        )
+      )
+    )
+    (bu_conv1): DWConv(
+      (dconv): BaseConv(
+        (conv): Conv2d(128, 128, kernel_size=(5, 5), stride=(2, 2), padding=(2, 2), groups=128, bias=False)
+        (bn): BatchNorm2d(128, eps=0.001, momentum=0.03, affine=True, track_running_stats=True)
+        (act): Hardswish()
+      )
+      (pconv): BaseConv(
+        (conv): Conv2d(128, 128, kernel_size=(1, 1), stride=(1, 1), bias=False)
+        (bn): BatchNorm2d(128, eps=0.001, momentum=0.03, affine=True, track_running_stats=True)
+        (act): Hardswish()
+      )
+    )
+    (C3_n4): CSPLayer(
+      (conv1): BaseConv(
+        (conv): Conv2d(256, 128, kernel_size=(1, 1), stride=(1, 1), bias=False)
+        (bn): BatchNorm2d(128, eps=0.001, momentum=0.03, affine=True, track_running_stats=True)
+        (act): Hardswish()
+      )
+      (conv2): BaseConv(
+        (conv): Conv2d(256, 128, kernel_size=(1, 1), stride=(1, 1), bias=False)
+        (bn): BatchNorm2d(128, eps=0.001, momentum=0.03, affine=True, track_running_stats=True)
+        (act): Hardswish()
+      )
+      (conv3): BaseConv(
+        (conv): Conv2d(256, 256, kernel_size=(1, 1), stride=(1, 1), bias=False)
+        (bn): BatchNorm2d(256, eps=0.001, momentum=0.03, affine=True, track_running_stats=True)
+        (act): Hardswish()
+      )
+      (m): Sequential(
+        (0): Bottleneck(
+          (conv1): BaseConv(
+            (conv): Conv2d(128, 128, kernel_size=(1, 1), stride=(1, 1), bias=False)
+            (bn): BatchNorm2d(128, eps=0.001, momentum=0.03, affine=True, track_running_stats=True)
+            (act): Hardswish()
+          )
+          (conv2): DWConv(
+            (dconv): BaseConv(
+              (conv): Conv2d(128, 128, kernel_size=(5, 5), stride=(1, 1), padding=(2, 2), groups=128, bias=False)
+              (bn): BatchNorm2d(128, eps=0.001, momentum=0.03, affine=True, track_running_stats=True)
+              (act): Hardswish()
+            )
+            (pconv): BaseConv(
+              (conv): Conv2d(128, 128, kernel_size=(1, 1), stride=(1, 1), bias=False)
+              (bn): BatchNorm2d(128, eps=0.001, momentum=0.03, affine=True, track_running_stats=True)
+              (act): Hardswish()
+            )
+          )
+        )
+      )
+    )
+  )
+  (head): YOLOXHead(
+    (cls_convs): ModuleList(
+      (0-2): 3 x Sequential(
+        (0): DWConv(
+          (dconv): BaseConv(
+            (conv): Conv2d(64, 64, kernel_size=(5, 5), stride=(1, 1), padding=(2, 2), groups=64, bias=False)
+            (bn): BatchNorm2d(64, eps=0.001, momentum=0.03, affine=True, track_running_stats=True)
+            (act): Hardswish()
+          )
+          (pconv): BaseConv(
+            (conv): Conv2d(64, 64, kernel_size=(1, 1), stride=(1, 1), bias=False)
+            (bn): BatchNorm2d(64, eps=0.001, momentum=0.03, affine=True, track_running_stats=True)
+            (act): Hardswish()
+          )
+        )
+        (1): DWConv(
+          (dconv): BaseConv(
+            (conv): Conv2d(64, 64, kernel_size=(5, 5), stride=(1, 1), padding=(2, 2), groups=64, bias=False)
+            (bn): BatchNorm2d(64, eps=0.001, momentum=0.03, affine=True, track_running_stats=True)
+            (act): Hardswish()
+          )
+          (pconv): BaseConv(
+            (conv): Conv2d(64, 64, kernel_size=(1, 1), stride=(1, 1), bias=False)
+            (bn): BatchNorm2d(64, eps=0.001, momentum=0.03, affine=True, track_running_stats=True)
+            (act): Hardswish()
+          )
+        )
+      )
+    )
+    (reg_convs): ModuleList(
+      (0-2): 3 x Sequential(
+        (0): DWConv(
+          (dconv): BaseConv(
+            (conv): Conv2d(64, 64, kernel_size=(5, 5), stride=(1, 1), padding=(2, 2), groups=64, bias=False)
+            (bn): BatchNorm2d(64, eps=0.001, momentum=0.03, affine=True, track_running_stats=True)
+            (act): Hardswish()
+          )
+          (pconv): BaseConv(
+            (conv): Conv2d(64, 64, kernel_size=(1, 1), stride=(1, 1), bias=False)
+            (bn): BatchNorm2d(64, eps=0.001, momentum=0.03, affine=True, track_running_stats=True)
+            (act): Hardswish()
+          )
+        )
+        (1): DWConv(
+          (dconv): BaseConv(
+            (conv): Conv2d(64, 64, kernel_size=(5, 5), stride=(1, 1), padding=(2, 2), groups=64, bias=False)
+            (bn): BatchNorm2d(64, eps=0.001, momentum=0.03, affine=True, track_running_stats=True)
+            (act): Hardswish()
+          )
+          (pconv): BaseConv(
+            (conv): Conv2d(64, 64, kernel_size=(1, 1), stride=(1, 1), bias=False)
+            (bn): BatchNorm2d(64, eps=0.001, momentum=0.03, affine=True, track_running_stats=True)
+            (act): Hardswish()
+          )
+        )
+      )
+    )
+    (cls_preds): ModuleList(
+      (0-2): 3 x Conv2d(64, 80, kernel_size=(1, 1), stride=(1, 1))
+    )
+    (reg_preds): ModuleList(
+      (0-2): 3 x Conv2d(64, 4, kernel_size=(1, 1), stride=(1, 1))
+    )
+    (obj_preds): ModuleList(
+      (0-2): 3 x Conv2d(64, 1, kernel_size=(1, 1), stride=(1, 1))
+    )
+    (stems): ModuleList(
+      (0): BaseConv(
+        (conv): Conv2d(64, 64, kernel_size=(1, 1), stride=(1, 1), bias=False)
+        (bn): BatchNorm2d(64, eps=0.001, momentum=0.03, affine=True, track_running_stats=True)
+        (act): Hardswish()
+      )
+      (1): BaseConv(
+        (conv): Conv2d(128, 64, kernel_size=(1, 1), stride=(1, 1), bias=False)
+        (bn): BatchNorm2d(64, eps=0.001, momentum=0.03, affine=True, track_running_stats=True)
+        (act): Hardswish()
+      )
+      (2): BaseConv(
+        (conv): Conv2d(256, 64, kernel_size=(1, 1), stride=(1, 1), bias=False)
+        (bn): BatchNorm2d(64, eps=0.001, momentum=0.03, affine=True, track_running_stats=True)
+        (act): Hardswish()
+      )
+    )
+    (l1_loss): L1Loss()
+    (bcewithlog_loss): BCEWithLogitsLoss()
+    (iou_loss): IOUloss()
+  )
+)
+2026-10-07 01:52:56.965 | INFO     | nano_macro:before_train:156 - NAS adayı hardswish_dreduced_k5: {'pretrained_loaded': True, 'act_swapped': 104, 'csp_blocks': {'dark3': 2, 'dark4': 2}, 'dw_widened': 28}
+2026-10-07 01:52:56.966 | INFO     | yolox.core.trainer:before_epoch:218 - ---> start train epoch1
+2026-10-07 01:53:19.547 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 1/10, iter: 10/157, gpu mem: 3515Mb, mem: 5.1Gb, iter_time: 2.257s, data_time: 0.008s, total_loss: 7.5, iou_loss: 2.5, l1_loss: 0.0, conf_loss: 3.3, cls_loss: 1.6, lr: 4.057e-06, size: 416, ETA: 0:58:41
+2026-10-07 01:53:40.422 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 1/10, iter: 20/157, gpu mem: 8052Mb, mem: 5.3Gb, iter_time: 2.084s, data_time: 0.003s, total_loss: 7.4, iou_loss: 2.5, l1_loss: 0.0, conf_loss: 3.4, cls_loss: 1.5, lr: 1.623e-05, size: 640, ETA: 0:56:04
+2026-10-07 01:54:01.049 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 1/10, iter: 30/157, gpu mem: 8052Mb, mem: 5.6Gb, iter_time: 2.062s, data_time: 0.002s, total_loss: 7.2, iou_loss: 2.5, l1_loss: 0.0, conf_loss: 3.2, cls_loss: 1.4, lr: 3.651e-05, size: 608, ETA: 0:54:46
+2026-10-07 01:54:20.865 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 1/10, iter: 40/157, gpu mem: 8052Mb, mem: 5.9Gb, iter_time: 1.980s, data_time: 0.002s, total_loss: 7.0, iou_loss: 2.4, l1_loss: 0.0, conf_loss: 3.1, cls_loss: 1.4, lr: 6.491e-05, size: 576, ETA: 0:53:26
+2026-10-07 01:54:39.197 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 1/10, iter: 50/157, gpu mem: 8052Mb, mem: 6.1Gb, iter_time: 1.832s, data_time: 0.002s, total_loss: 7.1, iou_loss: 2.7, l1_loss: 0.0, conf_loss: 2.9, cls_loss: 1.6, lr: 1.014e-04, size: 352, ETA: 0:51:45
+2026-10-07 01:54:44.917 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 1/10, iter: 60/157, gpu mem: 8052Mb, mem: 6.1Gb, iter_time: 0.571s, data_time: 0.002s, total_loss: 6.7, iou_loss: 2.4, l1_loss: 0.0, conf_loss: 2.9, cls_loss: 1.5, lr: 1.461e-04, size: 608, ETA: 0:45:14
+2026-10-07 01:54:48.808 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 1/10, iter: 70/157, gpu mem: 8052Mb, mem: 6.1Gb, iter_time: 0.388s, data_time: 0.002s, total_loss: 6.8, iou_loss: 2.5, l1_loss: 0.0, conf_loss: 2.8, cls_loss: 1.5, lr: 1.988e-04, size: 352, ETA: 0:39:54
+2026-10-07 01:54:52.803 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 1/10, iter: 80/157, gpu mem: 8052Mb, mem: 6.1Gb, iter_time: 0.398s, data_time: 0.002s, total_loss: 6.3, iou_loss: 2.4, l1_loss: 0.0, conf_loss: 2.6, cls_loss: 1.3, lr: 2.596e-04, size: 416, ETA: 0:35:55
+2026-10-07 01:55:12.460 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 1/10, iter: 90/157, gpu mem: 8052Mb, mem: 6.5Gb, iter_time: 1.965s, data_time: 0.002s, total_loss: 6.4, iou_loss: 2.4, l1_loss: 0.0, conf_loss: 2.7, cls_loss: 1.3, lr: 3.286e-04, size: 544, ETA: 0:37:06
+2026-10-07 01:55:17.797 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 1/10, iter: 100/157, gpu mem: 8052Mb, mem: 6.5Gb, iter_time: 0.533s, data_time: 0.002s, total_loss: 6.2, iou_loss: 2.4, l1_loss: 0.0, conf_loss: 2.7, cls_loss: 1.2, lr: 4.057e-04, size: 576, ETA: 0:34:28
+2026-10-07 01:55:37.063 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 1/10, iter: 110/157, gpu mem: 8052Mb, mem: 6.7Gb, iter_time: 1.926s, data_time: 0.002s, total_loss: 6.5, iou_loss: 2.4, l1_loss: 0.0, conf_loss: 2.8, cls_loss: 1.4, lr: 4.909e-04, size: 384, ETA: 0:35:23
+2026-10-07 01:55:42.979 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 1/10, iter: 120/157, gpu mem: 8052Mb, mem: 6.7Gb, iter_time: 0.591s, data_time: 0.002s, total_loss: 6.4, iou_loss: 2.3, l1_loss: 0.0, conf_loss: 2.8, cls_loss: 1.4, lr: 5.842e-04, size: 640, ETA: 0:33:24
+2026-10-07 01:56:01.666 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 1/10, iter: 130/157, gpu mem: 8052Mb, mem: 7.0Gb, iter_time: 1.868s, data_time: 0.002s, total_loss: 6.2, iou_loss: 2.3, l1_loss: 0.0, conf_loss: 2.7, cls_loss: 1.2, lr: 6.856e-04, size: 480, ETA: 0:34:04
+2026-10-07 01:56:07.626 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 1/10, iter: 140/157, gpu mem: 8052Mb, mem: 6.9Gb, iter_time: 0.595s, data_time: 0.004s, total_loss: 6.1, iou_loss: 2.3, l1_loss: 0.0, conf_loss: 2.6, cls_loss: 1.2, lr: 7.952e-04, size: 640, ETA: 0:32:25
+2026-10-07 01:56:26.003 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 1/10, iter: 150/157, gpu mem: 8052Mb, mem: 7.3Gb, iter_time: 1.836s, data_time: 0.002s, total_loss: 6.2, iou_loss: 2.4, l1_loss: 0.0, conf_loss: 2.5, cls_loss: 1.3, lr: 9.128e-04, size: 448, ETA: 0:32:57
+2026-10-07 01:56:29.370 | INFO     | yolox.core.trainer:save_ckpt:402 - Save weights to /content/edge_ai_workspace/YOLOX_outputs/nas_r1b/hardswish_dreduced_k5
+2026-10-07 01:56:29.494 | INFO     | yolox.core.trainer:before_epoch:218 - ---> start train epoch2
+2026-10-07 01:56:33.584 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 2/10, iter: 10/157, gpu mem: 8052Mb, mem: 7.3Gb, iter_time: 0.408s, data_time: 0.002s, total_loss: 6.1, iou_loss: 2.3, l1_loss: 0.0, conf_loss: 2.4, cls_loss: 1.4, lr: 9.999e-04, size: 352, ETA: 0:30:17
+2026-10-07 01:56:37.366 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 2/10, iter: 20/157, gpu mem: 8052Mb, mem: 7.3Gb, iter_time: 0.377s, data_time: 0.002s, total_loss: 6.1, iou_loss: 2.4, l1_loss: 0.0, conf_loss: 2.5, cls_loss: 1.3, lr: 9.994e-04, size: 384, ETA: 0:28:51
+2026-10-07 01:56:42.472 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 2/10, iter: 30/157, gpu mem: 8052Mb, mem: 7.2Gb, iter_time: 0.510s, data_time: 0.002s, total_loss: 6.4, iou_loss: 2.3, l1_loss: 0.0, conf_loss: 2.8, cls_loss: 1.3, lr: 9.987e-04, size: 608, ETA: 0:27:45
+2026-10-07 01:56:47.159 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 2/10, iter: 40/157, gpu mem: 8052Mb, mem: 7.3Gb, iter_time: 0.468s, data_time: 0.002s, total_loss: 6.3, iou_loss: 2.4, l1_loss: 0.0, conf_loss: 2.6, cls_loss: 1.3, lr: 9.976e-04, size: 448, ETA: 0:26:41
+2026-10-07 01:56:52.612 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 2/10, iter: 50/157, gpu mem: 8052Mb, mem: 7.2Gb, iter_time: 0.544s, data_time: 0.002s, total_loss: 6.2, iou_loss: 2.4, l1_loss: 0.0, conf_loss: 2.7, cls_loss: 1.2, lr: 9.963e-04, size: 640, ETA: 0:25:49
+2026-10-07 01:56:58.364 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 2/10, iter: 60/157, gpu mem: 8052Mb, mem: 7.2Gb, iter_time: 0.574s, data_time: 0.002s, total_loss: 6.1, iou_loss: 2.2, l1_loss: 0.0, conf_loss: 2.7, cls_loss: 1.2, lr: 9.947e-04, size: 640, ETA: 0:25:02
+2026-10-07 01:57:17.732 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 2/10, iter: 70/157, gpu mem: 8052Mb, mem: 7.5Gb, iter_time: 1.936s, data_time: 0.002s, total_loss: 5.9, iou_loss: 2.2, l1_loss: 0.0, conf_loss: 2.5, cls_loss: 1.3, lr: 9.927e-04, size: 512, ETA: 0:25:40
+2026-10-07 01:57:23.071 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 2/10, iter: 80/157, gpu mem: 8052Mb, mem: 7.6Gb, iter_time: 0.531s, data_time: 0.002s, total_loss: 6.1, iou_loss: 2.3, l1_loss: 0.0, conf_loss: 2.7, cls_loss: 1.2, lr: 9.905e-04, size: 608, ETA: 0:24:54
+2026-10-07 01:57:27.635 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 2/10, iter: 90/157, gpu mem: 8052Mb, mem: 7.5Gb, iter_time: 0.455s, data_time: 0.002s, total_loss: 5.9, iou_loss: 2.3, l1_loss: 0.0, conf_loss: 2.4, cls_loss: 1.2, lr: 9.880e-04, size: 416, ETA: 0:24:07
+2026-10-07 01:57:31.669 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 2/10, iter: 100/157, gpu mem: 8052Mb, mem: 7.5Gb, iter_time: 0.402s, data_time: 0.002s, total_loss: 6.1, iou_loss: 2.4, l1_loss: 0.0, conf_loss: 2.5, cls_loss: 1.2, lr: 9.852e-04, size: 384, ETA: 0:23:21
+2026-10-07 01:57:36.983 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 2/10, iter: 110/157, gpu mem: 8052Mb, mem: 7.5Gb, iter_time: 0.530s, data_time: 0.002s, total_loss: 6.0, iou_loss: 2.2, l1_loss: 0.0, conf_loss: 2.6, cls_loss: 1.2, lr: 9.821e-04, size: 640, ETA: 0:22:44
+2026-10-07 01:57:41.738 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 2/10, iter: 120/157, gpu mem: 8052Mb, mem: 7.5Gb, iter_time: 0.475s, data_time: 0.002s, total_loss: 5.9, iou_loss: 2.3, l1_loss: 0.0, conf_loss: 2.4, cls_loss: 1.3, lr: 9.788e-04, size: 448, ETA: 0:22:07
+2026-10-07 01:57:46.625 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 2/10, iter: 130/157, gpu mem: 8052Mb, mem: 7.5Gb, iter_time: 0.488s, data_time: 0.002s, total_loss: 6.3, iou_loss: 2.2, l1_loss: 0.0, conf_loss: 2.7, cls_loss: 1.4, lr: 9.751e-04, size: 544, ETA: 0:21:32
+2026-10-07 01:57:50.943 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 2/10, iter: 140/157, gpu mem: 8052Mb, mem: 7.5Gb, iter_time: 0.429s, data_time: 0.004s, total_loss: 5.8, iou_loss: 2.3, l1_loss: 0.0, conf_loss: 2.4, cls_loss: 1.2, lr: 9.712e-04, size: 352, ETA: 0:20:57
+2026-10-07 01:57:54.571 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 2/10, iter: 150/157, gpu mem: 8052Mb, mem: 7.5Gb, iter_time: 0.362s, data_time: 0.002s, total_loss: 5.8, iou_loss: 2.3, l1_loss: 0.0, conf_loss: 2.3, cls_loss: 1.2, lr: 9.670e-04, size: 384, ETA: 0:20:22
+2026-10-07 01:57:57.559 | INFO     | yolox.core.trainer:save_ckpt:402 - Save weights to /content/edge_ai_workspace/YOLOX_outputs/nas_r1b/hardswish_dreduced_k5
+2026-10-07 01:57:57.706 | INFO     | yolox.core.trainer:before_epoch:218 - ---> start train epoch3
+2026-10-07 01:58:02.230 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 3/10, iter: 10/157, gpu mem: 8052Mb, mem: 7.6Gb, iter_time: 0.451s, data_time: 0.002s, total_loss: 6.1, iou_loss: 2.3, l1_loss: 0.0, conf_loss: 2.5, cls_loss: 1.2, lr: 9.592e-04, size: 448, ETA: 0:19:31
+2026-10-07 01:58:06.743 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 3/10, iter: 20/157, gpu mem: 8052Mb, mem: 7.5Gb, iter_time: 0.450s, data_time: 0.002s, total_loss: 5.5, iou_loss: 2.1, l1_loss: 0.0, conf_loss: 2.3, cls_loss: 1.1, lr: 9.542e-04, size: 480, ETA: 0:19:03
+2026-10-07 01:58:21.567 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 3/10, iter: 30/157, gpu mem: 8052Mb, mem: 7.7Gb, iter_time: 1.481s, data_time: 0.002s, total_loss: 6.0, iou_loss: 2.3, l1_loss: 0.0, conf_loss: 2.4, cls_loss: 1.3, lr: 9.490e-04, size: 320, ETA: 0:19:14
+2026-10-07 01:58:25.674 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 3/10, iter: 40/157, gpu mem: 8052Mb, mem: 7.8Gb, iter_time: 0.410s, data_time: 0.002s, total_loss: 6.1, iou_loss: 2.2, l1_loss: 0.0, conf_loss: 2.7, cls_loss: 1.2, lr: 9.435e-04, size: 480, ETA: 0:18:46
+2026-10-07 01:58:30.869 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 3/10, iter: 50/157, gpu mem: 8052Mb, mem: 7.7Gb, iter_time: 0.518s, data_time: 0.002s, total_loss: 5.9, iou_loss: 2.2, l1_loss: 0.0, conf_loss: 2.5, cls_loss: 1.2, lr: 9.377e-04, size: 608, ETA: 0:18:23
+2026-10-07 01:58:36.083 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 3/10, iter: 60/157, gpu mem: 8052Mb, mem: 7.8Gb, iter_time: 0.520s, data_time: 0.002s, total_loss: 6.2, iou_loss: 2.3, l1_loss: 0.0, conf_loss: 2.6, cls_loss: 1.3, lr: 9.317e-04, size: 448, ETA: 0:18:02
+2026-10-07 01:58:41.000 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 3/10, iter: 70/157, gpu mem: 8052Mb, mem: 7.7Gb, iter_time: 0.491s, data_time: 0.002s, total_loss: 5.9, iou_loss: 2.2, l1_loss: 0.0, conf_loss: 2.5, cls_loss: 1.2, lr: 9.255e-04, size: 608, ETA: 0:17:40
+2026-10-07 01:58:46.200 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 3/10, iter: 80/157, gpu mem: 8052Mb, mem: 7.7Gb, iter_time: 0.519s, data_time: 0.002s, total_loss: 6.1, iou_loss: 2.3, l1_loss: 0.0, conf_loss: 2.5, cls_loss: 1.3, lr: 9.190e-04, size: 448, ETA: 0:17:20
+2026-10-07 01:58:50.583 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 3/10, iter: 90/157, gpu mem: 8052Mb, mem: 7.8Gb, iter_time: 0.437s, data_time: 0.002s, total_loss: 5.9, iou_loss: 2.3, l1_loss: 0.0, conf_loss: 2.5, cls_loss: 1.1, lr: 9.122e-04, size: 512, ETA: 0:16:58
+2026-10-07 01:58:55.782 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 3/10, iter: 100/157, gpu mem: 8052Mb, mem: 7.7Gb, iter_time: 0.519s, data_time: 0.002s, total_loss: 6.0, iou_loss: 2.2, l1_loss: 0.0, conf_loss: 2.6, cls_loss: 1.2, lr: 9.052e-04, size: 608, ETA: 0:16:39
+2026-10-07 01:59:00.795 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 3/10, iter: 110/157, gpu mem: 8052Mb, mem: 7.8Gb, iter_time: 0.500s, data_time: 0.002s, total_loss: 5.8, iou_loss: 2.3, l1_loss: 0.0, conf_loss: 2.4, cls_loss: 1.2, lr: 8.980e-04, size: 416, ETA: 0:16:21
+2026-10-07 01:59:05.136 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 3/10, iter: 120/157, gpu mem: 8052Mb, mem: 7.8Gb, iter_time: 0.433s, data_time: 0.002s, total_loss: 5.8, iou_loss: 2.2, l1_loss: 0.0, conf_loss: 2.5, cls_loss: 1.1, lr: 8.905e-04, size: 544, ETA: 0:16:01
+2026-10-07 01:59:10.290 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 3/10, iter: 130/157, gpu mem: 8052Mb, mem: 7.7Gb, iter_time: 0.514s, data_time: 0.004s, total_loss: 6.0, iou_loss: 2.2, l1_loss: 0.0, conf_loss: 2.5, cls_loss: 1.2, lr: 8.828e-04, size: 576, ETA: 0:15:44
+2026-10-07 01:59:15.786 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 3/10, iter: 140/157, gpu mem: 8052Mb, mem: 8.0Gb, iter_time: 0.549s, data_time: 0.002s, total_loss: 5.5, iou_loss: 2.2, l1_loss: 0.0, conf_loss: 2.3, cls_loss: 1.0, lr: 8.748e-04, size: 448, ETA: 0:15:29
+2026-10-07 01:59:20.669 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 3/10, iter: 150/157, gpu mem: 8052Mb, mem: 7.9Gb, iter_time: 0.487s, data_time: 0.002s, total_loss: 6.1, iou_loss: 2.3, l1_loss: 0.0, conf_loss: 2.6, cls_loss: 1.2, lr: 8.667e-04, size: 640, ETA: 0:15:12
+2026-10-07 01:59:24.686 | INFO     | yolox.core.trainer:save_ckpt:402 - Save weights to /content/edge_ai_workspace/YOLOX_outputs/nas_r1b/hardswish_dreduced_k5
+2026-10-07 01:59:24.821 | INFO     | yolox.core.trainer:before_epoch:218 - ---> start train epoch4
+2026-10-07 01:59:30.425 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 4/10, iter: 10/157, gpu mem: 8052Mb, mem: 7.9Gb, iter_time: 0.559s, data_time: 0.002s, total_loss: 5.6, iou_loss: 2.2, l1_loss: 0.0, conf_loss: 2.4, cls_loss: 1.1, lr: 8.524e-04, size: 416, ETA: 0:14:48
+2026-10-07 01:59:34.529 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 4/10, iter: 20/157, gpu mem: 8052Mb, mem: 8.0Gb, iter_time: 0.409s, data_time: 0.002s, total_loss: 5.8, iou_loss: 2.1, l1_loss: 0.0, conf_loss: 2.5, cls_loss: 1.2, lr: 8.437e-04, size: 640, ETA: 0:14:31
+2026-10-07 01:59:40.213 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 4/10, iter: 30/157, gpu mem: 8055Mb, mem: 8.0Gb, iter_time: 0.567s, data_time: 0.002s, total_loss: 6.1, iou_loss: 2.4, l1_loss: 0.0, conf_loss: 2.5, cls_loss: 1.2, lr: 8.348e-04, size: 352, ETA: 0:14:18
+2026-10-07 01:59:43.949 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 4/10, iter: 40/157, gpu mem: 8055Mb, mem: 8.0Gb, iter_time: 0.372s, data_time: 0.002s, total_loss: 5.8, iou_loss: 2.2, l1_loss: 0.0, conf_loss: 2.3, cls_loss: 1.2, lr: 8.256e-04, size: 384, ETA: 0:14:01
+2026-10-07 01:59:47.997 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 4/10, iter: 50/157, gpu mem: 8055Mb, mem: 8.0Gb, iter_time: 0.404s, data_time: 0.002s, total_loss: 5.7, iou_loss: 2.1, l1_loss: 0.0, conf_loss: 2.5, cls_loss: 1.1, lr: 8.164e-04, size: 640, ETA: 0:13:45
+2026-10-07 01:59:53.738 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 4/10, iter: 60/157, gpu mem: 8055Mb, mem: 7.9Gb, iter_time: 0.573s, data_time: 0.002s, total_loss: 6.3, iou_loss: 2.4, l1_loss: 0.0, conf_loss: 2.5, cls_loss: 1.3, lr: 8.069e-04, size: 320, ETA: 0:13:33
+2026-10-07 01:59:57.406 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 4/10, iter: 70/157, gpu mem: 8055Mb, mem: 7.9Gb, iter_time: 0.366s, data_time: 0.002s, total_loss: 6.3, iou_loss: 2.4, l1_loss: 0.0, conf_loss: 2.5, cls_loss: 1.4, lr: 7.972e-04, size: 320, ETA: 0:13:17
+2026-10-07 02:00:01.202 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 4/10, iter: 80/157, gpu mem: 8055Mb, mem: 8.0Gb, iter_time: 0.377s, data_time: 0.002s, total_loss: 6.1, iou_loss: 2.2, l1_loss: 0.0, conf_loss: 2.7, cls_loss: 1.2, lr: 7.874e-04, size: 576, ETA: 0:13:02
+2026-10-07 02:00:06.435 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 4/10, iter: 90/157, gpu mem: 8055Mb, mem: 8.0Gb, iter_time: 0.522s, data_time: 0.002s, total_loss: 5.4, iou_loss: 2.1, l1_loss: 0.0, conf_loss: 2.3, cls_loss: 1.0, lr: 7.774e-04, size: 480, ETA: 0:12:50
+2026-10-07 02:00:10.958 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 4/10, iter: 100/157, gpu mem: 8055Mb, mem: 8.0Gb, iter_time: 0.451s, data_time: 0.002s, total_loss: 5.7, iou_loss: 2.3, l1_loss: 0.0, conf_loss: 2.4, cls_loss: 1.1, lr: 7.673e-04, size: 576, ETA: 0:12:37
+2026-10-07 02:00:16.177 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 4/10, iter: 110/157, gpu mem: 8055Mb, mem: 7.9Gb, iter_time: 0.521s, data_time: 0.002s, total_loss: 5.7, iou_loss: 2.0, l1_loss: 0.0, conf_loss: 2.5, cls_loss: 1.2, lr: 7.570e-04, size: 576, ETA: 0:12:25
+2026-10-07 02:00:21.340 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 4/10, iter: 120/157, gpu mem: 8055Mb, mem: 8.0Gb, iter_time: 0.515s, data_time: 0.002s, total_loss: 6.0, iou_loss: 2.4, l1_loss: 0.0, conf_loss: 2.4, cls_loss: 1.2, lr: 7.466e-04, size: 352, ETA: 0:12:14
+2026-10-07 02:00:25.013 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 4/10, iter: 130/157, gpu mem: 8055Mb, mem: 8.0Gb, iter_time: 0.366s, data_time: 0.004s, total_loss: 5.7, iou_loss: 2.2, l1_loss: 0.0, conf_loss: 2.3, cls_loss: 1.2, lr: 7.360e-04, size: 384, ETA: 0:12:00
+2026-10-07 02:00:28.993 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 4/10, iter: 140/157, gpu mem: 8055Mb, mem: 8.0Gb, iter_time: 0.397s, data_time: 0.002s, total_loss: 5.7, iou_loss: 2.2, l1_loss: 0.0, conf_loss: 2.3, cls_loss: 1.1, lr: 7.253e-04, size: 480, ETA: 0:11:47
+2026-10-07 02:00:33.461 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 4/10, iter: 150/157, gpu mem: 8055Mb, mem: 7.9Gb, iter_time: 0.446s, data_time: 0.002s, total_loss: 6.2, iou_loss: 2.4, l1_loss: 0.0, conf_loss: 2.5, cls_loss: 1.3, lr: 7.144e-04, size: 352, ETA: 0:11:35
+2026-10-07 02:00:36.094 | INFO     | yolox.core.trainer:save_ckpt:402 - Save weights to /content/edge_ai_workspace/YOLOX_outputs/nas_r1b/hardswish_dreduced_k5
+2026-10-07 02:00:36.244 | INFO     | yolox.core.trainer:before_epoch:218 - ---> start train epoch5
+2026-10-07 02:00:40.691 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 5/10, iter: 10/157, gpu mem: 8055Mb, mem: 8.0Gb, iter_time: 0.444s, data_time: 0.002s, total_loss: 5.6, iou_loss: 2.1, l1_loss: 0.0, conf_loss: 2.4, cls_loss: 1.1, lr: 6.957e-04, size: 512, ETA: 0:11:15
+2026-10-07 02:00:44.851 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 5/10, iter: 20/157, gpu mem: 8055Mb, mem: 7.9Gb, iter_time: 0.415s, data_time: 0.002s, total_loss: 5.8, iou_loss: 2.3, l1_loss: 0.0, conf_loss: 2.4, cls_loss: 1.1, lr: 6.846e-04, size: 416, ETA: 0:11:03
+2026-10-07 02:00:50.403 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 5/10, iter: 30/157, gpu mem: 8055Mb, mem: 7.9Gb, iter_time: 0.554s, data_time: 0.002s, total_loss: 5.7, iou_loss: 2.2, l1_loss: 0.0, conf_loss: 2.4, cls_loss: 1.1, lr: 6.734e-04, size: 640, ETA: 0:10:54
+2026-10-07 02:00:55.271 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 5/10, iter: 40/157, gpu mem: 8055Mb, mem: 7.9Gb, iter_time: 0.486s, data_time: 0.002s, total_loss: 5.4, iou_loss: 2.1, l1_loss: 0.0, conf_loss: 2.2, cls_loss: 1.1, lr: 6.620e-04, size: 480, ETA: 0:10:44
+2026-10-07 02:01:00.694 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 5/10, iter: 50/157, gpu mem: 8055Mb, mem: 8.0Gb, iter_time: 0.541s, data_time: 0.002s, total_loss: 5.8, iou_loss: 2.1, l1_loss: 0.0, conf_loss: 2.6, cls_loss: 1.1, lr: 6.506e-04, size: 608, ETA: 0:10:34
+2026-10-07 02:01:04.957 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 5/10, iter: 60/157, gpu mem: 8055Mb, mem: 7.9Gb, iter_time: 0.425s, data_time: 0.002s, total_loss: 5.6, iou_loss: 2.3, l1_loss: 0.0, conf_loss: 2.2, cls_loss: 1.1, lr: 6.391e-04, size: 352, ETA: 0:10:23
+2026-10-07 02:01:09.532 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 5/10, iter: 70/157, gpu mem: 8055Mb, mem: 8.0Gb, iter_time: 0.456s, data_time: 0.002s, total_loss: 5.5, iou_loss: 2.2, l1_loss: 0.0, conf_loss: 2.2, cls_loss: 1.0, lr: 6.276e-04, size: 512, ETA: 0:10:13
+2026-10-07 02:01:13.917 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 5/10, iter: 80/157, gpu mem: 8055Mb, mem: 8.0Gb, iter_time: 0.437s, data_time: 0.002s, total_loss: 5.7, iou_loss: 2.3, l1_loss: 0.0, conf_loss: 2.4, cls_loss: 1.1, lr: 6.159e-04, size: 448, ETA: 0:10:03
+2026-10-07 02:01:18.577 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 5/10, iter: 90/157, gpu mem: 8055Mb, mem: 8.0Gb, iter_time: 0.465s, data_time: 0.002s, total_loss: 5.7, iou_loss: 2.2, l1_loss: 0.0, conf_loss: 2.4, cls_loss: 1.1, lr: 6.042e-04, size: 512, ETA: 0:09:53
+2026-10-07 02:01:22.464 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 5/10, iter: 100/157, gpu mem: 8055Mb, mem: 8.0Gb, iter_time: 0.388s, data_time: 0.002s, total_loss: 5.9, iou_loss: 2.4, l1_loss: 0.0, conf_loss: 2.3, cls_loss: 1.2, lr: 5.925e-04, size: 320, ETA: 0:09:43
+2026-10-07 02:01:26.323 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 5/10, iter: 110/157, gpu mem: 8055Mb, mem: 8.0Gb, iter_time: 0.385s, data_time: 0.002s, total_loss: 5.7, iou_loss: 2.3, l1_loss: 0.0, conf_loss: 2.4, cls_loss: 1.1, lr: 5.807e-04, size: 352, ETA: 0:09:32
+2026-10-07 02:01:30.292 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 5/10, iter: 120/157, gpu mem: 8055Mb, mem: 7.9Gb, iter_time: 0.396s, data_time: 0.002s, total_loss: 5.6, iou_loss: 2.1, l1_loss: 0.0, conf_loss: 2.3, cls_loss: 1.2, lr: 5.689e-04, size: 416, ETA: 0:09:22
+2026-10-07 02:01:35.155 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 5/10, iter: 130/157, gpu mem: 8055Mb, mem: 8.0Gb, iter_time: 0.485s, data_time: 0.004s, total_loss: 5.8, iou_loss: 2.1, l1_loss: 0.0, conf_loss: 2.5, cls_loss: 1.2, lr: 5.571e-04, size: 544, ETA: 0:09:13
+2026-10-07 02:01:40.172 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 5/10, iter: 140/157, gpu mem: 8055Mb, mem: 8.0Gb, iter_time: 0.501s, data_time: 0.002s, total_loss: 5.4, iou_loss: 2.1, l1_loss: 0.0, conf_loss: 2.3, cls_loss: 1.0, lr: 5.452e-04, size: 544, ETA: 0:09:04
+2026-10-07 02:01:44.810 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 5/10, iter: 150/157, gpu mem: 8055Mb, mem: 8.0Gb, iter_time: 0.463s, data_time: 0.002s, total_loss: 6.1, iou_loss: 2.3, l1_loss: 0.0, conf_loss: 2.5, cls_loss: 1.2, lr: 5.333e-04, size: 480, ETA: 0:08:55
+2026-10-07 02:01:47.581 | INFO     | yolox.core.trainer:save_ckpt:402 - Save weights to /content/edge_ai_workspace/YOLOX_outputs/nas_r1b/hardswish_dreduced_k5
+2026-10-07 02:01:47.743 | INFO     | yolox.core.trainer:before_epoch:218 - ---> start train epoch6
+2026-10-07 02:01:52.436 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 6/10, iter: 10/157, gpu mem: 8055Mb, mem: 7.9Gb, iter_time: 0.468s, data_time: 0.002s, total_loss: 6.1, iou_loss: 2.1, l1_loss: 0.0, conf_loss: 2.6, cls_loss: 1.3, lr: 5.131e-04, size: 640, ETA: 0:08:40
+2026-10-07 02:01:57.292 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 6/10, iter: 20/157, gpu mem: 8071Mb, mem: 7.9Gb, iter_time: 0.485s, data_time: 0.002s, total_loss: 5.7, iou_loss: 2.3, l1_loss: 0.0, conf_loss: 2.2, cls_loss: 1.2, lr: 5.012e-04, size: 384, ETA: 0:08:31
+2026-10-07 02:02:01.374 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 6/10, iter: 30/157, gpu mem: 8071Mb, mem: 8.0Gb, iter_time: 0.407s, data_time: 0.002s, total_loss: 5.7, iou_loss: 2.3, l1_loss: 0.0, conf_loss: 2.3, cls_loss: 1.1, lr: 4.894e-04, size: 448, ETA: 0:08:22
+2026-10-07 02:02:06.364 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 6/10, iter: 40/157, gpu mem: 8071Mb, mem: 7.9Gb, iter_time: 0.498s, data_time: 0.002s, total_loss: 5.5, iou_loss: 2.1, l1_loss: 0.0, conf_loss: 2.4, cls_loss: 1.0, lr: 4.776e-04, size: 640, ETA: 0:08:14
+2026-10-07 02:02:11.914 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 6/10, iter: 50/157, gpu mem: 8071Mb, mem: 8.0Gb, iter_time: 0.554s, data_time: 0.002s, total_loss: 5.4, iou_loss: 2.0, l1_loss: 0.0, conf_loss: 2.4, cls_loss: 1.0, lr: 4.657e-04, size: 576, ETA: 0:08:07
+2026-10-07 02:02:17.168 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 6/10, iter: 60/157, gpu mem: 8071Mb, mem: 8.0Gb, iter_time: 0.524s, data_time: 0.002s, total_loss: 5.7, iou_loss: 2.2, l1_loss: 0.0, conf_loss: 2.4, cls_loss: 1.1, lr: 4.540e-04, size: 576, ETA: 0:07:59
+2026-10-07 02:02:21.806 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 6/10, iter: 70/157, gpu mem: 8071Mb, mem: 7.9Gb, iter_time: 0.463s, data_time: 0.002s, total_loss: 5.5, iou_loss: 2.3, l1_loss: 0.0, conf_loss: 2.2, cls_loss: 1.1, lr: 4.423e-04, size: 416, ETA: 0:07:50
+2026-10-07 02:02:26.221 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 6/10, iter: 80/157, gpu mem: 8071Mb, mem: 8.0Gb, iter_time: 0.441s, data_time: 0.002s, total_loss: 5.6, iou_loss: 2.2, l1_loss: 0.0, conf_loss: 2.3, cls_loss: 1.1, lr: 4.306e-04, size: 512, ETA: 0:07:42
+2026-10-07 02:02:30.550 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 6/10, iter: 90/157, gpu mem: 8071Mb, mem: 7.9Gb, iter_time: 0.432s, data_time: 0.002s, total_loss: 5.3, iou_loss: 2.1, l1_loss: 0.0, conf_loss: 2.2, cls_loss: 1.0, lr: 4.190e-04, size: 416, ETA: 0:07:34
+2026-10-07 02:02:34.523 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 6/10, iter: 100/157, gpu mem: 8071Mb, mem: 8.0Gb, iter_time: 0.396s, data_time: 0.002s, total_loss: 5.9, iou_loss: 2.4, l1_loss: 0.0, conf_loss: 2.2, cls_loss: 1.4, lr: 4.074e-04, size: 320, ETA: 0:07:25
+2026-10-07 02:02:38.434 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 6/10, iter: 110/157, gpu mem: 8071Mb, mem: 8.0Gb, iter_time: 0.390s, data_time: 0.002s, total_loss: 5.3, iou_loss: 2.1, l1_loss: 0.0, conf_loss: 2.2, cls_loss: 1.0, lr: 3.960e-04, size: 448, ETA: 0:07:17
+2026-10-07 02:02:42.656 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 6/10, iter: 120/157, gpu mem: 8071Mb, mem: 8.0Gb, iter_time: 0.421s, data_time: 0.002s, total_loss: 5.5, iou_loss: 2.1, l1_loss: 0.0, conf_loss: 2.3, cls_loss: 1.1, lr: 3.846e-04, size: 448, ETA: 0:07:09
+2026-10-07 02:02:46.772 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 6/10, iter: 130/157, gpu mem: 8071Mb, mem: 8.0Gb, iter_time: 0.411s, data_time: 0.004s, total_loss: 5.9, iou_loss: 2.3, l1_loss: 0.0, conf_loss: 2.4, cls_loss: 1.2, lr: 3.733e-04, size: 384, ETA: 0:07:00
+2026-10-07 02:02:51.551 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 6/10, iter: 140/157, gpu mem: 8071Mb, mem: 7.9Gb, iter_time: 0.477s, data_time: 0.002s, total_loss: 5.8, iou_loss: 2.2, l1_loss: 0.0, conf_loss: 2.5, cls_loss: 1.1, lr: 3.620e-04, size: 608, ETA: 0:06:53
+2026-10-07 02:02:56.284 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 6/10, iter: 150/157, gpu mem: 8071Mb, mem: 7.9Gb, iter_time: 0.470s, data_time: 0.002s, total_loss: 5.6, iou_loss: 2.3, l1_loss: 0.0, conf_loss: 2.2, cls_loss: 1.1, lr: 3.509e-04, size: 384, ETA: 0:06:45
+2026-10-07 02:02:58.919 | INFO     | yolox.core.trainer:save_ckpt:402 - Save weights to /content/edge_ai_workspace/YOLOX_outputs/nas_r1b/hardswish_dreduced_k5
+2026-10-07 02:02:59.074 | INFO     | yolox.core.trainer:before_epoch:218 - ---> start train epoch7
+2026-10-07 02:03:02.687 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 7/10, iter: 10/157, gpu mem: 8071Mb, mem: 8.0Gb, iter_time: 0.360s, data_time: 0.002s, total_loss: 5.6, iou_loss: 2.3, l1_loss: 0.0, conf_loss: 2.2, cls_loss: 1.1, lr: 3.323e-04, size: 384, ETA: 0:06:31
+2026-10-07 02:03:06.625 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 7/10, iter: 20/157, gpu mem: 8071Mb, mem: 8.0Gb, iter_time: 0.393s, data_time: 0.002s, total_loss: 5.5, iou_loss: 2.2, l1_loss: 0.0, conf_loss: 2.2, cls_loss: 1.1, lr: 3.215e-04, size: 448, ETA: 0:06:24
+2026-10-07 02:03:10.932 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 7/10, iter: 30/157, gpu mem: 8071Mb, mem: 8.0Gb, iter_time: 0.430s, data_time: 0.002s, total_loss: 5.7, iou_loss: 2.2, l1_loss: 0.0, conf_loss: 2.4, cls_loss: 1.2, lr: 3.108e-04, size: 480, ETA: 0:06:16
+2026-10-07 02:03:15.692 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 7/10, iter: 40/157, gpu mem: 8071Mb, mem: 7.9Gb, iter_time: 0.475s, data_time: 0.002s, total_loss: 5.6, iou_loss: 2.2, l1_loss: 0.0, conf_loss: 2.4, cls_loss: 1.1, lr: 3.003e-04, size: 576, ETA: 0:06:09
+2026-10-07 02:03:20.864 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 7/10, iter: 50/157, gpu mem: 8071Mb, mem: 8.0Gb, iter_time: 0.516s, data_time: 0.002s, total_loss: 5.5, iou_loss: 2.1, l1_loss: 0.0, conf_loss: 2.2, cls_loss: 1.1, lr: 2.899e-04, size: 480, ETA: 0:06:02
+2026-10-07 02:03:25.731 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 7/10, iter: 60/157, gpu mem: 8071Mb, mem: 7.9Gb, iter_time: 0.486s, data_time: 0.002s, total_loss: 5.7, iou_loss: 2.1, l1_loss: 0.0, conf_loss: 2.4, cls_loss: 1.2, lr: 2.797e-04, size: 576, ETA: 0:05:55
+2026-10-07 02:03:30.805 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 7/10, iter: 70/157, gpu mem: 8071Mb, mem: 8.0Gb, iter_time: 0.506s, data_time: 0.002s, total_loss: 5.6, iou_loss: 2.2, l1_loss: 0.0, conf_loss: 2.4, cls_loss: 1.1, lr: 2.696e-04, size: 480, ETA: 0:05:48
+2026-10-07 02:03:35.530 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 7/10, iter: 80/157, gpu mem: 8071Mb, mem: 7.9Gb, iter_time: 0.471s, data_time: 0.002s, total_loss: 5.7, iou_loss: 2.1, l1_loss: 0.0, conf_loss: 2.4, cls_loss: 1.1, lr: 2.596e-04, size: 640, ETA: 0:05:41
+2026-10-07 02:03:41.096 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 7/10, iter: 90/157, gpu mem: 8071Mb, mem: 7.9Gb, iter_time: 0.555s, data_time: 0.002s, total_loss: 5.4, iou_loss: 2.1, l1_loss: 0.0, conf_loss: 2.2, cls_loss: 1.1, lr: 2.499e-04, size: 448, ETA: 0:05:34
+2026-10-07 02:03:45.130 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 7/10, iter: 100/157, gpu mem: 8071Mb, mem: 8.0Gb, iter_time: 0.402s, data_time: 0.002s, total_loss: 5.9, iou_loss: 2.4, l1_loss: 0.0, conf_loss: 2.4, cls_loss: 1.2, lr: 2.403e-04, size: 352, ETA: 0:05:27
+2026-10-07 02:03:49.328 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 7/10, iter: 110/157, gpu mem: 8071Mb, mem: 7.9Gb, iter_time: 0.419s, data_time: 0.004s, total_loss: 5.7, iou_loss: 2.3, l1_loss: 0.0, conf_loss: 2.4, cls_loss: 1.0, lr: 2.308e-04, size: 576, ETA: 0:05:20
+2026-10-07 02:03:54.378 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 7/10, iter: 120/157, gpu mem: 8071Mb, mem: 7.9Gb, iter_time: 0.504s, data_time: 0.002s, total_loss: 5.5, iou_loss: 2.2, l1_loss: 0.0, conf_loss: 2.3, cls_loss: 1.0, lr: 2.216e-04, size: 448, ETA: 0:05:13
+2026-10-07 02:03:58.772 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 7/10, iter: 130/157, gpu mem: 8071Mb, mem: 8.0Gb, iter_time: 0.438s, data_time: 0.004s, total_loss: 5.4, iou_loss: 2.1, l1_loss: 0.0, conf_loss: 2.2, cls_loss: 1.1, lr: 2.126e-04, size: 416, ETA: 0:05:06
+2026-10-07 02:04:03.123 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 7/10, iter: 140/157, gpu mem: 8071Mb, mem: 7.9Gb, iter_time: 0.434s, data_time: 0.002s, total_loss: 5.3, iou_loss: 2.1, l1_loss: 0.0, conf_loss: 2.3, cls_loss: 1.0, lr: 2.037e-04, size: 544, ETA: 0:04:59
+2026-10-07 02:04:07.947 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 7/10, iter: 150/157, gpu mem: 8071Mb, mem: 7.9Gb, iter_time: 0.481s, data_time: 0.002s, total_loss: 5.9, iou_loss: 2.3, l1_loss: 0.0, conf_loss: 2.4, cls_loss: 1.2, lr: 1.951e-04, size: 384, ETA: 0:04:52
+2026-10-07 02:04:10.635 | INFO     | yolox.core.trainer:save_ckpt:402 - Save weights to /content/edge_ai_workspace/YOLOX_outputs/nas_r1b/hardswish_dreduced_k5
+2026-10-07 02:04:10.774 | INFO     | yolox.core.trainer:before_epoch:218 - ---> start train epoch8
+2026-10-07 02:04:14.639 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 8/10, iter: 10/157, gpu mem: 8071Mb, mem: 8.0Gb, iter_time: 0.386s, data_time: 0.002s, total_loss: 5.4, iou_loss: 2.2, l1_loss: 0.0, conf_loss: 2.1, cls_loss: 1.0, lr: 1.808e-04, size: 352, ETA: 0:04:40
+2026-10-07 02:04:19.535 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 8/10, iter: 20/157, gpu mem: 8071Mb, mem: 8.0Gb, iter_time: 0.489s, data_time: 0.002s, total_loss: 5.3, iou_loss: 2.1, l1_loss: 0.0, conf_loss: 2.2, cls_loss: 1.0, lr: 1.727e-04, size: 544, ETA: 0:04:34
+2026-10-07 02:04:23.836 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 8/10, iter: 30/157, gpu mem: 8071Mb, mem: 8.0Gb, iter_time: 0.429s, data_time: 0.002s, total_loss: 5.6, iou_loss: 2.3, l1_loss: 0.0, conf_loss: 2.2, cls_loss: 1.0, lr: 1.649e-04, size: 448, ETA: 0:04:27
+2026-10-07 02:04:28.395 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 8/10, iter: 40/157, gpu mem: 8071Mb, mem: 8.0Gb, iter_time: 0.455s, data_time: 0.002s, total_loss: 5.9, iou_loss: 2.2, l1_loss: 0.0, conf_loss: 2.5, cls_loss: 1.2, lr: 1.573e-04, size: 480, ETA: 0:04:20
+2026-10-07 02:04:33.320 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 8/10, iter: 50/157, gpu mem: 8071Mb, mem: 8.0Gb, iter_time: 0.491s, data_time: 0.002s, total_loss: 5.2, iou_loss: 2.0, l1_loss: 0.0, conf_loss: 2.2, cls_loss: 1.0, lr: 1.499e-04, size: 544, ETA: 0:04:14
+2026-10-07 02:04:38.666 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 8/10, iter: 60/157, gpu mem: 8071Mb, mem: 7.9Gb, iter_time: 0.534s, data_time: 0.002s, total_loss: 5.8, iou_loss: 2.2, l1_loss: 0.0, conf_loss: 2.5, cls_loss: 1.1, lr: 1.427e-04, size: 576, ETA: 0:04:08
+2026-10-07 02:04:43.953 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 8/10, iter: 70/157, gpu mem: 8071Mb, mem: 8.0Gb, iter_time: 0.528s, data_time: 0.002s, total_loss: 5.5, iou_loss: 2.0, l1_loss: 0.0, conf_loss: 2.4, cls_loss: 1.1, lr: 1.358e-04, size: 576, ETA: 0:04:01
+2026-10-07 02:04:49.647 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 8/10, iter: 80/157, gpu mem: 8071Mb, mem: 8.0Gb, iter_time: 0.568s, data_time: 0.002s, total_loss: 5.7, iou_loss: 2.1, l1_loss: 0.0, conf_loss: 2.5, cls_loss: 1.1, lr: 1.291e-04, size: 640, ETA: 0:03:55
+2026-10-07 02:04:55.473 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 8/10, iter: 90/157, gpu mem: 8071Mb, mem: 7.9Gb, iter_time: 0.582s, data_time: 0.002s, total_loss: 5.6, iou_loss: 2.1, l1_loss: 0.0, conf_loss: 2.4, cls_loss: 1.1, lr: 1.226e-04, size: 640, ETA: 0:03:49
+2026-10-07 02:05:01.237 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 8/10, iter: 100/157, gpu mem: 8071Mb, mem: 7.9Gb, iter_time: 0.575s, data_time: 0.002s, total_loss: 5.3, iou_loss: 2.0, l1_loss: 0.0, conf_loss: 2.4, cls_loss: 1.0, lr: 1.164e-04, size: 640, ETA: 0:03:43
+2026-10-07 02:05:05.968 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 8/10, iter: 110/157, gpu mem: 8071Mb, mem: 8.0Gb, iter_time: 0.472s, data_time: 0.002s, total_loss: 5.4, iou_loss: 2.1, l1_loss: 0.0, conf_loss: 2.2, cls_loss: 1.1, lr: 1.105e-04, size: 480, ETA: 0:03:36
+2026-10-07 02:05:09.828 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 8/10, iter: 120/157, gpu mem: 8071Mb, mem: 7.9Gb, iter_time: 0.385s, data_time: 0.002s, total_loss: 5.3, iou_loss: 2.1, l1_loss: 0.0, conf_loss: 2.2, cls_loss: 1.1, lr: 1.048e-04, size: 384, ETA: 0:03:30
+2026-10-07 02:05:13.445 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 8/10, iter: 130/157, gpu mem: 8071Mb, mem: 7.9Gb, iter_time: 0.361s, data_time: 0.004s, total_loss: 5.6, iou_loss: 2.2, l1_loss: 0.0, conf_loss: 2.2, cls_loss: 1.1, lr: 9.942e-05, size: 320, ETA: 0:03:23
+2026-10-07 02:05:17.204 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 8/10, iter: 140/157, gpu mem: 8071Mb, mem: 8.0Gb, iter_time: 0.375s, data_time: 0.002s, total_loss: 5.6, iou_loss: 2.2, l1_loss: 0.0, conf_loss: 2.2, cls_loss: 1.2, lr: 9.428e-05, size: 384, ETA: 0:03:17
+2026-10-07 02:05:21.059 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 8/10, iter: 150/157, gpu mem: 8071Mb, mem: 8.0Gb, iter_time: 0.384s, data_time: 0.002s, total_loss: 5.5, iou_loss: 2.2, l1_loss: 0.0, conf_loss: 2.2, cls_loss: 1.1, lr: 8.941e-05, size: 384, ETA: 0:03:10
+2026-10-07 02:05:23.820 | INFO     | yolox.core.trainer:save_ckpt:402 - Save weights to /content/edge_ai_workspace/YOLOX_outputs/nas_r1b/hardswish_dreduced_k5
+2026-10-07 02:05:23.952 | INFO     | yolox.core.trainer:before_epoch:218 - ---> start train epoch9
+2026-10-07 02:05:23.952 | INFO     | yolox.core.trainer:before_epoch:221 - --->No mosaic aug now!
+2026-10-07 02:05:23.953 | INFO     | yolox.core.trainer:before_epoch:223 - --->Add additional L1 loss now!
+2026-10-07 02:05:23.953 | INFO     | yolox.core.trainer:save_ckpt:402 - Save weights to /content/edge_ai_workspace/YOLOX_outputs/nas_r1b/hardswish_dreduced_k5
+2026-10-07 02:05:29.489 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 9/10, iter: 10/157, gpu mem: 8071Mb, mem: 7.8Gb, iter_time: 0.545s, data_time: 0.002s, total_loss: 6.4, iou_loss: 2.1, l1_loss: 0.9, conf_loss: 2.3, cls_loss: 1.1, lr: 8.175e-05, size: 640, ETA: 0:03:00
+2026-10-07 02:05:34.953 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 9/10, iter: 20/157, gpu mem: 8071Mb, mem: 7.9Gb, iter_time: 0.545s, data_time: 0.002s, total_loss: inf, iou_loss: 2.1, l1_loss: inf, conf_loss: 2.2, cls_loss: 1.0, lr: 7.762e-05, size: 512, ETA: 0:02:54
+2026-10-07 02:05:39.426 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 9/10, iter: 30/157, gpu mem: 8071Mb, mem: 7.9Gb, iter_time: 0.446s, data_time: 0.002s, total_loss: 5.8, iou_loss: 2.1, l1_loss: 0.8, conf_loss: 2.0, cls_loss: 0.9, lr: 7.376e-05, size: 384, ETA: 0:02:47
+2026-10-07 02:05:43.439 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 9/10, iter: 40/157, gpu mem: 8071Mb, mem: 7.9Gb, iter_time: 0.400s, data_time: 0.002s, total_loss: 5.8, iou_loss: 2.1, l1_loss: 0.7, conf_loss: 2.0, cls_loss: 0.9, lr: 7.020e-05, size: 352, ETA: 0:02:41
+2026-10-07 02:05:47.383 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 9/10, iter: 50/157, gpu mem: 8071Mb, mem: 7.9Gb, iter_time: 0.393s, data_time: 0.002s, total_loss: 5.8, iou_loss: 2.1, l1_loss: 0.7, conf_loss: 2.1, cls_loss: 0.9, lr: 6.691e-05, size: 416, ETA: 0:02:35
+2026-10-07 02:05:51.779 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 9/10, iter: 60/157, gpu mem: 8071Mb, mem: 7.9Gb, iter_time: 0.439s, data_time: 0.002s, total_loss: 5.8, iou_loss: 2.1, l1_loss: 0.7, conf_loss: 2.1, cls_loss: 0.9, lr: 6.391e-05, size: 448, ETA: 0:02:29
+2026-10-07 02:05:56.261 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 9/10, iter: 70/157, gpu mem: 8071Mb, mem: 7.9Gb, iter_time: 0.447s, data_time: 0.002s, total_loss: 5.8, iou_loss: 2.0, l1_loss: 0.8, conf_loss: 2.1, cls_loss: 0.9, lr: 6.120e-05, size: 448, ETA: 0:02:22
+2026-10-07 02:06:01.020 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 9/10, iter: 80/157, gpu mem: 8071Mb, mem: 7.9Gb, iter_time: 0.475s, data_time: 0.002s, total_loss: 5.8, iou_loss: 2.1, l1_loss: 0.8, conf_loss: 2.0, cls_loss: 0.9, lr: 5.878e-05, size: 512, ETA: 0:02:16
+2026-10-07 02:06:05.279 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 9/10, iter: 90/157, gpu mem: 8071Mb, mem: 7.9Gb, iter_time: 0.425s, data_time: 0.002s, total_loss: 6.0, iou_loss: 2.2, l1_loss: 0.8, conf_loss: 2.1, cls_loss: 1.0, lr: 5.665e-05, size: 352, ETA: 0:02:10
+2026-10-07 02:06:10.119 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 9/10, iter: 100/157, gpu mem: 8071Mb, mem: 8.0Gb, iter_time: 0.483s, data_time: 0.002s, total_loss: 5.6, iou_loss: 1.9, l1_loss: 0.7, conf_loss: 2.1, cls_loss: 0.8, lr: 5.482e-05, size: 576, ETA: 0:02:04
+2026-10-07 02:06:14.594 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 9/10, iter: 110/157, gpu mem: 8071Mb, mem: 7.9Gb, iter_time: 0.447s, data_time: 0.002s, total_loss: 6.5, iou_loss: 2.2, l1_loss: 0.8, conf_loss: 2.4, cls_loss: 1.0, lr: 5.328e-05, size: 320, ETA: 0:01:58
+2026-10-07 02:06:19.015 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 9/10, iter: 120/157, gpu mem: 8071Mb, mem: 7.9Gb, iter_time: 0.441s, data_time: 0.002s, total_loss: 5.4, iou_loss: 1.9, l1_loss: 0.8, conf_loss: 2.0, cls_loss: 0.8, lr: 5.203e-05, size: 512, ETA: 0:01:52
+2026-10-07 02:06:23.642 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 9/10, iter: 130/157, gpu mem: 8071Mb, mem: 7.9Gb, iter_time: 0.462s, data_time: 0.004s, total_loss: 5.9, iou_loss: 2.0, l1_loss: 0.8, conf_loss: 2.2, cls_loss: 1.0, lr: 5.108e-05, size: 448, ETA: 0:01:46
+2026-10-07 02:06:29.008 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 9/10, iter: 140/157, gpu mem: 8071Mb, mem: 7.9Gb, iter_time: 0.536s, data_time: 0.002s, total_loss: 6.5, iou_loss: 2.2, l1_loss: 0.9, conf_loss: 2.4, cls_loss: 1.0, lr: 5.043e-05, size: 640, ETA: 0:01:40
+2026-10-07 02:06:33.821 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 9/10, iter: 150/157, gpu mem: 8071Mb, mem: 7.9Gb, iter_time: 0.480s, data_time: 0.002s, total_loss: 5.9, iou_loss: 2.1, l1_loss: 0.8, conf_loss: 2.1, cls_loss: 0.9, lr: 5.007e-05, size: 352, ETA: 0:01:34
+2026-10-07 02:06:37.118 | INFO     | yolox.core.trainer:save_ckpt:402 - Save weights to /content/edge_ai_workspace/YOLOX_outputs/nas_r1b/hardswish_dreduced_k5
+2026-10-07 02:06:37.233 | INFO     | yolox.core.trainer:save_ckpt:402 - Save weights to /content/edge_ai_workspace/YOLOX_outputs/nas_r1b/hardswish_dreduced_k5
+2026-10-07 02:06:37.387 | INFO     | yolox.core.trainer:before_epoch:218 - ---> start train epoch10
+2026-10-07 02:06:43.180 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 10/10, iter: 10/157, gpu mem: 8071Mb, mem: 7.9Gb, iter_time: 0.578s, data_time: 0.002s, total_loss: 5.5, iou_loss: 1.9, l1_loss: 0.8, conf_loss: 2.0, cls_loss: 0.8, lr: 5.000e-05, size: 608, ETA: 0:01:25
+2026-10-07 02:06:49.026 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 10/10, iter: 20/157, gpu mem: 8071Mb, mem: 8.0Gb, iter_time: 0.584s, data_time: 0.002s, total_loss: 6.2, iou_loss: 2.1, l1_loss: 0.9, conf_loss: 2.3, cls_loss: 0.9, lr: 5.000e-05, size: 640, ETA: 0:01:19
+2026-10-07 02:06:54.933 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 10/10, iter: 30/157, gpu mem: 8071Mb, mem: 7.9Gb, iter_time: 0.590s, data_time: 0.002s, total_loss: 5.6, iou_loss: 2.0, l1_loss: 0.8, conf_loss: 2.1, cls_loss: 0.8, lr: 5.000e-05, size: 608, ETA: 0:01:13
+2026-10-07 02:07:00.388 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 10/10, iter: 40/157, gpu mem: 8071Mb, mem: 7.9Gb, iter_time: 0.544s, data_time: 0.002s, total_loss: 5.7, iou_loss: 2.0, l1_loss: 0.8, conf_loss: 2.0, cls_loss: 0.9, lr: 5.000e-05, size: 448, ETA: 0:01:07
+2026-10-07 02:07:05.106 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 10/10, iter: 50/157, gpu mem: 8071Mb, mem: 7.9Gb, iter_time: 0.471s, data_time: 0.002s, total_loss: 5.7, iou_loss: 1.9, l1_loss: 0.8, conf_loss: 2.1, cls_loss: 0.9, lr: 5.000e-05, size: 576, ETA: 0:01:01
+2026-10-07 02:07:10.244 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 10/10, iter: 60/157, gpu mem: 8071Mb, mem: 7.9Gb, iter_time: 0.513s, data_time: 0.002s, total_loss: 6.1, iou_loss: 2.2, l1_loss: 0.8, conf_loss: 2.2, cls_loss: 0.9, lr: 5.000e-05, size: 384, ETA: 0:00:55
+2026-10-07 02:07:14.698 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 10/10, iter: 70/157, gpu mem: 8071Mb, mem: 7.9Gb, iter_time: 0.444s, data_time: 0.002s, total_loss: 5.8, iou_loss: 2.0, l1_loss: 0.8, conf_loss: 2.1, cls_loss: 0.9, lr: 5.000e-05, size: 608, ETA: 0:00:50
+2026-10-07 02:07:20.349 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 10/10, iter: 80/157, gpu mem: 8071Mb, mem: 7.9Gb, iter_time: 0.564s, data_time: 0.002s, total_loss: 5.7, iou_loss: 1.9, l1_loss: 0.8, conf_loss: 2.1, cls_loss: 0.9, lr: 5.000e-05, size: 576, ETA: 0:00:44
+2026-10-07 02:07:25.603 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 10/10, iter: 90/157, gpu mem: 8071Mb, mem: 7.9Gb, iter_time: 0.524s, data_time: 0.002s, total_loss: 6.1, iou_loss: 2.2, l1_loss: 0.8, conf_loss: 2.2, cls_loss: 1.0, lr: 5.000e-05, size: 448, ETA: 0:00:38
+2026-10-07 02:07:30.520 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 10/10, iter: 100/157, gpu mem: 8071Mb, mem: 7.9Gb, iter_time: 0.491s, data_time: 0.002s, total_loss: 6.0, iou_loss: 2.0, l1_loss: 0.8, conf_loss: 2.3, cls_loss: 0.9, lr: 5.000e-05, size: 608, ETA: 0:00:32
+2026-10-07 02:07:35.912 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 10/10, iter: 110/157, gpu mem: 8071Mb, mem: 7.9Gb, iter_time: 0.538s, data_time: 0.002s, total_loss: 6.2, iou_loss: 2.1, l1_loss: 0.8, conf_loss: 2.2, cls_loss: 1.1, lr: 5.000e-05, size: 384, ETA: 0:00:27
+2026-10-07 02:07:40.193 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 10/10, iter: 120/157, gpu mem: 8071Mb, mem: 7.9Gb, iter_time: 0.427s, data_time: 0.002s, total_loss: 5.7, iou_loss: 2.0, l1_loss: 0.8, conf_loss: 2.1, cls_loss: 0.9, lr: 5.000e-05, size: 480, ETA: 0:00:21
+2026-10-07 02:07:45.060 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 10/10, iter: 130/157, gpu mem: 8071Mb, mem: 7.9Gb, iter_time: 0.486s, data_time: 0.004s, total_loss: 5.8, iou_loss: 2.1, l1_loss: 0.8, conf_loss: 2.1, cls_loss: 0.8, lr: 5.000e-05, size: 512, ETA: 0:00:15
+2026-10-07 02:07:50.142 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 10/10, iter: 140/157, gpu mem: 8071Mb, mem: 7.9Gb, iter_time: 0.507s, data_time: 0.002s, total_loss: 6.0, iou_loss: 2.1, l1_loss: 0.8, conf_loss: 2.2, cls_loss: 0.9, lr: 5.000e-05, size: 544, ETA: 0:00:09
+2026-10-07 02:07:55.129 | INFO     | yolox.core.trainer:after_iter:270 - epoch: 10/10, iter: 150/157, gpu mem: 8071Mb, mem: 7.9Gb, iter_time: 0.498s, data_time: 0.002s, total_loss: 5.9, iou_loss: 2.1, l1_loss: 0.8, conf_loss: 2.1, cls_loss: 0.9, lr: 5.000e-05, size: 416, ETA: 0:00:04
+2026-10-07 02:07:58.003 | INFO     | yolox.core.trainer:save_ckpt:402 - Save weights to /content/edge_ai_workspace/YOLOX_outputs/nas_r1b/hardswish_dreduced_k5
+2026-10-07 02:07:58.093 | INFO     | yolox.core.trainer:save_ckpt:402 - Save weights to /content/edge_ai_workspace/YOLOX_outputs/nas_r1b/hardswish_dreduced_k5

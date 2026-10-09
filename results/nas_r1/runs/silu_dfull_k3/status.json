@@ -1,0 +1,33 @@
+{
+  "run_id": "silu_dfull_k3",
+  "status": "trained",
+  "attempts": [
+    {
+      "start_utc": "2026-10-06T22:20:25+00:00",
+      "resume_from_epoch": null,
+      "gpu": "NVIDIA L4, 23034 MiB, 580.82.07",
+      "repo_commit": "dbf2199",
+      "end_utc": "2026-10-06T22:36:07+00:00",
+      "wall_s": 941.8
+    }
+  ],
+  "evals": {
+    "416": {
+      "map5095": 20.4,
+      "ap50": 34.5,
+      "ap_small": 6.2,
+      "ap_medium": 21.2,
+      "ap_large": 32.3,
+      "gpu_forward_ms": 1.83,
+      "gpu_nms_ms": 0.89,
+      "params_m": 0.91,
+      "gflops": 1.11,
+      "eval_s": 101.6,
+      "evaluated_utc": "2026-10-06T22:37:48+00:00"
+    }
+  },
+  "updated_utc": "2026-10-06T22:37:48+00:00",
+  "train_s": 941.8,
+  "trained_utc": "2026-10-06T22:36:07+00:00",
+  "repo_commit": "dbf2199"
+}

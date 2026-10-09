@@ -1,0 +1,59 @@
+{
+  "run_id": "silu_dfull_k3",
+  "status": "evaluated",
+  "attempts": [
+    {
+      "start_utc": "2026-10-06T22:49:31+00:00",
+      "resume_from_epoch": null,
+      "gpu": "NVIDIA L4, 23034 MiB, 580.82.07",
+      "repo_commit": "51cacab",
+      "end_utc": "2026-10-06T23:05:11+00:00",
+      "wall_s": 940.0
+    }
+  ],
+  "evals": {
+    "416": {
+      "map5095": 24.5,
+      "ap50": 39.8,
+      "ap_small": 7.7,
+      "ap_medium": 25.7,
+      "ap_large": 38.8,
+      "gpu_forward_ms": 1.37,
+      "gpu_nms_ms": 0.87,
+      "params_m": 0.91,
+      "gflops": 1.11,
+      "eval_s": 80.4,
+      "evaluated_utc": "2026-10-06T23:06:32+00:00"
+    },
+    "320": {
+      "map5095": 21.4,
+      "ap50": 35.3,
+      "ap_small": 4.9,
+      "ap_medium": 20.8,
+      "ap_large": 37.8,
+      "gpu_forward_ms": 1.64,
+      "gpu_nms_ms": 0.85,
+      "params_m": 0.91,
+      "gflops": 0.66,
+      "eval_s": 95.4,
+      "evaluated_utc": "2026-10-07T06:27:14+00:00"
+    },
+    "512": {
+      "map5095": 25.7,
+      "ap50": 41.8,
+      "ap_small": 10.1,
+      "ap_medium": 27.9,
+      "ap_large": 37.0,
+      "gpu_forward_ms": 1.96,
+      "gpu_nms_ms": 0.94,
+      "params_m": 0.91,
+      "gflops": 1.69,
+      "eval_s": 92.7,
+      "evaluated_utc": "2026-10-07T06:28:46+00:00"
+    }
+  },
+  "updated_utc": "2026-10-07T06:28:46+00:00",
+  "train_s": 940.0,
+  "trained_utc": "2026-10-06T23:05:11+00:00",
+  "repo_commit": "51cacab"
+}

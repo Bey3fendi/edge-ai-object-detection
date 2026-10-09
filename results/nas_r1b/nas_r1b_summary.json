@@ -1,0 +1,53 @@
+{
+  "round": "nas_r1b",
+  "written_utc": "2026-10-07T07:21:11+00:00",
+  "control_noise_rep2_minus_rep1": {
+    "320": -0.3,
+    "416": -0.1,
+    "512": 0.0
+  },
+  "budget_rule": "delta_vs_control >= -1.0 (Karar 5; kontrol silu_dfull_k3 aynı çözünürlükte)",
+  "n_candidates": 36,
+  "in_budget": [
+    "silu_dfull_k3_s320",
+    "hardswish_dfull_k3_s320",
+    "silu_dreduced_k5_s320",
+    "silu_dfull_k5_s320",
+    "silu_dfull_k3_s416",
+    "silu_dreduced_k5_s416",
+    "silu_dfull_k5_s416",
+    "hardswish_dfull_k5_s416",
+    "silu_dfull_k3_s512",
+    "hardswish_dfull_k3_s512",
+    "silu_dreduced_k5_s512",
+    "silu_dfull_k5_s512",
+    "hardswish_dfull_k5_s512"
+  ],
+  "out_of_budget": [
+    "silu_dreduced_k3_s320",
+    "relu_dreduced_k3_s320",
+    "hardswish_dreduced_k3_s320",
+    "relu_dfull_k3_s320",
+    "relu_dreduced_k5_s320",
+    "hardswish_dreduced_k5_s320",
+    "relu_dfull_k5_s320",
+    "hardswish_dfull_k5_s320",
+    "silu_dreduced_k3_s416",
+    "relu_dreduced_k3_s416",
+    "hardswish_dreduced_k3_s416",
+    "relu_dfull_k3_s416",
+    "hardswish_dfull_k3_s416",
+    "relu_dreduced_k5_s416",
+    "hardswish_dreduced_k5_s416",
+    "relu_dfull_k5_s416",
+    "silu_dreduced_k3_s512",
+    "relu_dreduced_k3_s512",
+    "hardswish_dreduced_k3_s512",
+    "relu_dfull_k3_s512",
+    "relu_dreduced_k5_s512",
+    "hardswish_dreduced_k5_s512",
+    "relu_dfull_k5_s512"
+  ],
+  "train_hours": 3.35,
+  "cu_total": 6.57
+}

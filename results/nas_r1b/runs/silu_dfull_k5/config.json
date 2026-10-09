@@ -1,0 +1,97 @@
+{
+  "run_id": "silu_dfull_k5",
+  "arch_params": {
+    "nas_act": "silu",
+    "nas_depth": "full",
+    "nas_dw_k": 5
+  },
+  "surgery": {
+    "pretrained_loaded": true,
+    "act_swapped": 0,
+    "csp_blocks": {},
+    "dw_widened": 30
+  },
+  "model_info": {
+    "320": {
+      "params_m": 0.94,
+      "gflops": 0.7
+    },
+    "416": {
+      "params_m": 0.94,
+      "gflops": 1.18
+    },
+    "512": {
+      "params_m": 0.94,
+      "gflops": 1.79
+    }
+  },
+  "exp": {
+    "seed": null,
+    "output_dir": "./YOLOX_outputs",
+    "print_interval": 10,
+    "eval_interval": 10000,
+    "dataset": null,
+    "num_classes": 80,
+    "depth": 0.33,
+    "width": 0.25,
+    "act": "silu",
+    "data_num_workers": 8,
+    "input_size": [
+      416,
+      416
+    ],
+    "multiscale_range": 5,
+    "data_dir": "/content/datasets/COCO",
+    "train_ann": "instances_train2017_10k.json",
+    "val_ann": "instances_val2017.json",
+    "test_ann": "instances_test2017.json",
+    "mosaic_prob": 0.5,
+    "mixup_prob": 1.0,
+    "hsv_prob": 1.0,
+    "flip_prob": 0.5,
+    "degrees": 10.0,
+    "translate": 0.1,
+    "mosaic_scale": [
+      0.5,
+      1.5
+    ],
+    "enable_mixup": false,
+    "mixup_scale": [
+      0.5,
+      1.5
+    ],
+    "shear": 2.0,
+    "warmup_epochs": 1,
+    "max_epoch": 10,
+    "warmup_lr": 0,
+    "min_lr_ratio": 0.05,
+    "basic_lr_per_img": 1.5625e-05,
+    "scheduler": "yoloxwarmcos",
+    "no_aug_epochs": 1,
+    "ema": true,
+    "weight_decay": 0.0005,
+    "momentum": 0.9,
+    "save_history_ckpt": false,
+    "exp_name": "nano_macro",
+    "test_size": [
+      416,
+      416
+    ],
+    "test_conf": 0.01,
+    "nmsthre": 0.65,
+    "random_size": [
+      10,
+      20
+    ],
+    "nas_act": "silu",
+    "nas_depth": "full",
+    "nas_dw_k": 5,
+    "nas_pretrained": "/content/yolox_nano.pth",
+    "nas_mirror_dir": ""
+  },
+  "train_cmd_fixed": {
+    "batch": 64,
+    "fp16": true,
+    "devices": 1
+  }
+}
