@@ -27,7 +27,12 @@ INPUT_NAME, OUTPUT_NAME = "images", "output"
 ORT_THREADS = 4               # AGENTS.md: ORT CPU ölçümlerinde intra_op_num_threads = 4
 STRIDES = (8, 16, 32)
 NUM_OUTPUTS = 85              # 4 kutu + 1 nesnellik + 80 sınıf
-EQ_RTOL, EQ_ATOL = 1e-3, 1e-3
+# Eşdeğerlik ölçütü kod çözülmüş uzayda (Furkan, 2026-10-09): ham kutu regresyonunda float32 toplama sırası
+# farkı (ORT Conv+BN birleştirmesi) 1e-3'ü aşabiliyor ama piksel karşılığı ~0,03 px. Kutular, referans skoru
+# değerlendirmedeki conf eşiğini (0,001) geçen anchor'larda karşılaştırılır; skorlar tüm anchor'larda.
+EQ_MAX_BOX_PX = 0.1           # kutu merkezi ve genişlik/yükseklik farkı, piksel
+EQ_MAX_SCORE = 1e-4           # obj × cls skor farkı
+EQ_SCORE_CONF = 0.001         # notebook 02 eval.py --conf
 # Dışa aktarma manifestinde değişmemesi gereken alanlar (aynı turun ONNX'leri aynı yolla üretilmeli)
 EXPORT_FINGERPRINT_KEYS = ("round", "candidates", "export_protocol", "exp_file_sha256", "yolox_commit",
                            "versions")
@@ -144,6 +149,31 @@ def graph_info(path):
             "n_nodes": len(m.graph.node), "op_counts": dict(sorted(ops.items()))}
 
 
+def decode(raw, res):
+    """YOLOX head kod çözmesi (decode_in_inference ile aynı): xy = (ham + ızgara) × adım, wh = exp(ham) × adım."""
+    import numpy as np
+    grids, strides = [], []
+    for s in STRIDES:
+        n = res // s
+        yv, xv = np.meshgrid(np.arange(n), np.arange(n), indexing="ij")
+        grids.append(np.stack([xv, yv], -1).reshape(-1, 2))
+        strides.append(np.full((n * n, 1), s))
+    grid, stride = np.concatenate(grids), np.concatenate(strides)
+    raw = raw.astype(np.float64)
+    return (raw[:, :2] + grid) * stride, np.exp(raw[:, 2:4]) * stride, raw[:, 4:5] * raw[:, 5:]
+
+
+def decoded_diff(ref, out, res):
+    import numpy as np
+    rxy, rwh, rsc = decode(ref, res)
+    oxy, owh, osc = decode(out, res)
+    keep = rsc.max(1) >= EQ_SCORE_CONF
+    box = float(max(np.abs(rxy - oxy)[keep].max(), np.abs(rwh - owh)[keep].max())) if keep.any() else 0.0
+    score = float(np.abs(rsc - osc).max())
+    return {"max_box_px": box, "max_score_diff": score, "n_scored_anchors": int(keep.sum()),
+            "pass": box <= EQ_MAX_BOX_PX and score <= EQ_MAX_SCORE}
+
+
 def check_equivalence(model, path, inputs):
     """inputs: (ad, 1×3×H×W float32 numpy) listesi. Her giriş için PyTorch ve ORT çıktısını karşılaştırır."""
     import numpy as np
@@ -159,7 +189,7 @@ def check_equivalence(model, path, inputs):
         out = sess.run([OUTPUT_NAME], {INPUT_NAME: x})[0]
         assert out.shape == ref.shape, (out.shape, ref.shape)
         res.append({"input": name, "max_abs_diff": float(np.abs(ref - out).max()),
-                    "allclose": bool(np.allclose(ref, out, rtol=EQ_RTOL, atol=EQ_ATOL))})
+                    **decoded_diff(ref[0], out[0], x.shape[-1])})
     return res
 
 
@@ -202,7 +232,7 @@ def export_candidate(cand, exp_file, ckpt_path, onnx_dir, out_dir, image_paths=(
     assert info["inputs"] == {INPUT_NAME: [1, 3, res, res]}, info["inputs"]
     assert info["outputs"] == {OUTPUT_NAME: [1, n_anchors(res), NUM_OUTPUTS]}, info["outputs"]
     eq = check_equivalence(model, onnx_path, equivalence_inputs(res, image_paths))
-    assert all(e["allclose"] for e in eq), f"{cid}: PyTorch/ORT çıktıları farklı: {eq}"
+    assert all(e["pass"] for e in eq), f"{cid}: PyTorch/ORT çıktıları farklı: {eq}"
     rec = {"candidate_id": cid, "tier": cand["tier"], "selectable": cand["selectable"], "run_id": run_id,
            "resolution": res, "ckpt": os.path.basename(ckpt_path), "ckpt_sha256": ns.sha256(ckpt_path),
            "ckpt_epoch": epoch, "onnx_file": os.path.basename(onnx_path),
@@ -214,7 +244,7 @@ def export_candidate(cand, exp_file, ckpt_path, onnx_dir, out_dir, image_paths=(
 
 EXPORT_FIELDS = ["candidate_id", "tier", "selectable", "run_id", "resolution", "ckpt_epoch", "onnx_file",
                  "onnx_bytes", "onnx_sha256", "ckpt_sha256", "opset", "n_nodes", "op_counts",
-                 "max_abs_diff", "exported_utc"]
+                 "max_abs_diff", "max_box_px", "max_score_diff", "exported_utc"]
 
 
 def rebuild_exports_csv(out_dir, candidate_ids):
@@ -223,7 +253,8 @@ def rebuild_exports_csv(out_dir, candidate_ids):
         rec = ns.read_json(record_path(out_dir, cid))
         if rec:
             rows.append({**rec, "op_counts": json.dumps(rec["op_counts"], sort_keys=True),
-                         "max_abs_diff": max(e["max_abs_diff"] for e in rec["equivalence"])})
+                         **{k: max(e[k] for e in rec["equivalence"])
+                            for k in ("max_abs_diff", "max_box_px", "max_score_diff")}})
     write_csv(os.path.join(out_dir, "exports.csv"), rows, EXPORT_FIELDS)
     return rows
 
