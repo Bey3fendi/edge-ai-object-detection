@@ -214,6 +214,29 @@ def equivalence_inputs(res, image_paths=(), seed=0):
     return xs
 
 
+LATENCY_IMAGE = "000000000139.jpg"   # N4 gecikme girdisi: val2017 ad sırasıyla ilk görsel (eşdeğerlik setinden)
+
+
+def latency_input_name(res):
+    return f"input_s{res}.npy"
+
+
+def write_latency_inputs(image_path, out_dir, resolutions=ns.RESOLUTIONS):
+    """N4 için gerçek görüntü girdisi: ValTransform ile aynı ön işlem, çözünürlük başına 1×3×R×R float32 .npy.
+
+    Cihazda yalnız np.load gerekir (OpenCV yok); tüm cihazlar bit düzeyinde aynı girdiyi kullanır."""
+    import cv2
+    import numpy as np
+    os.makedirs(out_dir, exist_ok=True)
+    img = cv2.imread(image_path)
+    out = []
+    for res in resolutions:
+        path = os.path.join(out_dir, latency_input_name(res))
+        np.save(path, preprocess(img, res))
+        out.append({"resolution": res, "file": os.path.basename(path), "sha256": ns.sha256(path)})
+    return out
+
+
 def record_path(out_dir, cid):
     return os.path.join(out_dir, "candidates", f"{cid}.json")
 

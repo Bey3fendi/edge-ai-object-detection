@@ -7,7 +7,7 @@ paket klasörüdür (`nas_r1b_n4_onnx/`: ONNX'ler, n4_candidates.csv, exports.cs
     python3 scripts/n4_latency.py --pkg ~/nas_r1b_n4_onnx --device jetson_orin_nano_cpu           # ≈65 dk, 19 aday
 
 Protokol (Karar 3 + AGENTS.md): ORT CPUExecutionProvider, intra_op_num_threads = 4, tüm grafik
-eniyilemeleri açık; sabit 1×3×R×R girdi; 100 çıkarım ısınma atılır; ardından 60 sn kararlı ölçüm × 3
+eniyilemeleri açık; girdi gerçek görüntü (val2017, 02b'de ValTransform ile önceden işlenmiş .npy); 100 çıkarım ısınma atılır; ardından 60 sn kararlı ölçüm × 3
 tekrar; rapor = tekrar ortalamalarının ortalaması ± std. Ölçülen pencere yalnız `session.run` (model
 gecikmesi; ön işlem ve NMS hariç — seçim ölçütü bu, uçtan uca FPS ayrı aşamada).
 
@@ -38,7 +38,7 @@ import nas_export as nx   # noqa: E402  (torch/onnx yalnız dışa aktarma fonks
 
 PROTOCOL = {"warmup": 100, "duration_s": 60.0, "repeats": 3, "intra_op_threads": nx.ORT_THREADS,
             "inter_op_threads": 1, "execution_mode": "sequential", "graph_optimization": "ORT_ENABLE_ALL",
-            "provider": "CPUExecutionProvider", "input": "sabit tohumlu U(0,255) float32, 1x3xRxR",
+            "provider": "CPUExecutionProvider", "input": f"val2017 {nx.LATENCY_IMAGE}, ValTransform ön işlemi, 1x3xRxR float32 (paket inputs/)",
             "window": "session.run (yalnız model)", "order_seed": 0}
 SMOKE = {"warmup": 10, "duration_s": 5.0, "repeats": 1}
 FINGERPRINT_KEYS = ("device", "protocol", "candidates", "versions", "device_settings")
@@ -139,7 +139,7 @@ def pct(xs, q):
     return xs[min(len(xs) - 1, int(round(q * (len(xs) - 1))))]
 
 
-def run_one(onnx_path, res, warmup, duration_s, repeats, tegrastats):
+def run_one(onnx_path, input_path, res, warmup, duration_s, repeats, tegrastats):
     import numpy as np
     import onnxruntime as ort
     so = ort.SessionOptions()
@@ -150,7 +150,8 @@ def run_one(onnx_path, res, warmup, duration_s, repeats, tegrastats):
     t0 = time.perf_counter()
     sess = ort.InferenceSession(onnx_path, so, providers=[PROTOCOL["provider"]])
     load_s = time.perf_counter() - t0
-    x = (np.random.default_rng(0).random((1, 3, res, res)) * 255).astype(np.float32)
+    x = np.load(input_path)
+    assert x.shape == (1, 3, res, res) and x.dtype == np.float32, (x.shape, x.dtype)
     feed = {nx.INPUT_NAME: x}
     out = sess.run([nx.OUTPUT_NAME], feed)[0]
     assert out.shape == (1, nx.n_anchors(res), nx.NUM_OUTPUTS), out.shape
@@ -222,6 +223,9 @@ def load_package(pkg):
         assert name in sums, f"{name} pakette yok"
         c["onnx_path"] = os.path.join(pkg, name)
         c["onnx_sha256"] = sums[name]
+        inp = f"inputs/{nx.latency_input_name(c['resolution'])}"
+        assert inp in sums, f"{inp} pakette yok (02b hücre 9 gerçek görüntü girdisini ekler)"
+        c["input_path"], c["input_sha256"] = os.path.join(pkg, inp), sums[inp]
     return cands
 
 
@@ -234,13 +238,13 @@ def main():
     ap.add_argument("--only", default="", help="virgülle aday kimlikleri (varsayılan: hepsi)")
     ap.add_argument("--smoke", action="store_true", help="kısa deneme: 10 ısınma, 5 sn × 1; <device>_smoke/")
     ap.add_argument("--tegrastats", action="store_true", help="Jetson: kart içi güç rayları (ayrı sütun)")
-    ap.add_argument("--run-one", nargs=2, metavar=("ONNX", "RES"), help=argparse.SUPPRESS)
+    ap.add_argument("--run-one", nargs=3, metavar=("ONNX", "INPUT", "RES"), help=argparse.SUPPRESS)
     ap.add_argument("--proto", help=argparse.SUPPRESS)
     a = ap.parse_args()
 
     if a.run_one:   # alt süreç: tek aday, sonucu stdout'a JSON olarak yazar
         p = json.loads(a.proto)
-        print(json.dumps(run_one(a.run_one[0], int(a.run_one[1]), p["warmup"], p["duration_s"],
+        print(json.dumps(run_one(a.run_one[0], a.run_one[1], int(a.run_one[2]), p["warmup"], p["duration_s"],
                                  p["repeats"], p["tegrastats"])))
         return
 
@@ -251,7 +255,8 @@ def main():
     settings = device_settings()
     manifest = ns.ensure_manifest(os.path.join(out_dir, "manifest.json"), {
         "device": a.device, "protocol": proto,
-        "candidates": [{"candidate_id": c["candidate_id"], "onnx_sha256": c["onnx_sha256"]} for c in cands],
+        "candidates": [{"candidate_id": c["candidate_id"], "onnx_sha256": c["onnx_sha256"],
+                        "input_sha256": c["input_sha256"]} for c in cands],
         "versions": versions(), "device_settings": settings, "device_info": device_info(),
         "package": os.path.abspath(a.pkg), "script": "scripts/n4_latency.py",
         "repo_commit": sh(f"git -C {os.path.dirname(os.path.abspath(__file__))} rev-parse --short HEAD"),
@@ -272,12 +277,14 @@ def main():
             print(f"· {i}/{len(todo)} {cid}: ölçülmüş, atlandı")
             continue
         assert ns.sha256(c["onnx_path"]) == c["onnx_sha256"], f"{cid}: ONNX SHA256 uyuşmuyor"
+        assert ns.sha256(c["input_path"]) == c["input_sha256"], f"{cid}: girdi SHA256 uyuşmuyor"
         now = device_settings()
         assert now == manifest["device_settings"], f"cihaz ayarı değişti: {now} ≠ {manifest['device_settings']}"
         load = os.getloadavg()[0]
         if load > 1.0:
             print(f"  uyarı: 1 dk yük ortalaması {load:.2f} (arka planda iş var mı?)")
-        cmd = [sys.executable, os.path.abspath(__file__), "--run-one", c["onnx_path"], c["resolution"],
+        cmd = [sys.executable, os.path.abspath(__file__), "--run-one", c["onnx_path"], c["input_path"],
+               c["resolution"],
                "--proto", json.dumps(proto)]
         t0 = time.time()
         res = subprocess.run(cmd, capture_output=True, text=True)
@@ -285,7 +292,8 @@ def main():
             print(res.stderr[-3000:])
             raise RuntimeError(f"{cid}: alt süreç çıkış kodu {res.returncode}")
         rec = {"candidate_id": cid, "tier": c["tier"], "resolution": int(c["resolution"]),
-               "onnx_sha256": c["onnx_sha256"], "load_avg_before": load, "order_index": i,
+               "onnx_sha256": c["onnx_sha256"], "input_file": os.path.relpath(c["input_path"], a.pkg),
+               "input_sha256": c["input_sha256"], "load_avg_before": load, "order_index": i,
                **json.loads(res.stdout.strip().splitlines()[-1]), "measured_utc": ns.now_utc(),
                "wall_s": round(time.time() - t0, 1)}
         rec["summary"] = summarize(rec)
