@@ -1,0 +1,88 @@
+{
+  "candidate_id": "hardswish_dfull_k5_s320",
+  "tier": "noise_margin",
+  "selectable": "False",
+  "run_id": "hardswish_dfull_k5",
+  "resolution": 320,
+  "ckpt": "last_epoch_ckpt.pth",
+  "ckpt_sha256": "6d750f7e57a0f93ac1717b5818d0ac1a775a0a077df7fb54e2bd40bb79f65435",
+  "ckpt_epoch": 10,
+  "onnx_file": "hardswish_dfull_k5_s320.onnx",
+  "onnx_sha256": "9d0a662230737f756839cff88c5e45b43b7444e80935cd17117468ed950c92b5",
+  "onnx_bytes": 3839999,
+  "opset": 13,
+  "inputs": {
+    "images": [
+      1,
+      3,
+      320,
+      320
+    ]
+  },
+  "outputs": {
+    "output": [
+      1,
+      2100,
+      85
+    ]
+  },
+  "n_nodes": 414,
+  "op_counts": {
+    "Add": 7,
+    "Concat": 21,
+    "Constant": 38,
+    "Conv": 113,
+    "HardSigmoid": 104,
+    "MaxPool": 3,
+    "Mul": 104,
+    "Reshape": 3,
+    "Resize": 2,
+    "Shape": 3,
+    "Sigmoid": 6,
+    "Slice": 9,
+    "Transpose": 1
+  },
+  "equivalence": [
+    {
+      "input": "random_u0_255",
+      "max_abs_diff": 1.1444091796875e-05,
+      "max_box_px": 7.833412496438541e-05,
+      "max_score_diff": 2.98208629456731e-08,
+      "n_scored_anchors": 8,
+      "pass": true
+    },
+    {
+      "input": "000000000139.jpg",
+      "max_abs_diff": 0.000133514404296875,
+      "max_box_px": 0.0005402554210149901,
+      "max_score_diff": 2.8382870667087445e-06,
+      "n_scored_anchors": 576,
+      "pass": true
+    },
+    {
+      "input": "000000000285.jpg",
+      "max_abs_diff": 2.3245811462402344e-05,
+      "max_box_px": 0.0007226388347874035,
+      "max_score_diff": 5.430883614820914e-06,
+      "n_scored_anchors": 66,
+      "pass": true
+    },
+    {
+      "input": "000000000632.jpg",
+      "max_abs_diff": 8.487701416015625e-05,
+      "max_box_px": 0.0008064871803128426,
+      "max_score_diff": 1.3228847137725097e-06,
+      "n_scored_anchors": 540,
+      "pass": true
+    },
+    {
+      "input": "000000000724.jpg",
+      "max_abs_diff": 7.802248001098633e-05,
+      "max_box_px": 0.0004617483667175293,
+      "max_score_diff": 1.5060866118687954e-06,
+      "n_scored_anchors": 226,
+      "pass": true
+    }
+  ],
+  "exported_utc": "2026-10-09T20:07:06+00:00"
+}

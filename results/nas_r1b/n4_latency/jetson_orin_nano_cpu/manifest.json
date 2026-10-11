@@ -1,0 +1,142 @@
+{
+  "device": "jetson_orin_nano_cpu",
+  "protocol": {
+    "warmup": 100,
+    "duration_s": 60.0,
+    "repeats": 3,
+    "intra_op_threads": 4,
+    "inter_op_threads": 1,
+    "execution_mode": "sequential",
+    "graph_optimization": "ORT_ENABLE_ALL",
+    "provider": "CPUExecutionProvider",
+    "input": "val2017 000000000139.jpg, ValTransform ön işlemi, 1x3xRxR float32 (paket inputs/)",
+    "window": "session.run (yalnız model)",
+    "order_seed": 0,
+    "tegrastats": true
+  },
+  "candidates": [
+    {
+      "candidate_id": "hardswish_dfull_k3_s320",
+      "onnx_sha256": "6d56b7aecd3cdb199a6675a1486b70a0fc7d6fae0ba2f2faca440b7bbf736985",
+      "input_sha256": "f9689fe25bda9baaf662f1604b6a30efe69119f92203669081ecf4a0cadd3585"
+    },
+    {
+      "candidate_id": "silu_dfull_k3_s320",
+      "onnx_sha256": "627ae4a457d4ca962526d94b45897022c42688b74c01fbefd0ba77ad74033819",
+      "input_sha256": "f9689fe25bda9baaf662f1604b6a30efe69119f92203669081ecf4a0cadd3585"
+    },
+    {
+      "candidate_id": "silu_dfull_k5_s320",
+      "onnx_sha256": "e1a7f7781e202b3db68bdcfce9c45306c5eaae1df05a35dfc0c197e7e38c5443",
+      "input_sha256": "f9689fe25bda9baaf662f1604b6a30efe69119f92203669081ecf4a0cadd3585"
+    },
+    {
+      "candidate_id": "silu_dreduced_k5_s320",
+      "onnx_sha256": "9e2ee05ce4bf6ca6a7a93562c872b2d722558309a82595d32b51dcf93e899199",
+      "input_sha256": "f9689fe25bda9baaf662f1604b6a30efe69119f92203669081ecf4a0cadd3585"
+    },
+    {
+      "candidate_id": "hardswish_dfull_k5_s416",
+      "onnx_sha256": "b45c9cb4e179d27c642e17ffbacd29f987b773d01582bb916a77d83e3b094c1a",
+      "input_sha256": "dab6d9f9d03540a2ae9fd15f5370ce70d9cce32748455195cf451b3a7df127f9"
+    },
+    {
+      "candidate_id": "silu_dfull_k3_s416",
+      "onnx_sha256": "858d4b45de60c4b63f5e82ed5e40387e5a79fc9fcfa0d7ecaab74bab6dbbf8d5",
+      "input_sha256": "dab6d9f9d03540a2ae9fd15f5370ce70d9cce32748455195cf451b3a7df127f9"
+    },
+    {
+      "candidate_id": "silu_dfull_k5_s416",
+      "onnx_sha256": "7741ccc056c2aa36c9ff3e1c6d1f1388743749995441c507f189f48d3458dd1e",
+      "input_sha256": "dab6d9f9d03540a2ae9fd15f5370ce70d9cce32748455195cf451b3a7df127f9"
+    },
+    {
+      "candidate_id": "silu_dreduced_k5_s416",
+      "onnx_sha256": "3d8113122db8aaf4d63c4185d104cb5dac5afe19610a1e9e72948b48b697600c",
+      "input_sha256": "dab6d9f9d03540a2ae9fd15f5370ce70d9cce32748455195cf451b3a7df127f9"
+    },
+    {
+      "candidate_id": "hardswish_dfull_k3_s512",
+      "onnx_sha256": "72896e3d1db65c19966a1353a531c81544f6a45eea56945bf74844e1a844d788",
+      "input_sha256": "fb07fa018212a7884a8b611bedcc7c3ce00c2ec3d6b3ad6ff581f6bd709bde6e"
+    },
+    {
+      "candidate_id": "hardswish_dfull_k5_s512",
+      "onnx_sha256": "ee2f16002e2fb3b1688c8a54221e6219f55a05b1a1766e00a45f368d206f7b2d",
+      "input_sha256": "fb07fa018212a7884a8b611bedcc7c3ce00c2ec3d6b3ad6ff581f6bd709bde6e"
+    },
+    {
+      "candidate_id": "silu_dfull_k3_s512",
+      "onnx_sha256": "996412201ec2bcd37e7bc4a772235a4697a194cf800a88bdbfc5eec8e2858402",
+      "input_sha256": "fb07fa018212a7884a8b611bedcc7c3ce00c2ec3d6b3ad6ff581f6bd709bde6e"
+    },
+    {
+      "candidate_id": "silu_dfull_k5_s512",
+      "onnx_sha256": "052b1df9da19f84e7cb5133134d3b01dfac2193ede44e74b912d709e43ee8e01",
+      "input_sha256": "fb07fa018212a7884a8b611bedcc7c3ce00c2ec3d6b3ad6ff581f6bd709bde6e"
+    },
+    {
+      "candidate_id": "silu_dreduced_k5_s512",
+      "onnx_sha256": "8872e2cf6cc824650fdd854ed3ea3c3c01117e19e34781adb650d3e063568a32",
+      "input_sha256": "fb07fa018212a7884a8b611bedcc7c3ce00c2ec3d6b3ad6ff581f6bd709bde6e"
+    },
+    {
+      "candidate_id": "hardswish_dfull_k5_s320",
+      "onnx_sha256": "9d0a662230737f756839cff88c5e45b43b7444e80935cd17117468ed950c92b5",
+      "input_sha256": "f9689fe25bda9baaf662f1604b6a30efe69119f92203669081ecf4a0cadd3585"
+    },
+    {
+      "candidate_id": "silu_dreduced_k3_s320",
+      "onnx_sha256": "97e0f5bc15d70982622695d4b0fd65b30211bb847f0ae0bb8ea5e3ecf1115593",
+      "input_sha256": "f9689fe25bda9baaf662f1604b6a30efe69119f92203669081ecf4a0cadd3585"
+    },
+    {
+      "candidate_id": "hardswish_dfull_k3_s416",
+      "onnx_sha256": "aa5810cc163bd498130557ac7229b45121659140635dbc658dc900624e476f6b",
+      "input_sha256": "dab6d9f9d03540a2ae9fd15f5370ce70d9cce32748455195cf451b3a7df127f9"
+    },
+    {
+      "candidate_id": "relu_dfull_k5_s320",
+      "onnx_sha256": "f2346d79d8eaf106213406bc2b4d9b9bb34285976dbc1408f3310efda2588a04",
+      "input_sha256": "f9689fe25bda9baaf662f1604b6a30efe69119f92203669081ecf4a0cadd3585"
+    },
+    {
+      "candidate_id": "relu_dfull_k5_s416",
+      "onnx_sha256": "992453e1e9a2a8de9e02f29d3cb252c6389bbe47064fee91185a5d9705ab961a",
+      "input_sha256": "dab6d9f9d03540a2ae9fd15f5370ce70d9cce32748455195cf451b3a7df127f9"
+    },
+    {
+      "candidate_id": "relu_dfull_k5_s512",
+      "onnx_sha256": "16bc53527e66e2931f42eac1ae1d549f27a39797700143adb3970f95788ca857",
+      "input_sha256": "fb07fa018212a7884a8b611bedcc7c3ce00c2ec3d6b3ad6ff581f6bd709bde6e"
+    }
+  ],
+  "versions": {
+    "onnxruntime": "1.31.0",
+    "numpy": "2.5.4",
+    "python": "3.13.9"
+  },
+  "device_settings": {
+    "cpu_governor": [
+      "schedutil"
+    ],
+    "cpu_count": 6,
+    "nvpmodel": "NV Power Mode: MAXN_SUPER\n2"
+  },
+  "device_info": {
+    "hostname": "iqmine-jetson",
+    "platform": "Linux-5.15.148-tegra-aarch64-with-glibc2.35",
+    "machine": "aarch64",
+    "python": "3.13.9",
+    "cpu_model": "Model name:                         Cortex-A78AE",
+    "mem_total": "MemTotal:        7802684 kB",
+    "board": "NVIDIA Jetson Orin Nano Engineering Reference Developer Kit Super\u0000",
+    "l4t": "# R36 (release), REVISION: 4.7, GCID: 42132812, BOARD: generic, EABI: aarch64, DATE: Thu Sep 18 22:54:44 UTC 2025\n# KERNEL_VARIANT: oot\nTARGET_USERSPACE_LIB_DIR=nvidia\nTARGET_USERSPACE_LIB_DIR_PATH=usr/lib/aarch64-linux-gnu/nvidia",
+    "jetson_clocks": "SOC family:tegra234  Machine:NVIDIA Jetson Orin Nano Engineering Reference Developer Kit Super\nError: Run this script(/usr/bin/jetson_clocks) as a root user"
+  },
+  "package": "/home/iqmine/nas_r1b_n4_onnx",
+  "script": "scripts/n4_latency.py",
+  "repo_commit": "5f2a93a",
+  "decisions": "Karar 3 (100 ısınma, 60 sn × 3), Karar 5 (seçim RPi 5 + ORT CPU), AGENTS.md (4 thread); Jetson CPU ön ölçümü (Furkan, 2026-10-07/09)",
+  "created_utc": "2026-10-11T22:17:59+00:00"
+}

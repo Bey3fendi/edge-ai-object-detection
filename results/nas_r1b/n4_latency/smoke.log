@@ -1,0 +1,39 @@
+jetson_orin_nano_cpu: 19 aday, sıra tohumu 0, en çok ≈6 dk · ayarlar {'cpu_governor': ['schedutil'], 'cpu_count': 6, 'nvpmodel': 'NV Power Mode: MAXN_SUPER\n2'} · yük (0.82177734375, 0.9169921875, 0.45654296875) · sıcaklık {'cpu-thermal': 38.656, 'gpu-thermal': 39.406, 'soc0-thermal': 38.843, 'soc1-thermal': 38.062, 'soc2-thermal': 39.031, 'tj-thermal': 39.406}
+✔ 1/19 hardswish_dfull_k5_s512       48.22 ± 0.00 ms ·   20.7 FPS · p99 48.51 · 40.843 °C
+  uyarı: 1 dk yük ortalaması 1.08 (arka planda iş var mı?)
+✔ 2/19 silu_dfull_k5_s512            48.97 ± 0.00 ms ·   20.4 FPS · p99 49.26 · 40.843 °C
+  uyarı: 1 dk yük ortalaması 1.31 (arka planda iş var mı?)
+✔ 3/19 silu_dreduced_k3_s320         18.21 ± 0.00 ms ·   54.9 FPS · p99 18.34 · 40.906 °C
+  uyarı: 1 dk yük ortalaması 1.93 (arka planda iş var mı?)
+✔ 4/19 relu_dfull_k5_s512            39.80 ± 0.00 ms ·   25.1 FPS · p99 40.10 · 41.281 °C
+  uyarı: 1 dk yük ortalaması 2.09 (arka planda iş var mı?)
+✔ 5/19 hardswish_dfull_k3_s320       18.66 ± 0.00 ms ·   53.6 FPS · p99 18.75 · 41.562 °C
+  uyarı: 1 dk yük ortalaması 2.17 (arka planda iş var mı?)
+✔ 6/19 relu_dfull_k5_s320            17.62 ± 0.00 ms ·   56.7 FPS · p99 17.80 · 41.656 °C
+  uyarı: 1 dk yük ortalaması 2.31 (arka planda iş var mı?)
+✔ 7/19 silu_dfull_k3_s512            42.31 ± 0.00 ms ·   23.6 FPS · p99 42.51 · 41.843 °C
+  uyarı: 1 dk yük ortalaması 2.45 (arka planda iş var mı?)
+✔ 8/19 silu_dfull_k5_s320            22.15 ± 0.00 ms ·   45.1 FPS · p99 22.40 · 41.843 °C
+  uyarı: 1 dk yük ortalaması 2.57 (arka planda iş var mı?)
+✔ 9/19 silu_dreduced_k5_s320         21.20 ± 0.00 ms ·   47.1 FPS · p99 21.41 · 42.093 °C
+  uyarı: 1 dk yük ortalaması 2.69 (arka planda iş var mı?)
+✔ 10/19 silu_dfull_k3_s416            29.74 ± 0.00 ms ·   33.6 FPS · p99 30.04 · 42.156 °C
+  uyarı: 1 dk yük ortalaması 2.79 (arka planda iş var mı?)
+✔ 11/19 relu_dfull_k5_s416            27.96 ± 0.00 ms ·   35.8 FPS · p99 28.20 · 42.343 °C
+  uyarı: 1 dk yük ortalaması 2.89 (arka planda iş var mı?)
+✔ 12/19 hardswish_dfull_k5_s416       34.10 ± 0.00 ms ·   29.3 FPS · p99 34.22 · 42.437 °C
+  uyarı: 1 dk yük ortalaması 3.06 (arka planda iş var mı?)
+✔ 13/19 silu_dfull_k5_s416            34.58 ± 0.00 ms ·   28.9 FPS · p99 34.92 · 42.593 °C
+  uyarı: 1 dk yük ortalaması 3.14 (arka planda iş var mı?)
+✔ 14/19 silu_dreduced_k5_s416         33.37 ± 0.00 ms ·   30.0 FPS · p99 33.68 · 42.531 °C
+  uyarı: 1 dk yük ortalaması 3.21 (arka planda iş var mı?)
+✔ 15/19 hardswish_dfull_k3_s416       29.03 ± 0.00 ms ·   34.4 FPS · p99 29.19 · 42.843 °C
+  uyarı: 1 dk yük ortalaması 3.27 (arka planda iş var mı?)
+✔ 16/19 hardswish_dfull_k3_s512       41.15 ± 0.00 ms ·   24.3 FPS · p99 41.56 · 42.843 °C
+  uyarı: 1 dk yük ortalaması 3.33 (arka planda iş var mı?)
+✔ 17/19 silu_dfull_k3_s320            18.82 ± 0.00 ms ·   53.1 FPS · p99 19.02 · 42.687 °C
+  uyarı: 1 dk yük ortalaması 3.38 (arka planda iş var mı?)
+✔ 18/19 hardswish_dfull_k5_s320       22.05 ± 0.00 ms ·   45.3 FPS · p99 22.33 · 42.843 °C
+  uyarı: 1 dk yük ortalaması 3.43 (arka planda iş var mı?)
+✔ 19/19 silu_dreduced_k5_s512         47.39 ± 0.00 ms ·   21.1 FPS · p99 47.73 · 42.812 °C
+19/19 aday ölçüldü → /home/iqmine/edge_ai_tez/edge-ai-object-detection/scripts/../results/nas_r1b/n4_latency/jetson_orin_nano_cpu_smoke/latency.csv

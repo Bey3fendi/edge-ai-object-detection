@@ -1,0 +1,87 @@
+{
+  "candidate_id": "silu_dfull_k3_s320",
+  "tier": "budget",
+  "selectable": "True",
+  "run_id": "silu_dfull_k3",
+  "resolution": 320,
+  "ckpt": "last_epoch_ckpt.pth",
+  "ckpt_sha256": "c77f0bddb587975957a9006d68356aaad184fcf28ae2961d59ce369ef99b08cf",
+  "ckpt_epoch": 10,
+  "onnx_file": "silu_dfull_k3_s320.onnx",
+  "onnx_sha256": "627ae4a457d4ca962526d94b45897022c42688b74c01fbefd0ba77ad74033819",
+  "onnx_bytes": 3713684,
+  "opset": 13,
+  "inputs": {
+    "images": [
+      1,
+      3,
+      320,
+      320
+    ]
+  },
+  "outputs": {
+    "output": [
+      1,
+      2100,
+      85
+    ]
+  },
+  "n_nodes": 414,
+  "op_counts": {
+    "Add": 7,
+    "Concat": 21,
+    "Constant": 38,
+    "Conv": 113,
+    "MaxPool": 3,
+    "Mul": 104,
+    "Reshape": 3,
+    "Resize": 2,
+    "Shape": 3,
+    "Sigmoid": 110,
+    "Slice": 9,
+    "Transpose": 1
+  },
+  "equivalence": [
+    {
+      "input": "random_u0_255",
+      "max_abs_diff": 1.6927719116210938e-05,
+      "max_box_px": 0.0008768740900961802,
+      "max_score_diff": 7.814331964839383e-08,
+      "n_scored_anchors": 221,
+      "pass": true
+    },
+    {
+      "input": "000000000139.jpg",
+      "max_abs_diff": 0.00015938282012939453,
+      "max_box_px": 0.0013429215560449848,
+      "max_score_diff": 5.180065965504355e-06,
+      "n_scored_anchors": 556,
+      "pass": true
+    },
+    {
+      "input": "000000000285.jpg",
+      "max_abs_diff": 1.3589859008789062e-05,
+      "max_box_px": 0.00027886494780204885,
+      "max_score_diff": 6.073238219883592e-06,
+      "n_scored_anchors": 54,
+      "pass": true
+    },
+    {
+      "input": "000000000632.jpg",
+      "max_abs_diff": 9.834766387939453e-05,
+      "max_box_px": 0.00047886968623345183,
+      "max_score_diff": 3.7342079188817934e-06,
+      "n_scored_anchors": 584,
+      "pass": true
+    },
+    {
+      "input": "000000000724.jpg",
+      "max_abs_diff": 4.875659942626953e-05,
+      "max_box_px": 0.0015454362191107407,
+      "max_score_diff": 2.2180294241280762e-06,
+      "n_scored_anchors": 230,
+      "pass": true
+    }
+  ],
+  "exported_utc": "2026-10-09T20:06:24+00:00"
+}

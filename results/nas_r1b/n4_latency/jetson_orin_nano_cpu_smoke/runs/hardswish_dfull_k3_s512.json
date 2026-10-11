@@ -1,0 +1,73 @@
+{
+  "candidate_id": "hardswish_dfull_k3_s512",
+  "tier": "budget",
+  "resolution": 512,
+  "onnx_sha256": "72896e3d1db65c19966a1353a531c81544f6a45eea56945bf74844e1a844d788",
+  "input_file": "inputs/input_s512.npy",
+  "input_sha256": "fb07fa018212a7884a8b611bedcc7c3ce00c2ec3d6b3ad6ff581f6bd709bde6e",
+  "load_avg_before": 3.26953125,
+  "order_index": 16,
+  "session_load_s": 0.063,
+  "repeats": [
+    {
+      "n": 122,
+      "wall_s": 5.022,
+      "fps": 24.295,
+      "mean_ms": 41.1516,
+      "std_ms": 0.1077,
+      "median_ms": 41.1394,
+      "p90_ms": 41.253,
+      "p99_ms": 41.5607,
+      "min_ms": 40.9525,
+      "max_ms": 41.7815,
+      "temp_start_c": {
+        "cpu-thermal": 42.718,
+        "gpu-thermal": 42.25,
+        "soc0-thermal": 40.937,
+        "soc1-thermal": 40.5,
+        "soc2-thermal": 41.75,
+        "tj-thermal": 42.718
+      },
+      "temp_end_c": {
+        "cpu-thermal": 42.843,
+        "gpu-thermal": 42.437,
+        "soc0-thermal": 41.093,
+        "soc1-thermal": 40.562,
+        "soc2-thermal": 42.031,
+        "tj-thermal": 42.843
+      },
+      "cpu_mhz_end": {
+        "0": 1728,
+        "1": 1728,
+        "2": 1728,
+        "3": 1728,
+        "4": 1728,
+        "5": 1728
+      },
+      "tegrastats_mw": {
+        "VDD_IN": 9522.8,
+        "VDD_CPU_GPU_CV": 4424.7,
+        "VDD_SOC": 2533.7
+      },
+      "tegrastats_samples": 9
+    }
+  ],
+  "rss_peak_mb": 99.8,
+  "ort_providers": [
+    "CPUExecutionProvider"
+  ],
+  "measured_utc": "2026-10-11T22:16:32+00:00",
+  "wall_s": 5.8,
+  "summary": {
+    "latency_ms_mean": 41.152,
+    "latency_ms_std": 0.0,
+    "latency_ms_median": 41.139,
+    "latency_ms_p90": 41.253,
+    "latency_ms_p99": 41.561,
+    "fps_model": 24.3,
+    "n_inferences": 122,
+    "rss_peak_mb": 99.8,
+    "temp_c_max": 42.843,
+    "tegra_vdd_in_mw": 9522.8
+  }
+}
