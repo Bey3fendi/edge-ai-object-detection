@@ -54,7 +54,7 @@ def read(path, default=None):
     try:
         with open(path) as f:
             return f.read().strip()
-    except OSError:
+    except (OSError, TypeError, ValueError):   # Jetson: bazı termal bölgelerin temp dosyası okunamaz (py3.13'te TypeError)
         return default
 
 
