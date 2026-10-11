@@ -183,3 +183,65 @@ YOL A (onerilen): klasoru Windows'ta ayni yola kopyala (PowerShell):
 Sonra ajana "attim" de; oradan okur, commit/push birlikte yapilir. Jetson'da GitHub girisi gerekmez.
 
 YOL B: Jetson'dan commit + push, ajan pull eder (Jetson'da GitHub kimlik bilgisi gerekir).
+
+---------------------------------------------------------------------------------------------------
+
+## 4) N4b - ReLU k3 gecikmesi (2. tur oncesi, Furkan 2026-10-12)
+
+Amac: 02d'deki uzun egitimden ONCE relu_dfull_k3'un gecikmesini olcmek. Kontrol (silu_dfull_k3) ayni
+oturumda yeniden olculur (anchor): ReLU/SiLU orani oturumlar arasi kaymadan bagimsiz olur.
+6 aday (relu_dfull_k3 + silu_dfull_k3, 320/416/512). Tam olcum ~20 dk.
+
+### 4a. Colab: paketi uret (notebook 02c, CPU runtime yeterli)
+
+`notebooks/02c_relu_k3_onnx_disa_aktarma.ipynb` hucre 1-9. Sonunda Drive'da:
+`edge_ai/artifacts/onnx/nas_r1b_n4b_onnx.zip` (hucre 9 sha256'yi yazar; not al).
+Hucre 9 ayrica gecikme girdilerinin N4'tekilerle ayni oldugunu denetler ("N4 girdileriyle ayni: True").
+
+### 4b. Jetson hazirligi
+
+Cihaz yeniden basladiysa saatleri tekrar sabitle (1c), sonra:
+
+    sudo nvpmodel -q
+    sudo jetson_clocks
+    sudo jetson_clocks --fan
+    sudo systemctl isolate multi-user.target
+    conda deactivate
+    source ~/n4env/bin/activate
+    cd ~/edge_ai_tez/edge-ai-object-detection
+    git pull
+    git log --oneline -1
+
+`nvpmodel -q` MAXN_SUPER (2) gostermeli (N4 ile ayni mod).
+
+Paketi gonder (Windows PowerShell):
+
+    scp .\nas_r1b_n4b_onnx.zip iqmine@<jetson-ip>:~/
+
+Jetson'da:
+
+    cd ~
+    sha256sum nas_r1b_n4b_onnx.zip
+    rm -rf nas_r1b_n4b_onnx
+    unzip nas_r1b_n4b_onnx.zip
+    cd nas_r1b_n4b_onnx && sha256sum -c SHA256SUMS && ls inputs/
+
+Beklenen: zip sha256 02c hucre 9'un yazdigiyla ayni; 9 satir OK (6 ONNX + 3 npy).
+
+### 4c. Olcum (--out ile ayri klasor; N4 sonuclarina dokunmaz)
+
+    cd ~/edge_ai_tez/edge-ai-object-detection
+    OUT=results/nas_r1b/n4b_latency
+    mkdir -p $OUT
+    python3 scripts/n4_latency.py --pkg ~/nas_r1b_n4b_onnx --device jetson_orin_nano_cpu --out $OUT --smoke --tegrastats 2>&1 | tee $OUT/smoke.log
+    python3 scripts/n4_latency.py --pkg ~/nas_r1b_n4b_onnx --device jetson_orin_nano_cpu --out $OUT --tegrastats 2>&1 | tee -a $OUT/full.log
+
+Smoke 6/6 olculduyse tam olcume gec. Yuk ortalamasi uyarisi artik yalniz 5,0 ustunde cikar
+(onceki ~4,0 uyarilari, bir onceki adayin 4 thread'lik olcumuydu).
+
+### 4d. Ciktilari ajana ulastir
+
+    scp -r iqmine@<jetson-ip>:~/edge_ai_tez/edge-ai-object-detection/results/nas_r1b/n4b_latency C:\projects\edge_ai_workspace\results\nas_r1b\
+
+Sonra ajana "attim" de. Beklenti: ReLU k3, ayni cozunurlukteki SiLU k3'ten ~%20 hizli (N4'te ReLU k5 /
+SiLU k5 = %19-21). Kazanc beklenen duzeydeyse notebook 02d (tam COCO, iki kol) baslatilir.

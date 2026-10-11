@@ -1,0 +1,7 @@
+candidate_id,tier,selectable,run_id,arch_id,act,depth,dw_k,resolution,params_m,gflops,map5095,ap50,delta_vs_control
+relu_dfull_k3_s320,reference,False,relu_dfull_k3,relu_dfull_k3,relu,full,3,320,0.91,0.66,16.5,28.7,-4.9
+relu_dfull_k3_s416,reference,False,relu_dfull_k3,relu_dfull_k3,relu,full,3,416,0.91,1.11,19.0,32.7,-5.5
+relu_dfull_k3_s512,reference,False,relu_dfull_k3,relu_dfull_k3,relu,full,3,512,0.91,1.69,20.2,34.9,-5.5
+silu_dfull_k3_s320,anchor,False,silu_dfull_k3,silu_dfull_k3,silu,full,3,320,0.91,0.66,21.4,35.3,0.0
+silu_dfull_k3_s416,anchor,False,silu_dfull_k3,silu_dfull_k3,silu,full,3,416,0.91,1.11,24.5,39.8,0.0
+silu_dfull_k3_s512,anchor,False,silu_dfull_k3,silu_dfull_k3,silu,full,3,512,0.91,1.69,25.7,41.8,0.0

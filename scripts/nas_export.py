@@ -4,6 +4,7 @@ N3 = aday mimarilerin ONNX'e dışa aktarımı, N4 = cihazda (RPi 5, ön ölçü
 notebooks/02b_aday_onnx_disa_aktarma.ipynb tarafından kullanılır; aday listesi yerelde de üretilebilir:
 
     python scripts/nas_export.py candidates results/nas_r1b
+    python scripts/nas_export.py candidates-n4b results/nas_r1b   # N4b: relu_dfull_k3 + kontrol
 
 Dışa aktarma kuralları (AGENTS.md, workflow 6. aşama): opset 13, statik 1×3×H×W, giriş `images`,
 çıkış `output`, `decode_in_inference=False` (YOLOX export_onnx.py varsayılanları), onnxsim yok.
@@ -49,7 +50,13 @@ TIERS = {
     "budget": "bütçe içinde (≥ −1,0); seçilebilir",
     "noise_margin": f"bütçenin {NOISE_MARGIN} puan (ölçülen gürültü) altına kadar; seçim için 2. tur gerekir",
     "reference": "bütçe dışı bilgi adayı (2. tur kararı); seçilemez",
+    "anchor": "aynı ölçüm oturumunda yeniden ölçülen kontrol (cihaz/oturum kayması denetimi); seçilemez",
 }
+
+# N4b (Furkan, 2026-10-12): 2. turdaki uzun ince ayardan önce ReLU k3'ün cihaz gecikmesi. N4'teki ReLU
+# referansı k5'ti; k3 kontrol ile aynı kernel. Kontrol aynı oturumda yeniden ölçülür (anchor), N4 ile
+# kıyas oturumlar arası kaymadan bağımsız olur.
+N4B_ARCHS = {"relu_dfull_k3": "reference", "silu_dfull_k3": "anchor"}
 
 CANDIDATE_FIELDS = ["candidate_id", "tier", "selectable", "run_id", "arch_id", "act", "depth", "dw_k",
                     "resolution", "params_m", "gflops", "map5095", "ap50", "delta_vs_control"]
@@ -87,6 +94,14 @@ def select_candidates(rows, budget=BUDGET, margin=NOISE_MARGIN, reference_archs=
             continue
         out.append({**{k: r[k] for k in CANDIDATE_FIELDS if k in r}, "tier": tier,
                     "selectable": tier == "budget"})
+    order = {t: i for i, t in enumerate(TIERS)}
+    out.sort(key=lambda r: (order[r["tier"]], int(r["resolution"]), r["arch_id"]))
+    return out
+
+
+def select_n4b(rows, archs=N4B_ARCHS):
+    out = [{**{k: r[k] for k in CANDIDATE_FIELDS if k in r}, "tier": archs[r["arch_id"]], "selectable": False}
+           for r in rows if r["repeat"] == "1" and r["arch_id"] in archs]
     order = {t: i for i, t in enumerate(TIERS)}
     out.sort(key=lambda r: (order[r["tier"]], int(r["resolution"]), r["arch_id"]))
     return out
@@ -282,9 +297,16 @@ def rebuild_exports_csv(out_dir, candidate_ids):
     return rows
 
 
+def write_n4b_candidates(results_dir):
+    rows = select_n4b(read_csv(os.path.join(results_dir, "candidates.csv")))
+    path = os.path.join(results_dir, "n4b_candidates.csv")
+    write_csv(path, rows, CANDIDATE_FIELDS)
+    return path, rows
+
+
 if __name__ == "__main__":
-    assert len(sys.argv) == 3 and sys.argv[1] == "candidates", __doc__
-    path, rows = write_candidates(sys.argv[2])
+    assert len(sys.argv) == 3 and sys.argv[1] in ("candidates", "candidates-n4b"), __doc__
+    path, rows = (write_candidates if sys.argv[1] == "candidates" else write_n4b_candidates)(sys.argv[2])
     for r in rows:
         print(f"{r['tier']:13s} {r['candidate_id']:26s} {float(r['map5095']):5.1f}  Δ {float(r['delta_vs_control']):+.1f}")
     print(f"{len(rows)} aday → {path}")

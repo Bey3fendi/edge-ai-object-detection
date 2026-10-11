@@ -5,6 +5,7 @@ paket klasörüdür (`nas_r1b_n4_onnx/`: ONNX'ler, n4_candidates.csv, exports.cs
 
     python3 scripts/n4_latency.py --pkg ~/nas_r1b_n4_onnx --device jetson_orin_nano_cpu --smoke   # ≈2 dk deneme
     python3 scripts/n4_latency.py --pkg ~/nas_r1b_n4_onnx --device jetson_orin_nano_cpu           # ≈65 dk, 19 aday
+    python3 scripts/n4_latency.py --pkg ~/nas_r1b_n4b_onnx --device jetson_orin_nano_cpu         --out results/nas_r1b/n4b_latency                                                         # N4b, 6 aday
 
 Protokol (Karar 3 + AGENTS.md): ORT CPUExecutionProvider, intra_op_num_threads = 4, tüm grafik
 eniyilemeleri açık; girdi gerçek görüntü (val2017, 02b'de ValTransform ile önceden işlenmiş .npy); 100 çıkarım ısınma atılır; ardından 60 sn kararlı ölçüm × 3
@@ -281,7 +282,9 @@ def main():
         now = device_settings()
         assert now == manifest["device_settings"], f"cihaz ayarı değişti: {now} ≠ {manifest['device_settings']}"
         load = os.getloadavg()[0]
-        if load > 1.0:
+        # Bir önceki adayın ölçümü (intra_op_threads iş parçacığı) 1 dk ortalamayı ≈ thread sayısına çıkarır;
+        # uyarı yalnız bunun üstündeki yük için (2026-10-12 Jetson: her adayda ≈4,0 yanlış alarm verdi).
+        if load > proto["intra_op_threads"] + 1.0:
             print(f"  uyarı: 1 dk yük ortalaması {load:.2f} (arka planda iş var mı?)")
         cmd = [sys.executable, os.path.abspath(__file__), "--run-one", c["onnx_path"], c["input_path"],
                c["resolution"],
