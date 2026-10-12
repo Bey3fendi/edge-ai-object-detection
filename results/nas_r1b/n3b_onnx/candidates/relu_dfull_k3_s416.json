@@ -1,0 +1,87 @@
+{
+  "candidate_id": "relu_dfull_k3_s416",
+  "tier": "reference",
+  "selectable": "False",
+  "run_id": "relu_dfull_k3",
+  "resolution": 416,
+  "ckpt": "last_epoch_ckpt.pth",
+  "ckpt_sha256": "9eb240b8e136fd5cce7feaedba1317051c868c554864742eefe108d66ce34f6d",
+  "ckpt_epoch": 10,
+  "onnx_file": "relu_dfull_k3_s416.onnx",
+  "onnx_sha256": "259f399df9bdd5917dc0aff432ffc2396aea4b95a24ddc9b887cb84c32a24d5a",
+  "onnx_bytes": 3689604,
+  "opset": 13,
+  "inputs": {
+    "images": [
+      1,
+      3,
+      416,
+      416
+    ]
+  },
+  "outputs": {
+    "output": [
+      1,
+      3549,
+      85
+    ]
+  },
+  "n_nodes": 310,
+  "op_counts": {
+    "Add": 7,
+    "Concat": 21,
+    "Constant": 38,
+    "Conv": 113,
+    "MaxPool": 3,
+    "Relu": 104,
+    "Reshape": 3,
+    "Resize": 2,
+    "Shape": 3,
+    "Sigmoid": 6,
+    "Slice": 9,
+    "Transpose": 1
+  },
+  "equivalence": [
+    {
+      "input": "random_u0_255",
+      "max_abs_diff": 6.413459777832031e-05,
+      "max_box_px": 0.0006142585987731763,
+      "max_score_diff": 9.253635173678276e-07,
+      "n_scored_anchors": 44,
+      "pass": true
+    },
+    {
+      "input": "000000000139.jpg",
+      "max_abs_diff": 0.0009574294090270996,
+      "max_box_px": 0.010715846692107789,
+      "max_score_diff": 3.851867921733643e-06,
+      "n_scored_anchors": 701,
+      "pass": true
+    },
+    {
+      "input": "000000000285.jpg",
+      "max_abs_diff": 7.772445678710938e-05,
+      "max_box_px": 0.0013537903856786215,
+      "max_score_diff": 4.0754244992058375e-06,
+      "n_scored_anchors": 79,
+      "pass": true
+    },
+    {
+      "input": "000000000632.jpg",
+      "max_abs_diff": 0.0009065866470336914,
+      "max_box_px": 0.002120358555629309,
+      "max_score_diff": 6.052202575546062e-06,
+      "n_scored_anchors": 820,
+      "pass": true
+    },
+    {
+      "input": "000000000724.jpg",
+      "max_abs_diff": 0.0005621910095214844,
+      "max_box_px": 0.004271703680075234,
+      "max_score_diff": 5.449384621769582e-06,
+      "n_scored_anchors": 306,
+      "pass": true
+    }
+  ],
+  "exported_utc": "2026-10-12T21:47:48+00:00"
+}

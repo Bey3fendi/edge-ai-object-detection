@@ -1,0 +1,101 @@
+{
+  "round": "nas_r1b",
+  "notebook": "notebooks/02c_relu_k3_onnx_disa_aktarma.ipynb",
+  "decisions": "N4b: 2. tur (02d) öncesi relu_dfull_k3 gecikmesi + aynı oturumda kontrol (Furkan, 2026-10-12); Karar 5 (seçim RPi 5 + ORT CPU); Jetson CPU ön ölçümü (Furkan, 2026-10-07/09); AGENTS.md: opset 13, statik giriş, ORT 4 thread",
+  "candidates": [
+    {
+      "candidate_id": "relu_dfull_k3_s320",
+      "tier": "reference"
+    },
+    {
+      "candidate_id": "relu_dfull_k3_s416",
+      "tier": "reference"
+    },
+    {
+      "candidate_id": "relu_dfull_k3_s512",
+      "tier": "reference"
+    },
+    {
+      "candidate_id": "silu_dfull_k3_s320",
+      "tier": "anchor"
+    },
+    {
+      "candidate_id": "silu_dfull_k3_s416",
+      "tier": "anchor"
+    },
+    {
+      "candidate_id": "silu_dfull_k3_s512",
+      "tier": "anchor"
+    }
+  ],
+  "selection_rule": {
+    "n4b_archs": {
+      "relu_dfull_k3": "reference",
+      "silu_dfull_k3": "anchor"
+    },
+    "tiers": {
+      "reference": "bütçe dışı bilgi adayı (2. tur kararı); seçilemez",
+      "anchor": "aynı ölçüm oturumunda yeniden ölçülen kontrol (cihaz/oturum kayması denetimi); seçilemez"
+    }
+  },
+  "export_protocol": {
+    "opset": 13,
+    "input": "images",
+    "output": "output",
+    "shape": "1x3xRxR static",
+    "decode_in_inference": false,
+    "onnxsim": false,
+    "exporter": "torch.onnx.export (TorchScript, dynamo=False)",
+    "checkpoint": "last_epoch_ckpt.pth (EMA, epoch 10), strict=True",
+    "equivalence": {
+      "inputs": [
+        "random_u0_255",
+        "000000000139.jpg",
+        "000000000285.jpg",
+        "000000000632.jpg",
+        "000000000724.jpg"
+      ],
+      "space": "decoded",
+      "max_box_px": 0.1,
+      "max_score_diff": 0.0001,
+      "box_anchor_min_score": 0.001,
+      "ort_threads": 4
+    }
+  },
+  "exp_file_sha256": "38b21f33031fdb2a461f1daa8347c2d2c2290ab092db706bbaa7d5031168f3e0",
+  "yolox_commit": "3ec6263",
+  "versions": {
+    "torch": "2.11.0+cpu",
+    "onnx": "1.23.2",
+    "onnxruntime": "1.31.0",
+    "numpy": "2.1.3"
+  },
+  "repo_commit_at_creation": "34b326e",
+  "env_at_creation": {
+    "timestamp_utc": "2026-10-12T21:44:10+00:00",
+    "python": "3.13.16",
+    "platform": "Linux-6.6.122+-x86_64-with-glibc2.39",
+    "gpu": "none",
+    "cuda_nvcc": "",
+    "cpu_count": 2,
+    "ram_gb": 13.6,
+    "disk_free_content": "overlay         226G   21G  206G  10% /",
+    "torch": "2.11.0+cpu",
+    "torchvision": "0.26.0+cpu",
+    "torch_cuda": null,
+    "cuda_available": false,
+    "repo_commit": "34b326e",
+    "yolox_commit": "3ec6263",
+    "yolox_dirty": false,
+    "repo_dirty": false,
+    "pkg_torch": "2.11.0+cpu",
+    "pkg_torchvision": "0.26.0+cpu",
+    "pkg_numpy": "2.1.3",
+    "pkg_opencv-python-headless": "5.0.0.93",
+    "pkg_onnx": "1.23.2",
+    "pkg_onnxruntime": "1.31.0",
+    "pkg_loguru": "0.7.3",
+    "pkg_thop": "0.1.1-2209072238"
+  },
+  "created_utc": "2026-10-12T21:47:37+00:00"
+}

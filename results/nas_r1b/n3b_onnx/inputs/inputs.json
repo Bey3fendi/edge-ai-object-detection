@@ -1,0 +1,22 @@
+{
+  "image": "val2017/000000000139.jpg",
+  "preprocess": "ValTransform(legacy=False): oran korunur, sağ/alt 114 dolgu, BGR, 0-255, float32",
+  "files": [
+    {
+      "resolution": 320,
+      "file": "input_s320.npy",
+      "sha256": "f9689fe25bda9baaf662f1604b6a30efe69119f92203669081ecf4a0cadd3585"
+    },
+    {
+      "resolution": 416,
+      "file": "input_s416.npy",
+      "sha256": "dab6d9f9d03540a2ae9fd15f5370ce70d9cce32748455195cf451b3a7df127f9"
+    },
+    {
+      "resolution": 512,
+      "file": "input_s512.npy",
+      "sha256": "fb07fa018212a7884a8b611bedcc7c3ce00c2ec3d6b3ad6ff581f6bd709bde6e"
+    }
+  ],
+  "written_utc": "2026-10-12T21:48:07+00:00"
+}

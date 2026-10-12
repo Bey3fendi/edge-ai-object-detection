@@ -1,0 +1,77 @@
+{
+  "device": "jetson_orin_nano_cpu",
+  "protocol": {
+    "warmup": 100,
+    "duration_s": 60.0,
+    "repeats": 3,
+    "intra_op_threads": 4,
+    "inter_op_threads": 1,
+    "execution_mode": "sequential",
+    "graph_optimization": "ORT_ENABLE_ALL",
+    "provider": "CPUExecutionProvider",
+    "input": "val2017 000000000139.jpg, ValTransform ön işlemi, 1x3xRxR float32 (paket inputs/)",
+    "window": "session.run (yalnız model)",
+    "order_seed": 0,
+    "tegrastats": true
+  },
+  "candidates": [
+    {
+      "candidate_id": "relu_dfull_k3_s320",
+      "onnx_sha256": "816a51173815d0002e817b1ce3becab33cab7ce4a2ff0975e08fb99e7ccc3099",
+      "input_sha256": "f9689fe25bda9baaf662f1604b6a30efe69119f92203669081ecf4a0cadd3585"
+    },
+    {
+      "candidate_id": "relu_dfull_k3_s416",
+      "onnx_sha256": "259f399df9bdd5917dc0aff432ffc2396aea4b95a24ddc9b887cb84c32a24d5a",
+      "input_sha256": "dab6d9f9d03540a2ae9fd15f5370ce70d9cce32748455195cf451b3a7df127f9"
+    },
+    {
+      "candidate_id": "relu_dfull_k3_s512",
+      "onnx_sha256": "af918e9f4303216e86efd63eecdbcc6adfa6d65269868e87a058fbe6d07579e8",
+      "input_sha256": "fb07fa018212a7884a8b611bedcc7c3ce00c2ec3d6b3ad6ff581f6bd709bde6e"
+    },
+    {
+      "candidate_id": "silu_dfull_k3_s320",
+      "onnx_sha256": "627ae4a457d4ca962526d94b45897022c42688b74c01fbefd0ba77ad74033819",
+      "input_sha256": "f9689fe25bda9baaf662f1604b6a30efe69119f92203669081ecf4a0cadd3585"
+    },
+    {
+      "candidate_id": "silu_dfull_k3_s416",
+      "onnx_sha256": "858d4b45de60c4b63f5e82ed5e40387e5a79fc9fcfa0d7ecaab74bab6dbbf8d5",
+      "input_sha256": "dab6d9f9d03540a2ae9fd15f5370ce70d9cce32748455195cf451b3a7df127f9"
+    },
+    {
+      "candidate_id": "silu_dfull_k3_s512",
+      "onnx_sha256": "996412201ec2bcd37e7bc4a772235a4697a194cf800a88bdbfc5eec8e2858402",
+      "input_sha256": "fb07fa018212a7884a8b611bedcc7c3ce00c2ec3d6b3ad6ff581f6bd709bde6e"
+    }
+  ],
+  "versions": {
+    "onnxruntime": "1.31.0",
+    "numpy": "2.5.4",
+    "python": "3.13.9"
+  },
+  "device_settings": {
+    "cpu_governor": [
+      "schedutil"
+    ],
+    "cpu_count": 6,
+    "nvpmodel": "NV Power Mode: MAXN_SUPER\n2"
+  },
+  "device_info": {
+    "hostname": "iqmine-jetson",
+    "platform": "Linux-5.15.148-tegra-aarch64-with-glibc2.35",
+    "machine": "aarch64",
+    "python": "3.13.9",
+    "cpu_model": "Model name:                         Cortex-A78AE",
+    "mem_total": "MemTotal:        7802752 kB",
+    "board": "NVIDIA Jetson Orin Nano Engineering Reference Developer Kit Super\u0000",
+    "l4t": "# R36 (release), REVISION: 4.7, GCID: 42132812, BOARD: generic, EABI: aarch64, DATE: Thu Sep 18 22:54:44 UTC 2025\n# KERNEL_VARIANT: oot\nTARGET_USERSPACE_LIB_DIR=nvidia\nTARGET_USERSPACE_LIB_DIR_PATH=usr/lib/aarch64-linux-gnu/nvidia",
+    "jetson_clocks": "SOC family:tegra234  Machine:NVIDIA Jetson Orin Nano Engineering Reference Developer Kit Super\nError: Run this script(/usr/bin/jetson_clocks) as a root user"
+  },
+  "package": "/home/iqmine/nas_r1b_n4b_onnx",
+  "script": "scripts/n4_latency.py",
+  "repo_commit": "34b326e",
+  "decisions": "Karar 3 (100 ısınma, 60 sn × 3), Karar 5 (seçim RPi 5 + ORT CPU), AGENTS.md (4 thread); Jetson CPU ön ölçümü (Furkan, 2026-10-07/09)",
+  "created_utc": "2026-10-12T22:05:31+00:00"
+}
