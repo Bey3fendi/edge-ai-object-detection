@@ -1,0 +1,132 @@
+{
+  "run_id": "silu_dfull_k3",
+  "status": "evaluated",
+  "attempts": [
+    {
+      "start_utc": "2026-10-12T23:30:23+00:00",
+      "resume_from_epoch": null,
+      "gpu": "NVIDIA L4, 23034 MiB, 580.82.07",
+      "repo_commit": "490f642",
+      "end_utc": "2026-10-13T02:29:36+00:00",
+      "wall_s": 10753.0
+    }
+  ],
+  "evals": {
+    "e12_s416": {
+      "map5095": 25.7,
+      "ap50": 41.3,
+      "ap_small": 8.3,
+      "ap_medium": 26.8,
+      "ap_large": 40.8,
+      "gpu_forward_ms": 1.4,
+      "gpu_nms_ms": 0.86,
+      "params_m": 0.91,
+      "gflops": 1.11,
+      "epoch": 12,
+      "eval_s": 85.2,
+      "evaluated_utc": "2026-10-13T02:31:02+00:00"
+    },
+    "e2_s416": {
+      "map5095": 23.3,
+      "ap50": 38.3,
+      "ap_small": 7.4,
+      "ap_medium": 24.3,
+      "ap_large": 37.0,
+      "gpu_forward_ms": 1.38,
+      "gpu_nms_ms": 0.9,
+      "params_m": 0.91,
+      "gflops": 1.11,
+      "epoch": 2,
+      "eval_s": 83.6,
+      "evaluated_utc": "2026-10-13T05:33:01+00:00"
+    },
+    "e4_s416": {
+      "map5095": 24.3,
+      "ap50": 39.5,
+      "ap_small": 7.9,
+      "ap_medium": 25.3,
+      "ap_large": 38.3,
+      "gpu_forward_ms": 1.32,
+      "gpu_nms_ms": 0.93,
+      "params_m": 0.91,
+      "gflops": 1.11,
+      "epoch": 4,
+      "eval_s": 85.1,
+      "evaluated_utc": "2026-10-13T05:34:26+00:00"
+    },
+    "e6_s416": {
+      "map5095": 25.1,
+      "ap50": 40.5,
+      "ap_small": 8.3,
+      "ap_medium": 26.4,
+      "ap_large": 39.7,
+      "gpu_forward_ms": 1.38,
+      "gpu_nms_ms": 0.92,
+      "params_m": 0.91,
+      "gflops": 1.11,
+      "epoch": 6,
+      "eval_s": 82.4,
+      "evaluated_utc": "2026-10-13T05:35:49+00:00"
+    },
+    "e8_s416": {
+      "map5095": 25.4,
+      "ap50": 40.9,
+      "ap_small": 8.3,
+      "ap_medium": 26.6,
+      "ap_large": 40.1,
+      "gpu_forward_ms": 1.37,
+      "gpu_nms_ms": 0.9,
+      "params_m": 0.91,
+      "gflops": 1.11,
+      "epoch": 8,
+      "eval_s": 82.2,
+      "evaluated_utc": "2026-10-13T05:37:11+00:00"
+    },
+    "e10_s416": {
+      "map5095": 25.6,
+      "ap50": 41.1,
+      "ap_small": 8.4,
+      "ap_medium": 26.7,
+      "ap_large": 40.4,
+      "gpu_forward_ms": 1.4,
+      "gpu_nms_ms": 0.9,
+      "params_m": 0.91,
+      "gflops": 1.11,
+      "epoch": 10,
+      "eval_s": 82.0,
+      "evaluated_utc": "2026-10-13T05:38:33+00:00"
+    },
+    "e12_s320": {
+      "map5095": 22.5,
+      "ap50": 36.7,
+      "ap_small": 5.4,
+      "ap_medium": 22.1,
+      "ap_large": 39.5,
+      "gpu_forward_ms": 0.9,
+      "gpu_nms_ms": 0.87,
+      "params_m": 0.91,
+      "gflops": 0.66,
+      "epoch": 12,
+      "eval_s": 72.0,
+      "evaluated_utc": "2026-10-13T05:39:45+00:00"
+    },
+    "e12_s512": {
+      "map5095": 27.1,
+      "ap50": 43.6,
+      "ap_small": 11.2,
+      "ap_medium": 29.2,
+      "ap_large": 39.5,
+      "gpu_forward_ms": 2.11,
+      "gpu_nms_ms": 0.96,
+      "params_m": 0.91,
+      "gflops": 1.69,
+      "epoch": 12,
+      "eval_s": 96.3,
+      "evaluated_utc": "2026-10-13T05:41:22+00:00"
+    }
+  },
+  "updated_utc": "2026-10-13T05:41:22+00:00",
+  "train_s": 10753.0,
+  "trained_utc": "2026-10-13T02:29:36+00:00",
+  "repo_commit": "490f642"
+}
