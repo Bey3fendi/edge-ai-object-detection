@@ -33,12 +33,17 @@ değişiklik gerekiyorsa söyle.
    **Karar 6 ile güncellendi:** bu ızgara araması (nas_r1b, nas_r2) önçalışmadır.
 6. **Gerçek NAS (2026-10-16, danışman görüşmesi):** one-shot ağırlık paylaşımlı süper ağ
    (`exps/nas/supernet.py`): her DW katmanında kernel {3, 5, 7} (30 katman) · dark3/dark4 derinlik
-   {1, 2, 3} · çözünürlük 320–512 (adım 32). Genişlik aramada yok. Süper ağ train2017 − 5000 görselle
-   sandwich kuralıyla eğitilir; arama uygunluğu train2017'den ayrılan fit1k'da (BN kalibreli) ölçülür —
-   **val2017 aramada kullanılmaz**. Gecikme: cihaz LUT'u (`scripts/latency_lut.py`, uçtan uca doğrulama
-   ρ ≥ 0,9). Arama: NSGA-II (`scripts/supernet_search.py`). Pareto'dan 2–3 alt ağ tam COCO'da nas_r2
-   tarifiyle (12 epoch) ince ayarlanır; seçim cihazında (RPi 5; RPi gelene kadar Jetson ön ölçümü).
-   Hesaplama Colab L4.
+   {1, 2, 3} · çözünürlük 320–512 (adım 32). Genişlik aramada yok. Süper ağ tam train2017 ile sandwich
+   (en büyük + en küçük + 2 rastgele; inplace distillation yok — BigNAS'tan açık sapma), 60 epoch + önceden
+   yazılı uzatma kuralı. **val2017 A/B** (`scripts/make_splits.py`): A arama (A_fit1k, BN kalibreli) ve tüm
+   yöntem kararları; **B mühürlü** — NAS, budama, nicemleme kararları bitene kadar hiçbir kodda açılmaz.
+   Nihai değerlendirme: gönderim kabulü doğrulanırsa COCO test-dev, değilse B. Gecikme: cihaz LUT'u
+   (`scripts/latency_lut.py`). Arama: NSGA-II 50 × 20. Sıralama referansı: 10 aday sıfırdan 60 epoch.
+   Final + orijinal Nano sıfırdan 300 epoch × 3 tohum. Hesaplama Colab L4, tek GPU.
+7. **Kesintiye dayanıklılık (zorunlu, tüm uzun koşular):** tam durum (ham + EMA, optimizer, AMP ölçekleyici,
+   RNG, epoch/iter) doğrulanmış depoya (`scripts/ckpt_store.py`: benzersiz dosya, sha256 + yükleme denetimi,
+   önceki sağlam kayıt silinmez); tohumlu veri sırası ve örnek başına artırma (`scripts/nas_data.py`).
+   Uzun koşudan önce kesinti testi (eğitim ortasında ve kayıt yazılırken öldürme) geçmeli.
 
 ## Teknik kurallar
 - Yalnız **yapısal** kanal budama (Torch-Pruning DepGraph). Başlık koruması

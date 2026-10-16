@@ -1,161 +1,1299 @@
 {
-	"nodes":[
-		{"id":"g2b","type":"group","x":-30,"y":1300,"width":2420,"height":820,"label":"2b · Gerçek NAS: one-shot süper ağ + LUT + evrimsel arama — 10-16 → 10-23 (≈ 7 gün, ≈ 30 GPU-sa, ≈ 45 CU)"},
-		{"id":"g7","type":"group","x":-30,"y":3800,"width":1700,"height":1040,"label":"7 · Dağıtım ve benchmark — 11-04 → 11-11 (≈ 6 iş günü, cihazda)"},
-		{"id":"g1","type":"group","x":-30,"y":-50,"width":1360,"height":820,"label":"1 · Kurulum ve baseline — ✅ 09-24 → 10-04 (gerçekleşen ≈ 10 gün)"},
-		{"id":"g2","type":"group","x":-30,"y":850,"width":2380,"height":380,"label":"2a · Makro-mimari ızgara araması (önçalışma) — ✅ 10-04 → 10-13 (9 gün, ≈ 17 CU)"},
-		{"id":"g6","type":"group","x":-30,"y":3250,"width":1700,"height":470,"label":"6 · Kuantizasyon — 10-31 → 11-03 (2–4 gün; QAT gerekirse ≈ 8 CU)"},
-		{"id":"g4","type":"group","x":-30,"y":2500,"width":1020,"height":430,"label":"4 · Yapısal budama — 10-24 → 10-29 (≈ 5 gün, ≈ 13 GPU-sa, ≈ 19 CU)"},
-		{"id":"g5","type":"group","x":-30,"y":2950,"width":1020,"height":200,"label":"5 · ONNX dönüşümü — 10-30 (1 gün, GPU yok)"},
-		{"id":"g3","type":"group","x":-30,"y":2200,"width":1020,"height":170,"label":"3 · Tam eğitim — 2b-R6'ya taşındı"},
-		{"id":"b2","type":"text","text":"✅ Referans ağırlıklarla smoke test · 09-30\n⏱ gerçekleşen < 1 sa","x":340,"y":600,"width":280,"height":90},
-		{"id":"b3","type":"text","text":"✅ Baseline: 25,8 mAP@[.5:.95] / AP50 41,4 (val2017, 416) · 09-30; Colab'da 10-04 tekrar\n⏱ eval 88 sn","x":680,"y":600,"width":280,"height":110},
-		{"id":"n1","type":"text","text":"✅ Arama uzayı: çözünürlük · aktivasyon · CSP derinliği · DW kernel → 36 aday; 10k alt küme\n⏱ 1 gün (10-05)","x":340,"y":900,"width":280,"height":130},
-		{"id":"n3","type":"text","text":"✅ 02b: 19 aday ONNX (opset 13) · 10-09\n⏱ ≈ 30 dk Colab","x":1020,"y":900,"width":280,"height":110},
-		{"id":"n4","type":"text","text":"✅ N4: Jetson CPU ön ölçüm, 19 aday ≈ 65 dk · 10-12\n(RPi 5 gelince tekrar)","x":1360,"y":900,"width":280,"height":110},
-		{"id":"n5","type":"text","text":"✅ Pareto: yalnız silu_dfull k3/k5 (orijinal Nano + k5)\n⏱ analiz 0,5 gün","x":1700,"y":900,"width":280,"height":110},
-		{"id":"t1","type":"text","text":"Seçilen alt ağ(lar) tam COCO 12 epoch (nas_r2 kontrolüyle aynı tarif)\n⏱ 2b-R6 içinde (≈ 3 sa/aday)","x":340,"y":2250,"width":280,"height":110},
-		{"id":"t2","type":"text","text":"NAS öncesi/sonrası: kontrol 25,7 (416) vs seçilen alt ağ; ablasyon \"yalnız NAS\" satırı\n⏱ 2b-R8 içinde","x":680,"y":2250,"width":280,"height":110},
-		{"id":"n2","type":"text","text":"✅ nas_r1b: 13 koşu × ≈ 940 sn ≈ 3,4 sa + eval 36 × 88 sn ≈ 0,9 sa (≈ 6,6 CU) · 10-06/07\n(nas_r1: lr 0,01 kontrolü bozdu, durduruldu)","x":680,"y":900,"width":280,"height":150},
-		{"id":"pilot","type":"text","text":"✅ **Pilot P0** (10-04): 1 epoch 214 sn (kararlı ≈ 69 sn), 0,092 CU; eval 88 sn\n⏱ gerçekleşen 0,5 gün","x":1020,"y":600,"width":280,"height":130,"color":"3"},
-		{"id":"b1","type":"text","text":"✅ COCO baseline reprodüksiyonu · 09-30\n⏱ gerçekleşen 0,5 gün","x":0,"y":600,"width":280,"height":90},
-		{"id":"n0","type":"text","text":"✅ Donanıma duyarlı makro-mimari araması (ızgara)\n⏱ 10-04 → 10-13","x":0,"y":900,"width":280,"height":110},
-		{"id":"n6","type":"text","text":"✅ 2. tur nas_r2: ReLU k3 vs kontrol, tam COCO 12 ep, 2 × ≈ 3 sa (9,7 CU) · 10-12/13 → Δ −2,9 < −1,0: ReLU geçmez","x":2040,"y":900,"width":280,"height":150},
-		{"id":"n7","type":"text","text":"Sonuç: bu ızgarada orijinal Nano Pareto-optimal.\n**Danışman (10-16): ızgara araması tez için yetersiz → gerçek NAS (2b)**","x":2040,"y":1060,"width":280,"height":150,"color":"4"},
-		{"id":"t0","type":"text","text":"Tam eğitim / fine-tune → 2b-R6'da","x":0,"y":2250,"width":280,"height":90},
-		{"id":"p0","type":"text","text":"Yapısal kanal/filtre budama — Torch-Pruning DepGraph, başlık korumalı (cls/reg/obj_preds)\n⏱ hazırlık 2 gün (kod, test, ONNX eşdeğerliği) · 10-24 → 10-25","x":0,"y":2550,"width":280,"height":150},
-		{"id":"p1","type":"text","text":"Oran taraması %10/20/30/40 × 2 model (NAS modeli + ablasyon için orijinal Nano)\nkısa FT 10k / 10 ep ≈ 17 dk + eval 1,5 dk → 8 × ≈ 20 dk ≈ 2,7 sa ≈ 4 CU · 10-26","x":340,"y":2550,"width":280,"height":150},
-		{"id":"p2","type":"text","text":"Seçim: ≤ 1,0 puan kayıpla en yüksek oran (her model için)\n⏱ 0,5 gün","x":680,"y":2550,"width":280,"height":110},
-		{"id":"s1","type":"text","text":"Raspberry Pi 5 konfigürasyonu\n⏳ cihaz henüz gelmedi\n⏱ geldiğinde ≈ 1 gün (OS, ORT, governor, güç ölçer)","x":0,"y":0,"width":280,"height":90},
-		{"id":"s2","type":"text","text":"✅ Jetson Orin Nano konfigürasyonu\nL4T R36.4.7, MAXN_SUPER · 10-04\n⏱ gerçekleşen ≈ 1 gün","x":0,"y":150,"width":280,"height":110},
-		{"id":"s3","type":"text","text":"✅ Çalışma ortamı (Git) · 10-04\n⏱ gerçekleşen 0,5 gün","x":0,"y":300,"width":280,"height":90},
-		{"id":"s4","type":"text","text":"✅ YOLOX submodule (fork 3ec6263) · 10-04\n⏱ gerçekleşen 0,5 gün","x":0,"y":450,"width":280,"height":90},
-		{"id":"legend","type":"text","text":"**Lejant**\n🟥 kırmızı: açık karar / dış bağımlılık (RPi 5)\n🟩 yeşil: verilmiş karar / tamamlanan sonuç\n🟨 sarı: sıradaki somut iş\n🟦 mavi: zaman hesabı / çizelge\n✅ bitti · ⏳ bekliyor · ⏱ süre (gerçekleşen ya da tahmin)\nKaynak: `Tez_2026-10-03_17-12-57.png` (aslı korunuyor)","x":-560,"y":-50,"width":420,"height":230},
-		{"id":"p3","type":"text","text":"Fine-tune (RPi 5 kapısı: N4/LUT RPi'de tekrarlanmış olmalı)","x":0,"y":2760,"width":280,"height":110},
-		{"id":"p4","type":"text","text":"Tam COCO 20 epoch, düşük lr · 20 × 886 sn ≈ 4,9 sa/model × 2 (NAS+budama, yalnız budama) ≈ 9,8 sa ≈ 15 CU · 10-27 → 10-28","x":340,"y":2760,"width":280,"height":130},
-		{"id":"p5","type":"text","text":"Budama + FT öncesi/sonrası karşılaştırma\n⏱ 0,5 gün · 10-29","x":680,"y":2760,"width":280,"height":110},
-		{"id":"o0","type":"text","text":"ONNX dönüşümü: 4 ablasyon modeli (baseline · yalnız NAS · yalnız budama · NAS+budama)\n⏱ 1 gün","x":0,"y":3000,"width":280,"height":130},
-		{"id":"o1","type":"text","text":"Kaydedilen model nesnesini doğrudan dışa aktar (export_onnx.py budanmış modeli yükleyemez)\n⏱ 4 × ≈ 5 dk","x":340,"y":3000,"width":280,"height":130},
-		{"id":"o2","type":"text","text":"PyTorch bağımlılığını kaldır + PyTorch/ORT çıktı eşdeğerliği (kod çözülmüş uzay)\n⏱ 4 × ≈ 2 dk","x":680,"y":3000,"width":280,"height":110},
-		{"id":"k2","type":"text","text":"## ✅ Karar 2 — mAP, PTQ eşiği ve QAT (2026-10-03)\n- **mAP:** COCO val2017 mAP@[.5:.95] ana, mAP@.5 yardımcı; aynı ön/son işlem ve NMS.\n- **PTQ eşiği:** INT8, FP32'ye göre **ΔmAP ≤ 2,0 puan** (mutlak).\n- **QAT:** en fazla **2 deneme**, her biri **10 epoch**.\n- **Fallback:** mixed precision (hassas katmanlar/head FP16-FP32) → yine olmazsa sonucu olduğu gibi raporla.\n- **Toplam bütçe:** orijinal YOLOX baseline'a göre NAS + budama + INT8 toplam kaybı **≤ 4,0 puan**.\n\nKaynak: Furkan'ın kararı","x":2100,"y":3000,"width":340,"height":335,"color":"4"},
-		{"id":"q6","type":"text","text":"Hâlâ yetersiz → QAT'a devam (en fazla 2 deneme → ≤ 5 sa)","x":1360,"y":3300,"width":280,"height":110},
-		{"id":"q0","type":"text","text":"Statik PTQ INT8\n⏱ kod 1 gün","x":0,"y":3450,"width":280,"height":90},
-		{"id":"q1","type":"text","text":"ORT statik INT8 (PTQ), QDQ · 500 COCO kalibrasyon görseli\n⏱ 4 model × (kalibrasyon ≈ 5 dk + ORT CPU val2017 mAP ≈ 15 dk) ≈ 1,5 sa","x":340,"y":3450,"width":280,"height":130},
-		{"id":"q2","type":"text","text":"Modeli test et: ΔmAP ≤ 2,0 puan mı? (FP32'ye göre)\n⏱ q1 içinde","x":680,"y":3450,"width":280,"height":110},
-		{"id":"q3","type":"text","text":"mAP düşüşü çok kötü → QAT\n⏱ deneme başına 10 epoch tam COCO ≈ 2,5 sa ≈ 3,8 CU","x":1020,"y":3450,"width":280,"height":110},
-		{"id":"q4","type":"text","text":"Modeli yeniden test et\n⏱ ≈ 20 dk","x":1360,"y":3450,"width":280,"height":90},
-		{"id":"q5","type":"text","text":"mAP yeterli → DONE","x":1360,"y":3600,"width":280,"height":90,"color":"4"},
-		{"id":"q7","type":"text","text":"mAP zaten yeterli → DONE","x":1020,"y":3600,"width":280,"height":90,"color":"4"},
-		{"id":"c","type":"text","text":"**Canonical ONNX = `yolox_fp32.onnx`**\nBudama + fine-tune sonrası FP32 — asıl referans","x":0,"y":3850,"width":300,"height":110,"color":"4"},
-		{"id":"k1","type":"text","text":"## ✅ Karar 1 — Canonical ONNX (2026-10-03)\n- **FP32 ONNX asıl referans** (canonical); Stage-1'in ana verisi FP32 çıktıları.\n- INT8 (QDQ) model FP32'den türetilir ve **ayrıca ölçülür** — ek veri olarak sunulur.\n- İki artefakt ayrı adlandırılır; her benchmark satırı hangi artefaktı kullandığını belirtir.\n\nKaynak: Furkan'ın kararı","x":-560,"y":3850,"width":420,"height":300,"color":"4"},
-		{"id":"i8","type":"text","text":"**`yolox_int8_qdq.onnx`**\nFP32'den PTQ (gerekirse QAT) ile türetilir — Stage-1'de ayrıca ölçülür (ek veri)","x":380,"y":3850,"width":300,"height":110},
-		{"id":"d1","type":"text","text":"**Stage-1**: ORT CPU · FP32 (ana) + INT8 (ek) · RPi 5 · Jetson Orin Nano\n⏱ 8 satır/cihaz × (≈ 4 dk ölçüm + güç ölçer) ≈ 1 sa/cihaz + cihazda INT8 mAP 4 × ≈ 15 dk → 2 gün (11-04 → 11-05)","x":340,"y":4100,"width":280,"height":170},
-		{"id":"m1","type":"text","text":"Çıktı metrikleri: mAP / gecikme (model) / FPS (model) / FPS (uçtan uca) / W / FPS-W / J-frame (toplam + artımsal) / RAM","x":680,"y":4100,"width":280,"height":130},
-		{"id":"m2","type":"text","text":"Fiziksel: USB-C güç ölçer (girişte toplam güç) + idle güç; 100 ısınma → 60 sn × 3","x":1020,"y":4100,"width":280,"height":110},
-		{"id":"x1","type":"text","text":"CSV dosyasına yaz","x":1360,"y":4100,"width":280,"height":90},
-		{"id":"tbl","type":"text","text":"### Örnek final tablo (sembolik; ölçüm yok)\n| Cihaz | Aşama | Arka uç | Model tipi | Giriş | mAP | Gecikme (ms) | FPS (model) | FPS (uçtan uca) | Güç (W) | Idle (W) | FPS/W | J/frame (toplam) | J/frame (artımsal) | RAM (MB) | tegrastats (W) |\n|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|\n| RPi 5 | Stage-1 | ORT CPU | FP32 | 416×416 | mAP1 | Ölçüm 1 | F1 | E1 | W1 | I1 | F1/W1 | W1/F1 | (W1−I1)/F1 | R1 | — |\n| Jetson Orin Nano | Stage-1 | ORT CPU | FP32 | 416×416 | mAP2 | Ölçüm 2 | F2 | E2 | W2 | I2 | F2/W2 | W2/F2 | (W2−I2)/F2 | R2 | T2 |\n| RPi 5 | Stage-1 | ORT CPU | INT8 (QDQ) — ek | 416×416 | mAP1b | Ölçüm 1b | F1b | E1b | W1b | I1b | F1b/W1b | W1b/F1b | (W1b−I1b)/F1b | R1b | — |\n| Jetson Orin Nano | Stage-1 | ORT CPU | INT8 (QDQ) — ek | 416×416 | mAP2b | Ölçüm 2b | F2b | E2b | W2b | I2b | F2b/W2b | W2b/F2b | (W2b−I2b)/F2b | R2b | T2b |\n| RPi 5 | Stage-2 | ncnn | FP32 (doğrulama) | 416×416 | mAP3a | Ölçüm 3a | F3a | E3a | W3a | I3a | F3a/W3a | W3a/F3a | (W3a−I3a)/F3a | R3a | — |\n| RPi 5 | Stage-2 | ncnn | INT8 (ncnn2int8) | 416×416 | mAP3 | Ölçüm 3 | F3 | E3 | W3 | I3 | F3/W3 | W3/F3 | (W3−I3)/F3 | R3 | — |\n| Jetson Orin Nano | Stage-2 | TensorRT | FP16 | 416×416 | mAP4a | Ölçüm 4a | F4a | E4a | W4a | I4a | F4a/W4a | W4a/F4a | (W4a−I4a)/F4a | R4a | T4a |\n| Jetson Orin Nano | Stage-2 | TensorRT | INT8 (QDQ) | 416×416 | mAP4 | Ölçüm 4 | F4 | E4 | W4 | I4 | F4/W4 | W4/F4 | (W4−I4)/F4 | R4 | T4 |","x":1760,"y":4100,"width":1700,"height":480},
-		{"id":"m3","type":"text","text":"Jetson'da ayrıca tegrastats (ayrı sütun, karşılaştırmaya girmez)","x":1020,"y":4250,"width":280,"height":90},
-		{"id":"d2","type":"text","text":"Modeli platforma göre optimize et (aynı FP32 ağırlıklar; INT8'ler cihazda ayrıca mAP ölçülür)\n⏱ Stage-2 toplam 4 gün (11-06 → 11-11)","x":0,"y":4400,"width":280,"height":130},
-		{"id":"k4","type":"text","text":"## ✅ Karar 4 — Stage-2 INT8 kaynakları (2026-10-03)\n- **TensorRT INT8:** QDQ modelden (explicit); kendi kalibratörü kullanılmaz.\n- **TensorRT FP16:** FP32 ONNX'ten ek satır.\n- **ncnn:** QDQ ONNX'i **desteklemez** (kaynak kodu + issue #5183 ile doğrulandı) → FP32 pnnx modeli + `ncnn2table`/`ncnn2int8`, aynı 500 kalibrasyon görseli.\n- **ncnn FP32** satırı dönüşüm doğrulaması.\n- Her INT8 modelin mAP'i cihazda ayrıca ölçülür; ΔmAP ≤ 2,0 her birine uygulanır.\n\nKaynak: Furkan'ın kararı · [[knowledge/concepts/ncnn-qdq-onnx-destegi]]","x":-560,"y":4510,"width":460,"height":400,"color":"4"},
-		{"id":"d3","type":"text","text":"**Stage-2**: Platforma özel maksimum optimize runtime\n**RPi 5 (ncnn, ARM NEON):** FP32 (doğrulama) + INT8 (ncnn2table + ncnn2int8, aynı 500 kalibrasyon görseli) ⏱ ≈ 2 gün\n**Jetson (TensorRT GPU):** FP16 + INT8 (QDQ, explicit) ⏱ engine ≈ 10 dk/model, toplam ≈ 1,5 gün","x":0,"y":4550,"width":280,"height":240},
-		{"id":"m4","type":"text","text":"Çıktı metrikleri: mAP / gecikme (model) / FPS (model) / FPS (uçtan uca) / W / FPS-W / J-frame (toplam + artımsal) / RAM","x":340,"y":4550,"width":280,"height":130},
-		{"id":"m5","type":"text","text":"Fiziksel: USB-C güç ölçer (girişte toplam güç) + idle güç; 100 ısınma → 60 sn × 3","x":680,"y":4550,"width":280,"height":110},
-		{"id":"x2","type":"text","text":"CSV dosyasına yaz","x":1020,"y":4550,"width":280,"height":90},
-		{"id":"m6","type":"text","text":"Jetson'da ayrıca tegrastats (ayrı sütun, karşılaştırmaya girmez)","x":680,"y":4700,"width":280,"height":90},
-		{"id":"k3","type":"text","text":"## ✅ Karar 3 — Güç ve ölçüm protokolü (2026-10-03)\n- **Ana güç:** iki cihazda da girişte USB-C güç ölçer (toplam kart gücü); cihazlar arası karşılaştırma yalnız bununla.\n- **Enerji:** J/frame (toplam) = W ÷ FPS; J/frame (artımsal) = (W_çıkarım − W_idle) ÷ FPS. Idle her oturumda ayrıca ölçülür.\n- **tegrastats:** yalnız Jetson, ayrı sütun; kart içi dağılım için, karşılaştırmaya girmez.\n- **Protokol:** 100 çıkarım ısınma atılır → 60 sn kararlı ölçüm × 3 tekrar, ortalama ± std. Sabit: nvpmodel/jetson_clocks, RPi governor, soğutma; çevre birimi yok; ölçer örnekleme hızı kaydedilir.\n- **FPS:** ana metrik yalnız model penceresi; **uçtan uca FPS** (ön işlem + model + NMS) ayrı sütun.\n\nKaynak: Furkan'ın kararı","x":1360,"y":4870,"width":460,"height":470,"color":"4"},
-		{"id":"k5","type":"text","text":"## ✅ Karar 5 — Makro-mimari araması ve budama (2026-10-03) (Geçici)\n- **NAS → makro-mimari araması:** pretrained Nano'dan; çözünürlük 320/416/512 · aktivasyon SiLU/ReLU/HardSwish · CSP derinliği mevcut/−1 · DW kernel 3/5. Kanal sayısına dokunmaz (o budamanın işi).\n- Adaylar 10k alt kümede 10 epoch; seçilen mimari tam COCO ~20-30 epoch FT.\n- **Gecikme ölçütü:** RPi 5 + ORT CPU; NAS bütçesinde RPi'de en hızlı aday. Jetson raporlanır.\n- **Tek mimari**; en fazla 2 tur, Pareto iyileşmezse dur.\n- **mAP bütçesi:** NAS ≤ 1,0 · budama ≤ 1,0 · INT8 ≤ 2,0.\n- **Budama:** %10/20/30/40 taraması; ≤ 1,0 puanla en yüksek oran, tam 20 epoch FT yalnız onunla.\n- **Ablasyon:** baseline · yalnız NAS · yalnız budama · NAS+budama.\n- **Kod düzeltmesi:** başlık koruması `head.cls_preds/reg_preds/obj_preds`.\n- Klasik NAS (COCO 300 ep / VOC) bütçe ve tutarlılık nedeniyle reddedildi.\n\n⚠️ **Karar 6 (2026-10-16) ile güncellendi:** ızgara araması (bu düğüm) önçalışma kaldı; asıl NAS = 2b (one-shot süper ağ).\n\n**İlk iş:** Colab'da 1 epoch pilot → gerçek epoch süresi ve kredi.\n\nKaynak: Furkan'ın kararı · [[knowledge/karar-5-nas-ve-budama]]","x":-800,"y":840,"width":460,"height":680,"color":"4"},
-		{"id":"275db854d01806b7","type":"text","text":"Bu canvas içine her iş ne kadar sürecek ayrıntılı yaz ve her bloga bir süre biç\n\nSahte NAS tez için yeterli değil gerçek NAS a geçiş için gerekli değişiklikleri planla ve uygula sonrasında gerçek NAS eğitimi için ssb evren kullanılabilir mi yoksa google colab mi karar ver.\n\nhocaya gıthub lınkını, sunumu, ve bu canvası finalize edince at","x":1467,"y":13,"width":250,"height":527},
-		{"id":"r0","type":"text","text":"✅ **R0 · Karar + tasarım** (10-16)\nOne-shot süper ağ (SPOS/BigNAS tarzı); genişlik yok (budamanın işi); Colab L4 (SSB Evren erişimi yok)\n⏱ 0,5 gün · [[knowledge/karar-6-danisman-gorusmesi-2026-10-16]]","x":0,"y":1350,"width":300,"height":200,"color":"4"},
-		{"id":"r1","type":"text","text":"✅ **R1 · Kod** (10-16)\n`exps/nas/supernet.py`, `subnet.py`, `scripts/supernet_search.py` (BN kalibrasyonu, NSGA-II), `latency_lut.py`, `make_holdout.py`, `check_supernet.py`, notebook 03\n⏱ 1 gün · CPU öz-denetim geçti","x":340,"y":1350,"width":300,"height":200,"color":"4"},
-		{"id":"r2","type":"text","text":"**R2 · Colab pilot** (notebook 03, hücre 1–8)\nveri ≈ 20 dk · arama ayrımı 5000 görsel · öz-denetim · başlangıç fit1k · 10k'da 2+1 epoch süper ağ + resume\n⏱ ≈ 1 sa, ≈ 1,5 CU · 10-17\n→ iter süresi ölçülür, epoch sayısı Furkan'la sabitlenir","x":680,"y":1350,"width":300,"height":200,"color":"3"},
-		{"id":"r3","type":"text","text":"**R3 · Süper ağ eğitimi** (hücre 9–11) — uzun koşu, Furkan onayıyla\ntrain2017 − 5k, 20 epoch, sandwich (max + min + 1 rastgele), erken kontrol epoch 4\n⏱ **≈ 14 sa (12,5–15,5), ≈ 21 CU** · 10-17 → 10-18 (resume dahil 1,5 gün)","x":1020,"y":1350,"width":340,"height":200,"color":"3"},
-		{"id":"r5","type":"text","text":"**R5 · Evrimsel arama** (notebook 03b)\nNSGA-II: nüfus 64, 15 nesil ≈ 544 alt ağ; amaçlar fit1k mAP ↑ (BN kalibreli) · LUT gecikmesi ↓\n⏱ ≈ 544 × 25 sn ≈ 3,8 sa ≈ 6 CU · 10-19","x":1400,"y":1350,"width":300,"height":200},
-		{"id":"r6","type":"text","text":"**R6 · Aday ince ayarı** (notebook 03c)\nPareto'dan 3 alt ağ (Nano 416 gecikmesinde en iyi mAP · −%20 · −%35) → holdout 5k'da yeniden sıralama → tam COCO 12 epoch (nas_r2 tarifi)\n⏱ 3 × 3,0 sa ≈ 9 sa ≈ 14 CU · 10-20 → 10-21","x":1740,"y":1350,"width":300,"height":200},
-		{"id":"r7","type":"text","text":"**R7 · ONNX + Jetson doğrulama**\n3 aday + kontrol, val2017 mAP (3 çöz.), Karar 3 protokolüyle gecikme (4 × 3 × ≈ 3,5 dk)\n⏱ 0,5 gün · 10-22","x":2080,"y":1350,"width":280,"height":200},
-		{"id":"r4","type":"text","text":"**R4 · Gecikme tablosu (LUT), Jetson CPU** — R3 ile paralel (ağırlıktan bağımsız)\nbuild: 7 çöz. × (30 DW × 3 kernel + 4 blok) mikro ONNX + 7 sabit + 48 doğrulama ağı (PC, ≈ 15 dk)\nmeasure: ≈ 660 mikro × 3,5 sn + 55 tam × 11 sn ≈ 50 dk · fit: ρ ≥ 0,9 şartı\n⏱ Furkan Jetson'da ≈ 1,5 sa · 10-17/18","x":1020,"y":1600,"width":340,"height":200,"color":"3"},
-		{"id":"rpi","type":"text","text":"**RPi 5 kapısı** (Karar 5 kuralı)\nRPi gelince LUT measure + fit RPi'de tekrar (≈ 1,5 sa); seçim ölçütü RPi. Sıralama Jetson'la tutarsa değişiklik yok; tutmazsa R5'in son seçimi RPi LUT'uyla tekrarlanır (≈ 1 sa, arama yeniden koşmaz: değerlendirilmiş alt ağlar önbellekte)\n⏱ tarih: cihaza bağlı","x":1400,"y":1600,"width":300,"height":200,"color":"1"},
-		{"id":"r8","type":"text","text":"**R8 · Seçim kararı → Done**\nNAS bütçesi: kontrole (nas_r2, 416: 25,7) göre ≤ 1,0 puan; en hızlı uygun alt ağ\n+ tez bölümü güncellemesi (makro ızgara = önçalışma, süper ağ = asıl yöntem)\n⏱ 1 gün · 10-23","x":1740,"y":1600,"width":300,"height":200},
-		{"id":"rcalc","type":"text","text":"### ⏱ Süper ağ eğitim süresi hesabı (R3)\n- **Ölçülmüş taban:** tam COCO, tek ağ, L4, b64, fp16: nas_r2 10 632 sn / 12 epoch = **886 sn/epoch** (0,38 CU).\n- **Veri:** 118 287 − 5 000 (arama ayrımı) = 113 287 görsel → 1 770 iter/epoch (×0,958) → **849 sn** tek ağ.\n- **Sandwich:** her iterasyonda 3 alt ağ ileri+geri, veri bir kez yüklenir (data_time ≈ 0,003 sn). Göreli maliyet: en büyük (k7, d33) ≈ 1,1× · en küçük (k3, d11) ≈ 0,8× · rastgele ≈ 1,0× → **≈ 2,9×** → epoch ≈ 2,9 × 849 ≈ **2 460 sn ≈ 41 dk**.\n- **cuDNN ilk-şekil maliyeti:** yeni (kernel × giriş boyutu) kombinasyonları ilk epoch'a ≈ +10–15 dk (P0: tek ağda boyut başına 18 sn).\n- **20 epoch:** 20 × 41 dk + 15 dk ≈ **13,9 sa ≈ 21 CU** (1,54 CU/sa). Erken kontrol + 5 anlık görüntü × 4 alt ağ × ≈ 30 sn ≈ 12 dk.\n- **Belirsizlik:** çarpan 2,6–3,2× → 12,5–15,5 sa (19–24 CU). 16 epoch ≈ 11 sa · 24 epoch ≈ 16,7 sa.\n- **Kesinleştirme:** R2 pilotu kararlı iter süresini ölçer (pilot.json → est_16/20/24ep); epoch sayısı manifestten önce Furkan'la sabitlenir.\n- **Takvim:** Colab oturum sınırı aşılabilir → her epoch Drive'a atomik kopya + resume; 1,5 gün ayrıldı.\n\n**2b toplamı:** pilot 1 + süper ağ 14 + arama 4 + ince ayar 9 + eval/ONNX ≈ 1 → **≈ 30 GPU-sa ≈ 45 CU**; takvim 10-16 → 10-23 (+%30 tampon → 10-25).","x":0,"y":1600,"width":980,"height":490,"color":"5"},
-		{"id":"k6","type":"text","text":"## ✅ Karar 6 — Gerçek NAS (2026-10-16)\n- **Danışman:** ızgara araması (36 aday) tez için yetersiz → gerçek NAS.\n- **Yöntem:** one-shot ağırlık paylaşımlı süper ağ → cihaz LUT'u → NSGA-II → 2–3 alt ağın tam COCO ince ayarı → cihazda doğrulama.\n- **Uzay:** her DW katmanında kernel {3,5,7} (30 katman) · dark3/dark4 derinlik {1,2,3} · çözünürlük 320–512 (adım 32) ≈ 10¹⁶ alt ağ.\n- **Genişlik aramada yok** (budamanın işi).\n- **Hesaplama:** Colab L4; SSB Evren erişimi yok.\n- **Canvas = zaman çizelgesi;** finalize edilince hocaya GitHub + sunum + canvas.\n\nKaynak: Furkan'ın kararı · [[knowledge/karar-6-danisman-gorusmesi-2026-10-16]]","x":-800,"y":1560,"width":460,"height":420,"color":"4"},
-		{"id":"timeline","type":"text","text":"## 🗓️ Zaman çizelgesi (2026-10-16 itibarıyla)\n| Aşama | Tarih | Süre | GPU / CU | Durum |\n|---|---|---|---|---|\n| 1 · Kurulum + baseline + P0 | 09-24 → 10-04 | ≈ 10 gün | 0,1 CU | ✅ |\n| 2a · Makro ızgara araması (önçalışma) | 10-04 → 10-13 | 9 gün | ≈ 17 CU | ✅ |\n| Danışman sunumu + karar 6 | 10-14 → 10-16 | 3 gün | — | ✅ |\n| **2b · Gerçek NAS** (R0–R8) | **10-16 → 10-23** | **≈ 7 gün** | **≈ 30 sa · ≈ 45 CU** | 🟨 R2 sırada |\n| ↳ R3 süper ağ eğitimi | 10-17 → 10-18 | ≈ 14 sa (12,5–15,5) | ≈ 21 CU | |\n| 3 · Tam eğitim | 2b-R6 içinde | — | — | |\n| 4 · Yapısal budama | 10-24 → 10-29 | ≈ 5 gün | ≈ 13 sa · ≈ 19 CU | |\n| 5 · ONNX | 10-30 | 1 gün | — | |\n| 6 · Kuantizasyon (PTQ, gerekirse QAT) | 10-31 → 11-03 | 2–4 gün | 0–8 CU | |\n| 7 · Dağıtım + benchmark (Stage-1/2) | 11-04 → 11-11 | ≈ 6 iş günü | — | RPi 5'e bağlı |\n| **Toplam kalan** | **10-17 → 11-11** | **≈ 26 gün** (+%30 tampon → ≈ 11-18) | **≈ 70 CU** | |\n\n**Varsayımlar:** Colab L4 1,54 CU/sa; süreler ölçülmüş P0 / nas_r1b / nas_r2 sürelerinden türetildi (tahmin, ölçüm değil). Uzun koşular Furkan'ın başlatma onayıyla. Tarihler ardışık iş günü + paralel yürüyen cihaz işleri. RPi 5 gelmezse 7. aşamanın RPi satırları ve RPi kapısı kayar.\n**Harcanan:** ≈ 17 CU · **kalan tahmini:** ≈ 70 CU · Colab Pro bütçesi ≈ 400 kredi.\n**Her blokta:** ⏱ = süre (gerçekleşen ya da tahmini) · ✅ bitti · 🟨 sıradaki · tarih = plan.","x":1800,"y":-50,"width":1180,"height":800,"color":"5"}
+	"nodes": [
+		{
+			"id": "g2b",
+			"type": "group",
+			"x": -30,
+			"y": 1300,
+			"width": 2420,
+			"height": 950,
+			"label": "2b · Gerçek NAS: one-shot süper ağ → arama → sıfırdan doğrulama — 10-16 → ≈ 11-20 (tek GPU, ≈ 700 GPU-sa, ≈ 1.100 CU; tahmin, pilot kesinleştirir)"
+		},
+		{
+			"id": "g7",
+			"type": "group",
+			"x": -30,
+			"y": 3950,
+			"width": 1700,
+			"height": 1040,
+			"label": "7 · Dağıtım ve benchmark — ≈ 12-11 → 2027-01-08 (cihazda; tatil payı dahil) → sonra mühürlü değerlendirme (test-dev / B)"
+		},
+		{
+			"id": "g1",
+			"type": "group",
+			"x": -30,
+			"y": -50,
+			"width": 1360,
+			"height": 820,
+			"label": "1 · Kurulum ve baseline — ✅ 09-24 → 10-04 (gerçekleşen ≈ 10 gün)"
+		},
+		{
+			"id": "g2",
+			"type": "group",
+			"x": -30,
+			"y": 850,
+			"width": 2380,
+			"height": 380,
+			"label": "2a · Makro-mimari ızgara araması (önçalışma) — ✅ 10-04 → 10-13 (9 gün, ≈ 17 CU)"
+		},
+		{
+			"id": "g6",
+			"type": "group",
+			"x": -30,
+			"y": 3400,
+			"width": 1700,
+			"height": 470,
+			"label": "6 · Kuantizasyon — ≈ 12-05 → 12-10 (2–4 gün; QAT gerekirse ≈ 8 CU); INT8 kapısı val-A'da"
+		},
+		{
+			"id": "g4",
+			"type": "group",
+			"x": -30,
+			"y": 2650,
+			"width": 1020,
+			"height": 430,
+			"label": "4 · Yapısal budama — ≈ 11-26 → 12-03 (≈ 6 gün, ≈ 13 GPU-sa, ≈ 20 CU); oran seçimi val-A'da"
+		},
+		{
+			"id": "g5",
+			"type": "group",
+			"x": -30,
+			"y": 3100,
+			"width": 1020,
+			"height": 200,
+			"label": "5 · ONNX dönüşümü — ≈ 12-04 (1 gün, GPU yok)"
+		},
+		{
+			"id": "g3",
+			"type": "group",
+			"x": -30,
+			"y": 2350,
+			"width": 1020,
+			"height": 170,
+			"label": "3 · Tam eğitim — 2b-R6'ya taşındı"
+		},
+		{
+			"id": "b2",
+			"type": "text",
+			"text": "✅ Referans ağırlıklarla smoke test · 09-30\n⏱ gerçekleşen < 1 sa",
+			"x": 340,
+			"y": 600,
+			"width": 280,
+			"height": 90
+		},
+		{
+			"id": "b3",
+			"type": "text",
+			"text": "✅ Baseline: 25,8 mAP@[.5:.95] / AP50 41,4 (val2017, 416) · 09-30; Colab'da 10-04 tekrar\n⏱ eval 88 sn",
+			"x": 680,
+			"y": 600,
+			"width": 280,
+			"height": 110
+		},
+		{
+			"id": "n1",
+			"type": "text",
+			"text": "✅ Arama uzayı: çözünürlük · aktivasyon · CSP derinliği · DW kernel → 36 aday; 10k alt küme\n⏱ 1 gün (10-05)",
+			"x": 340,
+			"y": 900,
+			"width": 280,
+			"height": 130
+		},
+		{
+			"id": "n3",
+			"type": "text",
+			"text": "✅ 02b: 19 aday ONNX (opset 13) · 10-09\n⏱ ≈ 30 dk Colab",
+			"x": 1020,
+			"y": 900,
+			"width": 280,
+			"height": 110
+		},
+		{
+			"id": "n4",
+			"type": "text",
+			"text": "✅ N4: Jetson CPU ön ölçüm, 19 aday ≈ 65 dk · 10-12\n(RPi 5 gelince tekrar)",
+			"x": 1360,
+			"y": 900,
+			"width": 280,
+			"height": 110
+		},
+		{
+			"id": "n5",
+			"type": "text",
+			"text": "✅ Pareto: yalnız silu_dfull k3/k5 (orijinal Nano + k5)\n⏱ analiz 0,5 gün",
+			"x": 1700,
+			"y": 900,
+			"width": 280,
+			"height": 110
+		},
+		{
+			"id": "t1",
+			"type": "text",
+			"text": "Seçilen alt ağ(lar) tam COCO 12 epoch (nas_r2 kontrolüyle aynı tarif)\n⏱ 2b-R6 içinde (≈ 3 sa/aday)",
+			"x": 340,
+			"y": 2400,
+			"width": 280,
+			"height": 110
+		},
+		{
+			"id": "t2",
+			"type": "text",
+			"text": "NAS öncesi/sonrası: kontrol 25,7 (416) vs seçilen alt ağ; ablasyon \"yalnız NAS\" satırı\n⏱ 2b-R8 içinde",
+			"x": 680,
+			"y": 2400,
+			"width": 280,
+			"height": 110
+		},
+		{
+			"id": "n2",
+			"type": "text",
+			"text": "✅ nas_r1b: 13 koşu × ≈ 940 sn ≈ 3,4 sa + eval 36 × 88 sn ≈ 0,9 sa (≈ 6,6 CU) · 10-06/07\n(nas_r1: lr 0,01 kontrolü bozdu, durduruldu)",
+			"x": 680,
+			"y": 900,
+			"width": 280,
+			"height": 150
+		},
+		{
+			"id": "pilot",
+			"type": "text",
+			"text": "✅ **Pilot P0** (10-04): 1 epoch 214 sn (kararlı ≈ 69 sn), 0,092 CU; eval 88 sn\n⏱ gerçekleşen 0,5 gün",
+			"x": 1020,
+			"y": 600,
+			"width": 280,
+			"height": 130,
+			"color": "3"
+		},
+		{
+			"id": "b1",
+			"type": "text",
+			"text": "✅ COCO baseline reprodüksiyonu · 09-30\n⏱ gerçekleşen 0,5 gün",
+			"x": 0,
+			"y": 600,
+			"width": 280,
+			"height": 90
+		},
+		{
+			"id": "n0",
+			"type": "text",
+			"text": "✅ Donanıma duyarlı makro-mimari araması (ızgara)\n⏱ 10-04 → 10-13",
+			"x": 0,
+			"y": 900,
+			"width": 280,
+			"height": 110
+		},
+		{
+			"id": "n6",
+			"type": "text",
+			"text": "✅ 2. tur nas_r2: ReLU k3 vs kontrol, tam COCO 12 ep, 2 × ≈ 3 sa (9,7 CU) · 10-12/13 → Δ −2,9 < −1,0: ReLU geçmez",
+			"x": 2040,
+			"y": 900,
+			"width": 280,
+			"height": 150
+		},
+		{
+			"id": "n7",
+			"type": "text",
+			"text": "Sonuç: bu ızgarada orijinal Nano Pareto-optimal.\n**Danışman (10-16): ızgara araması tez için yetersiz → gerçek NAS (2b)**",
+			"x": 2040,
+			"y": 1060,
+			"width": 280,
+			"height": 150,
+			"color": "4"
+		},
+		{
+			"id": "t0",
+			"type": "text",
+			"text": "Tam eğitim / fine-tune → 2b-R6'da",
+			"x": 0,
+			"y": 2400,
+			"width": 280,
+			"height": 90
+		},
+		{
+			"id": "p0",
+			"type": "text",
+			"text": "Yapısal kanal/filtre budama — Torch-Pruning DepGraph, başlık korumalı (cls/reg/obj_preds); taban modeller = 300 ep final + Nano (1. tohum)\n⏱ hazırlık 2 gün · ≈ 11-26 → 11-27",
+			"x": 0,
+			"y": 2700,
+			"width": 280,
+			"height": 170
+		},
+		{
+			"id": "p1",
+			"type": "text",
+			"text": "Oran taraması %10/20/30/40 × 2 model · kısa FT 10k / 10 ep ≈ 17 dk + val-A eval ≈ 1 dk → 8 × ≈ 20 dk ≈ 2,7 sa ≈ 4 CU · ≈ 11-28",
+			"x": 340,
+			"y": 2700,
+			"width": 280,
+			"height": 150
+		},
+		{
+			"id": "p2",
+			"type": "text",
+			"text": "Seçim: ≤ 1,0 puan kayıpla en yüksek oran (her model için)\n⏱ 0,5 gün",
+			"x": 680,
+			"y": 2700,
+			"width": 280,
+			"height": 110
+		},
+		{
+			"id": "s1",
+			"type": "text",
+			"text": "Raspberry Pi 5 konfigürasyonu\n⏳ cihaz henüz gelmedi\n⏱ geldiğinde ≈ 1 gün (OS, ORT, governor, güç ölçer)",
+			"x": 0,
+			"y": 0,
+			"width": 280,
+			"height": 90
+		},
+		{
+			"id": "s2",
+			"type": "text",
+			"text": "✅ Jetson Orin Nano konfigürasyonu\nL4T R36.4.7, MAXN_SUPER · 10-04\n⏱ gerçekleşen ≈ 1 gün",
+			"x": 0,
+			"y": 150,
+			"width": 280,
+			"height": 110
+		},
+		{
+			"id": "s3",
+			"type": "text",
+			"text": "✅ Çalışma ortamı (Git) · 10-04\n⏱ gerçekleşen 0,5 gün",
+			"x": 0,
+			"y": 300,
+			"width": 280,
+			"height": 90
+		},
+		{
+			"id": "s4",
+			"type": "text",
+			"text": "✅ YOLOX submodule (fork 3ec6263) · 10-04\n⏱ gerçekleşen 0,5 gün",
+			"x": 0,
+			"y": 450,
+			"width": 280,
+			"height": 90
+		},
+		{
+			"id": "legend",
+			"type": "text",
+			"text": "**Lejant**\n🟥 kırmızı: açık karar / dış bağımlılık (RPi 5)\n🟩 yeşil: verilmiş karar / tamamlanan sonuç\n🟨 sarı: sıradaki somut iş\n🟦 mavi: zaman hesabı / çizelge\n✅ bitti · ⏳ bekliyor · ⏱ süre (gerçekleşen ya da tahmin)\nKaynak: `Tez_2026-10-03_17-12-57.png` (aslı korunuyor)",
+			"x": -560,
+			"y": -50,
+			"width": 420,
+			"height": 230
+		},
+		{
+			"id": "p3",
+			"type": "text",
+			"text": "Fine-tune (RPi 5 kapısı: N4/LUT RPi'de tekrarlanmış olmalı)",
+			"x": 0,
+			"y": 2910,
+			"width": 280,
+			"height": 110
+		},
+		{
+			"id": "p4",
+			"type": "text",
+			"text": "Tam COCO 20 epoch, düşük lr · 20 × 886 sn ≈ 4,9 sa/model × 2 (NAS+budama, yalnız budama) ≈ 9,8 sa ≈ 15 CU · ≈ 11-30 → 12-02",
+			"x": 340,
+			"y": 2910,
+			"width": 280,
+			"height": 130
+		},
+		{
+			"id": "p5",
+			"type": "text",
+			"text": "Budama + FT öncesi/sonrası karşılaştırma (val-A)\n⏱ 0,5 gün · ≈ 12-03",
+			"x": 680,
+			"y": 2910,
+			"width": 280,
+			"height": 110
+		},
+		{
+			"id": "o0",
+			"type": "text",
+			"text": "ONNX dönüşümü: 4 ablasyon modeli (baseline · yalnız NAS · yalnız budama · NAS+budama)\n⏱ 1 gün",
+			"x": 0,
+			"y": 3150,
+			"width": 280,
+			"height": 130
+		},
+		{
+			"id": "o1",
+			"type": "text",
+			"text": "Kaydedilen model nesnesini doğrudan dışa aktar (export_onnx.py budanmış modeli yükleyemez)\n⏱ 4 × ≈ 5 dk",
+			"x": 340,
+			"y": 3150,
+			"width": 280,
+			"height": 130
+		},
+		{
+			"id": "o2",
+			"type": "text",
+			"text": "PyTorch bağımlılığını kaldır + PyTorch/ORT çıktı eşdeğerliği (kod çözülmüş uzay)\n⏱ 4 × ≈ 2 dk",
+			"x": 680,
+			"y": 3150,
+			"width": 280,
+			"height": 110
+		},
+		{
+			"id": "k2",
+			"type": "text",
+			"text": "## ✅ Karar 2 — mAP, PTQ eşiği ve QAT (2026-10-03)\n- **mAP:** COCO val2017 mAP@[.5:.95] ana, mAP@.5 yardımcı; aynı ön/son işlem ve NMS.\n- **PTQ eşiği:** INT8, FP32'ye göre **ΔmAP ≤ 2,0 puan** (mutlak).\n- **QAT:** en fazla **2 deneme**, her biri **10 epoch**.\n- **Fallback:** mixed precision (hassas katmanlar/head FP16-FP32) → yine olmazsa sonucu olduğu gibi raporla.\n- **Toplam bütçe:** orijinal YOLOX baseline'a göre NAS + budama + INT8 toplam kaybı **≤ 4,0 puan**.\n\nKaynak: Furkan'ın kararı",
+			"x": 2100,
+			"y": 3150,
+			"width": 340,
+			"height": 335,
+			"color": "4"
+		},
+		{
+			"id": "q6",
+			"type": "text",
+			"text": "Hâlâ yetersiz → QAT'a devam (en fazla 2 deneme → ≤ 5 sa)",
+			"x": 1360,
+			"y": 3450,
+			"width": 280,
+			"height": 110
+		},
+		{
+			"id": "q0",
+			"type": "text",
+			"text": "Statik PTQ INT8\n⏱ kod 1 gün",
+			"x": 0,
+			"y": 3600,
+			"width": 280,
+			"height": 90
+		},
+		{
+			"id": "q1",
+			"type": "text",
+			"text": "ORT statik INT8 (PTQ), QDQ · 500 COCO kalibrasyon görseli\n⏱ 4 model × (kalibrasyon ≈ 5 dk + ORT CPU val2017 mAP ≈ 15 dk) ≈ 1,5 sa",
+			"x": 340,
+			"y": 3600,
+			"width": 280,
+			"height": 130
+		},
+		{
+			"id": "q2",
+			"type": "text",
+			"text": "Modeli test et: ΔmAP ≤ 2,0 puan mı? (FP32'ye göre)\n⏱ q1 içinde",
+			"x": 680,
+			"y": 3600,
+			"width": 280,
+			"height": 110
+		},
+		{
+			"id": "q3",
+			"type": "text",
+			"text": "mAP düşüşü çok kötü → QAT\n⏱ deneme başına 10 epoch tam COCO ≈ 2,5 sa ≈ 3,8 CU",
+			"x": 1020,
+			"y": 3600,
+			"width": 280,
+			"height": 110
+		},
+		{
+			"id": "q4",
+			"type": "text",
+			"text": "Modeli yeniden test et\n⏱ ≈ 20 dk",
+			"x": 1360,
+			"y": 3600,
+			"width": 280,
+			"height": 90
+		},
+		{
+			"id": "q5",
+			"type": "text",
+			"text": "mAP yeterli → DONE",
+			"x": 1360,
+			"y": 3750,
+			"width": 280,
+			"height": 90,
+			"color": "4"
+		},
+		{
+			"id": "q7",
+			"type": "text",
+			"text": "mAP zaten yeterli → DONE",
+			"x": 1020,
+			"y": 3750,
+			"width": 280,
+			"height": 90,
+			"color": "4"
+		},
+		{
+			"id": "c",
+			"type": "text",
+			"text": "**Canonical ONNX = `yolox_fp32.onnx`**\nBudama + fine-tune sonrası FP32 — asıl referans",
+			"x": 0,
+			"y": 4000,
+			"width": 300,
+			"height": 110,
+			"color": "4"
+		},
+		{
+			"id": "k1",
+			"type": "text",
+			"text": "## ✅ Karar 1 — Canonical ONNX (2026-10-03)\n- **FP32 ONNX asıl referans** (canonical); Stage-1'in ana verisi FP32 çıktıları.\n- INT8 (QDQ) model FP32'den türetilir ve **ayrıca ölçülür** — ek veri olarak sunulur.\n- İki artefakt ayrı adlandırılır; her benchmark satırı hangi artefaktı kullandığını belirtir.\n\nKaynak: Furkan'ın kararı",
+			"x": -560,
+			"y": 4000,
+			"width": 420,
+			"height": 300,
+			"color": "4"
+		},
+		{
+			"id": "i8",
+			"type": "text",
+			"text": "**`yolox_int8_qdq.onnx`**\nFP32'den PTQ (gerekirse QAT) ile türetilir — Stage-1'de ayrıca ölçülür (ek veri)",
+			"x": 380,
+			"y": 4000,
+			"width": 300,
+			"height": 110
+		},
+		{
+			"id": "d1",
+			"type": "text",
+			"text": "**Stage-1**: ORT CPU · FP32 (ana) + INT8 (ek) · RPi 5 · Jetson Orin Nano\n⏱ 8 satır/cihaz × (≈ 4 dk ölçüm + güç ölçer) ≈ 1 sa/cihaz + cihazda INT8 mAP 4 × ≈ 15 dk → 2 gün (11-04 → 11-05)",
+			"x": 340,
+			"y": 4250,
+			"width": 280,
+			"height": 170
+		},
+		{
+			"id": "m1",
+			"type": "text",
+			"text": "Çıktı metrikleri: mAP / gecikme (model) / FPS (model) / FPS (uçtan uca) / W / FPS-W / J-frame (toplam + artımsal) / RAM",
+			"x": 680,
+			"y": 4250,
+			"width": 280,
+			"height": 130
+		},
+		{
+			"id": "m2",
+			"type": "text",
+			"text": "Fiziksel: USB-C güç ölçer (girişte toplam güç) + idle güç; 100 ısınma → 60 sn × 3",
+			"x": 1020,
+			"y": 4250,
+			"width": 280,
+			"height": 110
+		},
+		{
+			"id": "x1",
+			"type": "text",
+			"text": "CSV dosyasına yaz",
+			"x": 1360,
+			"y": 4250,
+			"width": 280,
+			"height": 90
+		},
+		{
+			"id": "tbl",
+			"type": "text",
+			"text": "### Örnek final tablo (sembolik; ölçüm yok)\n| Cihaz | Aşama | Arka uç | Model tipi | Giriş | mAP | Gecikme (ms) | FPS (model) | FPS (uçtan uca) | Güç (W) | Idle (W) | FPS/W | J/frame (toplam) | J/frame (artımsal) | RAM (MB) | tegrastats (W) |\n|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|\n| RPi 5 | Stage-1 | ORT CPU | FP32 | 416×416 | mAP1 | Ölçüm 1 | F1 | E1 | W1 | I1 | F1/W1 | W1/F1 | (W1−I1)/F1 | R1 | — |\n| Jetson Orin Nano | Stage-1 | ORT CPU | FP32 | 416×416 | mAP2 | Ölçüm 2 | F2 | E2 | W2 | I2 | F2/W2 | W2/F2 | (W2−I2)/F2 | R2 | T2 |\n| RPi 5 | Stage-1 | ORT CPU | INT8 (QDQ) — ek | 416×416 | mAP1b | Ölçüm 1b | F1b | E1b | W1b | I1b | F1b/W1b | W1b/F1b | (W1b−I1b)/F1b | R1b | — |\n| Jetson Orin Nano | Stage-1 | ORT CPU | INT8 (QDQ) — ek | 416×416 | mAP2b | Ölçüm 2b | F2b | E2b | W2b | I2b | F2b/W2b | W2b/F2b | (W2b−I2b)/F2b | R2b | T2b |\n| RPi 5 | Stage-2 | ncnn | FP32 (doğrulama) | 416×416 | mAP3a | Ölçüm 3a | F3a | E3a | W3a | I3a | F3a/W3a | W3a/F3a | (W3a−I3a)/F3a | R3a | — |\n| RPi 5 | Stage-2 | ncnn | INT8 (ncnn2int8) | 416×416 | mAP3 | Ölçüm 3 | F3 | E3 | W3 | I3 | F3/W3 | W3/F3 | (W3−I3)/F3 | R3 | — |\n| Jetson Orin Nano | Stage-2 | TensorRT | FP16 | 416×416 | mAP4a | Ölçüm 4a | F4a | E4a | W4a | I4a | F4a/W4a | W4a/F4a | (W4a−I4a)/F4a | R4a | T4a |\n| Jetson Orin Nano | Stage-2 | TensorRT | INT8 (QDQ) | 416×416 | mAP4 | Ölçüm 4 | F4 | E4 | W4 | I4 | F4/W4 | W4/F4 | (W4−I4)/F4 | R4 | T4 |",
+			"x": 1760,
+			"y": 4250,
+			"width": 1700,
+			"height": 480
+		},
+		{
+			"id": "m3",
+			"type": "text",
+			"text": "Jetson'da ayrıca tegrastats (ayrı sütun, karşılaştırmaya girmez)",
+			"x": 1020,
+			"y": 4400,
+			"width": 280,
+			"height": 90
+		},
+		{
+			"id": "d2",
+			"type": "text",
+			"text": "Modeli platforma göre optimize et (aynı FP32 ağırlıklar; INT8'ler cihazda ayrıca mAP ölçülür)\n⏱ Stage-2 toplam 4 gün (11-06 → 11-11)",
+			"x": 0,
+			"y": 4550,
+			"width": 280,
+			"height": 130
+		},
+		{
+			"id": "k4",
+			"type": "text",
+			"text": "## ✅ Karar 4 — Stage-2 INT8 kaynakları (2026-10-03)\n- **TensorRT INT8:** QDQ modelden (explicit); kendi kalibratörü kullanılmaz.\n- **TensorRT FP16:** FP32 ONNX'ten ek satır.\n- **ncnn:** QDQ ONNX'i **desteklemez** (kaynak kodu + issue #5183 ile doğrulandı) → FP32 pnnx modeli + `ncnn2table`/`ncnn2int8`, aynı 500 kalibrasyon görseli.\n- **ncnn FP32** satırı dönüşüm doğrulaması.\n- Her INT8 modelin mAP'i cihazda ayrıca ölçülür; ΔmAP ≤ 2,0 her birine uygulanır.\n\nKaynak: Furkan'ın kararı · [[knowledge/concepts/ncnn-qdq-onnx-destegi]]",
+			"x": -560,
+			"y": 4660,
+			"width": 460,
+			"height": 400,
+			"color": "4"
+		},
+		{
+			"id": "d3",
+			"type": "text",
+			"text": "**Stage-2**: Platforma özel maksimum optimize runtime\n**RPi 5 (ncnn, ARM NEON):** FP32 (doğrulama) + INT8 (ncnn2table + ncnn2int8, aynı 500 kalibrasyon görseli) ⏱ ≈ 2 gün\n**Jetson (TensorRT GPU):** FP16 + INT8 (QDQ, explicit) ⏱ engine ≈ 10 dk/model, toplam ≈ 1,5 gün",
+			"x": 0,
+			"y": 4700,
+			"width": 280,
+			"height": 240
+		},
+		{
+			"id": "m4",
+			"type": "text",
+			"text": "Çıktı metrikleri: mAP / gecikme (model) / FPS (model) / FPS (uçtan uca) / W / FPS-W / J-frame (toplam + artımsal) / RAM",
+			"x": 340,
+			"y": 4700,
+			"width": 280,
+			"height": 130
+		},
+		{
+			"id": "m5",
+			"type": "text",
+			"text": "Fiziksel: USB-C güç ölçer (girişte toplam güç) + idle güç; 100 ısınma → 60 sn × 3",
+			"x": 680,
+			"y": 4700,
+			"width": 280,
+			"height": 110
+		},
+		{
+			"id": "x2",
+			"type": "text",
+			"text": "CSV dosyasına yaz",
+			"x": 1020,
+			"y": 4700,
+			"width": 280,
+			"height": 90
+		},
+		{
+			"id": "m6",
+			"type": "text",
+			"text": "Jetson'da ayrıca tegrastats (ayrı sütun, karşılaştırmaya girmez)",
+			"x": 680,
+			"y": 4850,
+			"width": 280,
+			"height": 90
+		},
+		{
+			"id": "k3",
+			"type": "text",
+			"text": "## ✅ Karar 3 — Güç ve ölçüm protokolü (2026-10-03)\n- **Ana güç:** iki cihazda da girişte USB-C güç ölçer (toplam kart gücü); cihazlar arası karşılaştırma yalnız bununla.\n- **Enerji:** J/frame (toplam) = W ÷ FPS; J/frame (artımsal) = (W_çıkarım − W_idle) ÷ FPS. Idle her oturumda ayrıca ölçülür.\n- **tegrastats:** yalnız Jetson, ayrı sütun; kart içi dağılım için, karşılaştırmaya girmez.\n- **Protokol:** 100 çıkarım ısınma atılır → 60 sn kararlı ölçüm × 3 tekrar, ortalama ± std. Sabit: nvpmodel/jetson_clocks, RPi governor, soğutma; çevre birimi yok; ölçer örnekleme hızı kaydedilir.\n- **FPS:** ana metrik yalnız model penceresi; **uçtan uca FPS** (ön işlem + model + NMS) ayrı sütun.\n\nKaynak: Furkan'ın kararı",
+			"x": 1360,
+			"y": 5020,
+			"width": 460,
+			"height": 470,
+			"color": "4"
+		},
+		{
+			"id": "k5",
+			"type": "text",
+			"text": "## ✅ Karar 5 — Makro-mimari araması ve budama (2026-10-03) (Geçici)\n- **NAS → makro-mimari araması:** pretrained Nano'dan; çözünürlük 320/416/512 · aktivasyon SiLU/ReLU/HardSwish · CSP derinliği mevcut/−1 · DW kernel 3/5. Kanal sayısına dokunmaz (o budamanın işi).\n- Adaylar 10k alt kümede 10 epoch; seçilen mimari tam COCO ~20-30 epoch FT.\n- **Gecikme ölçütü:** RPi 5 + ORT CPU; NAS bütçesinde RPi'de en hızlı aday. Jetson raporlanır.\n- **Tek mimari**; en fazla 2 tur, Pareto iyileşmezse dur.\n- **mAP bütçesi:** NAS ≤ 1,0 · budama ≤ 1,0 · INT8 ≤ 2,0.\n- **Budama:** %10/20/30/40 taraması; ≤ 1,0 puanla en yüksek oran, tam 20 epoch FT yalnız onunla.\n- **Ablasyon:** baseline · yalnız NAS · yalnız budama · NAS+budama.\n- **Kod düzeltmesi:** başlık koruması `head.cls_preds/reg_preds/obj_preds`.\n- Klasik NAS (COCO 300 ep / VOC) bütçe ve tutarlılık nedeniyle reddedildi.\n\n⚠️ **Karar 6 (2026-10-16) ile güncellendi:** ızgara araması (bu düğüm) önçalışma kaldı; asıl NAS = 2b (one-shot süper ağ).\n\n**İlk iş:** Colab'da 1 epoch pilot → gerçek epoch süresi ve kredi.\n\nKaynak: Furkan'ın kararı · [[knowledge/karar-5-nas-ve-budama]]",
+			"x": -800,
+			"y": 840,
+			"width": 460,
+			"height": 680,
+			"color": "4"
+		},
+		{
+			"id": "275db854d01806b7",
+			"type": "text",
+			"text": "Bu canvas içine her iş ne kadar sürecek ayrıntılı yaz ve her bloga bir süre biç\n\nSahte NAS tez için yeterli değil gerçek NAS a geçiş için gerekli değişiklikleri planla ve uygula sonrasında gerçek NAS eğitimi için ssb evren kullanılabilir mi yoksa google colab mi karar ver.\n\nhocaya gıthub lınkını, sunumu, ve bu canvası finalize edince at",
+			"x": 1467,
+			"y": 13,
+			"width": 250,
+			"height": 527
+		},
+		{
+			"id": "r0",
+			"type": "text",
+			"text": "✅ **R0 · Karar + tasarım** (10-16, 3 tur, dondu)\nOne-shot süper ağ · sandwich max+min+2 rastgele, inplace distillation yok (açık sapma) · genişlik yok · val2017 A/B (B mühürlü) · final: test-dev (doğrulanırsa) / B · Colab tek GPU\n⏱ 1 gün · [[knowledge/karar-6-danisman-gorusmesi-2026-10-16]]",
+			"x": 0,
+			"y": 1350,
+			"width": 300,
+			"height": 250,
+			"color": "4"
+		},
+		{
+			"id": "r1",
+			"type": "text",
+			"text": "✅ **R1 · Kod** (10-16)\nsüper ağ + tam durum devam (`supernet.py`), doğrulanmış kayıt deposu (`ckpt_store.py`), tohumlu veri/artırma (`nas_data.py`), ayrımlar (`make_splits.py`), arama + panel (`supernet_search.py`), LUT, notebook 03\n⏱ 1 gün · CPU testleri: öz-denetim 7/7, kesinti 4/4, trainer kesinti testi ağırlıklar birebir",
+			"x": 340,
+			"y": 1350,
+			"width": 300,
+			"height": 250,
+			"color": "4"
+		},
+		{
+			"id": "r2",
+			"type": "text",
+			"text": "**R2 · Pilot + GPU kesinti testi** (03, hücre 1–8)\nveri + ayrımlar · öz-denetimler · panel epoch-0 (54 alt ağ) · maliyet (10k, 1 ep) · kesinti testi (kayıt yazılırken öldür + kill -9, izler birebir) · dondurulmuş manifest\n⏱ ≈ 2 sa, ≈ 3 CU · 10-17",
+			"x": 680,
+			"y": 1350,
+			"width": 300,
+			"height": 250,
+			"color": "3"
+		},
+		{
+			"id": "r3",
+			"type": "text",
+			"text": "**R3 · Süper ağ 60 epoch** (03, hücre 9–11) — uzun koşu, Furkan onayıyla\ntam train2017, erken kontrol epoch 4, panel 20/30/40/50/60\n⏱ **≈ 57 sa + panel ≈ 2,5 sa ≈ 60 sa ≈ 92 CU** · 10-18 → 10-21\nuzatma (yalnız ölçüt + onay): +30 ep ≈ 28 sa ≈ 43 CU",
+			"x": 1020,
+			"y": 1350,
+			"width": 340,
+			"height": 250,
+			"color": "3"
+		},
+		{
+			"id": "r5",
+			"type": "text",
+			"text": "**R5 · Evrimsel arama** (03b — yazılacak)\nNSGA-II nüfus 50 × 20 nesil ≈ 1000 alt ağ (DetNAS ölçeği); uygunluk val2017 A_fit1k (BN kalibreli), gecikme LUT\n⏱ ≈ 1000 × 25 sn ≈ 7 sa ≈ 11 CU · 10-22",
+			"x": 1400,
+			"y": 1350,
+			"width": 300,
+			"height": 250
+		},
+		{
+			"id": "r6",
+			"type": "text",
+			"text": "**R6 · Sıralama referansı** (03c — yazılacak)\n10 aday (3 Pareto + 7 gecikmeye göre katmanlı; kural önceden) **sıfırdan 60 epoch** (kısmi eğitim referansı) + öneri: Nano da aynı tarifle (bütçe ölçütü için)\nτ (bootstrap: mimari, panele koşullu), benzer gecikme çiftleri\n⏱ 11 × ≈ 15,5 sa ≈ 170 sa ≈ 262 CU · 10-23 → 10-30",
+			"x": 1740,
+			"y": 1350,
+			"width": 300,
+			"height": 250
+		},
+		{
+			"id": "r7",
+			"type": "text",
+			"text": "**R7 · Final + Nano 300 ep × 3 tohum** (03d — yazılacak)\nfinal = donanım kısıtını sağlayan değerlendirilmiş adayların en iyisi (val-A, kural önceden) · aynı koşul, tohumlar baştan planlı\n⏱ 6 × ≈ 78 sa ≈ 470 sa ≈ 720 CU · 10-31 → ≈ 11-19",
+			"x": 2080,
+			"y": 1350,
+			"width": 280,
+			"height": 250
+		},
+		{
+			"id": "r4",
+			"type": "text",
+			"text": "**R4 · Gecikme tablosu (LUT), Jetson CPU** — R3 ile paralel (ağırlıktan bağımsız)\nbuild: 7 çöz. × (30 DW × 3 kernel + 4 blok) mikro ONNX + 7 sabit + 48 doğrulama ağı (PC, ≈ 15 dk)\nmeasure: ≈ 660 mikro × 3,5 sn + 55 tam × 11 sn ≈ 50 dk · fit: ρ ≥ 0,9 şartı\n⏱ Furkan Jetson'da ≈ 1,5 sa · 10-17/18",
+			"x": 1020,
+			"y": 1640,
+			"width": 340,
+			"height": 250,
+			"color": "3"
+		},
+		{
+			"id": "rpi",
+			"type": "text",
+			"text": "**RPi 5 kapısı** (Karar 5 kuralı)\nRPi gelince LUT measure + fit RPi'de (≈ 1,5 sa); seçim ölçütü RPi. Sıralama Jetson'la tutmazsa R5'in son seçimi RPi LUT'uyla tekrarlanır (≈ 1 sa; değerlendirilmiş alt ağlar önbellekte)\n⏱ tarih: cihaza bağlı; R6'dan önce olmalı",
+			"x": 1400,
+			"y": 1640,
+			"width": 300,
+			"height": 250,
+			"color": "1"
+		},
+		{
+			"id": "r8",
+			"type": "text",
+			"text": "**R8 · Değerlendirme + karar → Done**\ncihaz gecikmesi (Karar 3 protokolü) · val-A sonuçları · test-dev (gönderim kabulü doğrulanırsa, dondurulduktan sonra) ya da mühürlü B **yalnız tüm yöntem kararları bittikten sonra** (7. aşama sonrası) · tez bölümü\n⏱ 1–2 gün · ≈ 11-20",
+			"x": 1740,
+			"y": 1640,
+			"width": 300,
+			"height": 250
+		},
+		{
+			"id": "rcalc",
+			"type": "text",
+			"text": "### ⏱ Süre hesabı (tek GPU, Colab L4, 1,54 CU/sa; tahmin — R2 pilotu kesinleştirir)\n- **Taban (ölçülmüş):** tam COCO, tek ağ: nas_r2 10 632 sn / 12 ep = **886 sn/epoch**.\n- **Süper ağ epoch'u:** 4 alt ağ ileri+geri (max ≈ 1,1× · min ≈ 0,8× · 2 rastgele ≈ 1,0×) → ≈ 3,9× → **≈ 57 dk** (1848 iter).\n- **60 epoch:** ≈ 57 sa (+ cuDNN ilk-şekil ≈ 15 dk) · panel 6 anlık görüntü × 54 alt ağ × ≈ 25 sn ≈ 2,3 sa → **≈ 60 sa ≈ 92 CU**.\n- **Kayıt:** her 300 iter (≈ 9 dk) + epoch sonu, ≈ 15 MB, doğrulama ≈ 5–10 sn → ek < %2.\n- **Arama:** 1000 × (BN 2000 görsel ≈ 8 sn + fit1k ≈ 17 sn) ≈ 7 sa ≈ 11 CU.\n- **Sıralama referansı:** sıfırdan 60 ep × 886 sn ≈ 14,8 sa/aday (büyük kernel ≈ +%5–10) → 11 koşu ≈ 170 sa ≈ 262 CU.\n- **300 ep:** ≈ 74–81 sa/koşu → 6 koşu ≈ 470 sa ≈ 720 CU.\n- **2b toplamı:** ≈ 2 + 60 + 7 + 170 + 470 ≈ **≈ 710 GPU-sa ≈ 1.100 CU**, tek GPU'da kesintisiz ≈ 30 gün → takvim 10-17 → ≈ 11-20 (Colab kesintileri + %15 tampon → ≈ 11-25).\n- **Belirsizlik:** sandwich çarpanı 3,4–4,4× → süper ağ 50–65 sa; 300 ep koşu başına ±%10.\n- **Teslim:** en geç Nisan sonu – Mayıs 2. hafta 2027 → NAS sonrası aşamalar ve yazım için ≈ 5 ay pay.",
+			"x": 0,
+			"y": 1640,
+			"width": 980,
+			"height": 580,
+			"color": "5"
+		},
+		{
+			"id": "k6",
+			"type": "text",
+			"text": "## ✅ Karar 6 — Gerçek NAS (2026-10-16, 3 tur, dondu)\n- Danışman: ızgara araması yetersiz → one-shot süper ağ NAS.\n- Uzay: DW kernel {3,5,7} × 30 · dark3/dark4 derinlik {1,2,3} · çöz. 320–512 (≈ 10¹⁶).\n- Sandwich max+min+2 rastgele (BigNAS); inplace distillation yok (açık sapma); BN kalibrasyonu.\n- 60 ep + önceden yazılı uzatma ölçütü (en fazla +30, tepe lr × 0,5).\n- val2017 A (arama/karar) / B (mühürlü); final test-dev (doğrulanırsa) ya da B.\n- 10 aday × 60 ep sıfırdan sıralama referansı; final + Nano 300 ep × 3 tohum.\n- Tam durum kaydı + doğrulanmış depo + kesinti testi.\n- Genişlik yok; Colab tek GPU; teslim ≤ Nisan sonu/Mayıs 2027.\n\nKaynak: Furkan · [[knowledge/karar-6-danisman-gorusmesi-2026-10-16]]",
+			"x": -800,
+			"y": 1560,
+			"width": 460,
+			"height": 470,
+			"color": "4"
+		},
+		{
+			"id": "timeline",
+			"type": "text",
+			"text": "## 🗓️ Zaman çizelgesi (2026-10-16; tek GPU; tahmin — pilot kesinleştirir)\n| Aşama | Tarih | Süre | GPU / CU | Durum |\n|---|---|---|---|---|\n| 1 · Kurulum + baseline + P0 | 09-24 → 10-04 | ≈ 10 gün | 0,1 CU | ✅ |\n| 2a · Makro ızgara araması (önçalışma) | 10-04 → 10-13 | 9 gün | ≈ 17 CU | ✅ |\n| Danışman + Karar 6 (3 tur, dondu) | 10-14 → 10-16 | 3 gün | — | ✅ |\n| **2b · Gerçek NAS** | **10-17 → ≈ 11-20** | **≈ 30 gün** | **≈ 710 sa · ≈ 1.100 CU** | 🟨 R2 sırada |\n| ↳ R2 pilot + kesinti testi | 10-17 | ≈ 2 sa | ≈ 3 CU | |\n| ↳ R3 süper ağ 60 ep | 10-18 → 10-21 | ≈ 60 sa | ≈ 92 CU | |\n| ↳ R5 arama | 10-22 | ≈ 7 sa | ≈ 11 CU | |\n| ↳ R6 sıralama referansı (11 × 60 ep sıfırdan) | 10-23 → 10-30 | ≈ 170 sa | ≈ 262 CU | |\n| ↳ R7 final + Nano 300 ep × 3 tohum | 10-31 → 11-19 | ≈ 470 sa | ≈ 720 CU | |\n| 4 · Yapısal budama | ≈ 11-26 → 12-03 | ≈ 6 gün | ≈ 13 sa · 20 CU | |\n| 5 · ONNX | ≈ 12-04 | 1 gün | — | |\n| 6 · Kuantizasyon | ≈ 12-05 → 12-10 | 2–4 gün | 0–8 CU | |\n| 7 · Dağıtım + benchmark | ≈ 12-11 → 01-08 | ≈ 3 hafta (tatil dahil) | — | RPi 5'e bağlı |\n| Mühürlü değerlendirme (test-dev / val-B) | ≈ 01-11 | 1–2 gün | — | yöntem kararları bitince |\n| Tez yazımı + tampon | ≈ 01-12 → 04-30 | ≈ 3,5 ay | — | teslim ≤ Nisan sonu / Mayıs 2. hafta |\n\n**Toplam kalan GPU:** ≈ 1.130 CU (uzatma gerekirse +43). **Harcanan:** ≈ 17 CU.\n**Kanıt kapıları (uzun koşudan önce):** dondurulmuş manifest · GPU kesinti/kurtarma testi · pilot maliyeti · test-dev erişim durumu.\n**Varsayımlar:** tek Colab oturumu (paralel yok); süreler P0 / nas_r1b / nas_r2 ölçümlerinden türetildi; uzun koşular Furkan onayıyla.",
+			"x": 1800,
+			"y": -50,
+			"width": 1180,
+			"height": 900,
+			"color": "5"
+		}
 	],
-	"edges":[
-		{"id":"e-s1-s2","fromNode":"s1","fromSide":"bottom","toNode":"s2","toSide":"top"},
-		{"id":"e-s2-s3","fromNode":"s2","fromSide":"bottom","toNode":"s3","toSide":"top"},
-		{"id":"e-s3-s4","fromNode":"s3","fromSide":"bottom","toNode":"s4","toSide":"top"},
-		{"id":"e-s4-b1","fromNode":"s4","fromSide":"bottom","toNode":"b1","toSide":"top"},
-		{"id":"e-b1-b2","fromNode":"b1","fromSide":"right","toNode":"b2","toSide":"left"},
-		{"id":"e-b2-b3","fromNode":"b2","fromSide":"right","toNode":"b3","toSide":"left"},
-		{"id":"e-n0-n1","fromNode":"n0","fromSide":"right","toNode":"n1","toSide":"left"},
-		{"id":"e-n1-n2","fromNode":"n1","fromSide":"right","toNode":"n2","toSide":"left"},
-		{"id":"e-n2-n3","fromNode":"n2","fromSide":"right","toNode":"n3","toSide":"left"},
-		{"id":"e-n3-n4","fromNode":"n3","fromSide":"right","toNode":"n4","toSide":"left"},
-		{"id":"e-n4-n5","fromNode":"n4","fromSide":"right","toNode":"n5","toSide":"left"},
-		{"id":"e-n5-n6","fromNode":"n5","fromSide":"right","toNode":"n6","toSide":"left"},
-		{"id":"e-n6-n2","fromNode":"n6","fromSide":"top","toNode":"n2","toSide":"top","label":"Devam → Restart NAS"},
-		{"id":"e-n6-n7","fromNode":"n6","fromSide":"bottom","toNode":"n7","toSide":"top"},
-		{"id":"e-b1-n0","fromNode":"b1","fromSide":"bottom","toNode":"n0","toSide":"top"},
-		{"id":"e-t0-t1","fromNode":"t0","fromSide":"right","toNode":"t1","toSide":"left"},
-		{"id":"e-t1-t2","fromNode":"t1","fromSide":"right","toNode":"t2","toSide":"left"},
-		{"id":"e-p0-p1","fromNode":"p0","fromSide":"right","toNode":"p1","toSide":"left"},
-		{"id":"e-p1-p2","fromNode":"p1","fromSide":"right","toNode":"p2","toSide":"left"},
-		{"id":"e-p3-p4","fromNode":"p3","fromSide":"right","toNode":"p4","toSide":"left"},
-		{"id":"e-p4-p5","fromNode":"p4","fromSide":"right","toNode":"p5","toSide":"left"},
-		{"id":"e-p0-p3","fromNode":"p0","fromSide":"bottom","toNode":"p3","toSide":"top"},
-		{"id":"e-t0-p0","fromNode":"t0","fromSide":"bottom","toNode":"p0","toSide":"top"},
-		{"id":"e-o0-o1","fromNode":"o0","fromSide":"right","toNode":"o1","toSide":"left"},
-		{"id":"e-o1-o2","fromNode":"o1","fromSide":"right","toNode":"o2","toSide":"left"},
-		{"id":"e-p3-o0","fromNode":"p3","fromSide":"bottom","toNode":"o0","toSide":"top"},
-		{"id":"e-q0-q1","fromNode":"q0","fromSide":"right","toNode":"q1","toSide":"left"},
-		{"id":"e-q1-q2","fromNode":"q1","fromSide":"right","toNode":"q2","toSide":"left"},
-		{"id":"e-q2-q3","fromNode":"q2","fromSide":"right","toNode":"q3","toSide":"left","label":"hayır"},
-		{"id":"e-q3-q4","fromNode":"q3","fromSide":"right","toNode":"q4","toSide":"left"},
-		{"id":"e-q2-q7","fromNode":"q2","fromSide":"bottom","toNode":"q7","toSide":"left","label":"evet"},
-		{"id":"e-q4-q5","fromNode":"q4","fromSide":"bottom","toNode":"q5","toSide":"top"},
-		{"id":"e-q4-q6","fromNode":"q4","fromSide":"top","toNode":"q6","toSide":"bottom"},
-		{"id":"e-q6-q3","fromNode":"q6","fromSide":"left","toNode":"q3","toSide":"top"},
-		{"id":"e-o0-q0","fromNode":"o0","fromSide":"bottom","toNode":"q0","toSide":"top"},
-		{"id":"e-c-d1","fromNode":"c","fromSide":"right","toNode":"d1","toSide":"left"},
-		{"id":"e-d1-m1","fromNode":"d1","fromSide":"right","toNode":"m1","toSide":"left"},
-		{"id":"e-m1-m2","fromNode":"m1","fromSide":"right","toNode":"m2","toSide":"left"},
-		{"id":"e-m2-x1","fromNode":"m2","fromSide":"right","toNode":"x1","toSide":"left"},
-		{"id":"e-m2-m3","fromNode":"m2","fromSide":"bottom","toNode":"m3","toSide":"top"},
-		{"id":"e-c-d2","fromNode":"c","fromSide":"bottom","toNode":"d2","toSide":"top"},
-		{"id":"e-d2-d3","fromNode":"d2","fromSide":"bottom","toNode":"d3","toSide":"top"},
-		{"id":"e-d3-m4","fromNode":"d3","fromSide":"right","toNode":"m4","toSide":"left"},
-		{"id":"e-m4-m5","fromNode":"m4","fromSide":"right","toNode":"m5","toSide":"left"},
-		{"id":"e-m5-x2","fromNode":"m5","fromSide":"right","toNode":"x2","toSide":"left"},
-		{"id":"e-m5-m6","fromNode":"m5","fromSide":"bottom","toNode":"m6","toSide":"top"},
-		{"id":"e-x1-tbl","fromNode":"x1","fromSide":"right","toNode":"tbl","toSide":"left"},
-		{"id":"e-x2-tbl","fromNode":"x2","fromSide":"right","toNode":"tbl","toSide":"bottom"},
-		{"id":"e-k1-c","fromNode":"k1","fromSide":"right","toNode":"c","toSide":"left","color":"4","label":"karar verildi"},
-		{"id":"e-k2-q2","fromNode":"k2","fromSide":"left","toNode":"q2","toSide":"top","color":"4","label":"karar verildi"},
-		{"id":"e-k3-m5","fromNode":"k3","fromSide":"left","toNode":"m5","toSide":"bottom","color":"4","label":"karar verildi"},
-		{"id":"e-k3-m2","fromNode":"k3","fromSide":"top","toNode":"m2","toSide":"bottom","color":"4","label":"karar verildi"},
-		{"id":"e-o2-c","fromNode":"o2","fromSide":"bottom","toNode":"c","toSide":"top","label":"FP32 ONNX"},
-		{"id":"e-c-q0","fromNode":"c","fromSide":"left","toNode":"q0","toSide":"left","label":"kalibrasyon kaynağı"},
-		{"id":"e-q5-i8","fromNode":"q5","fromSide":"bottom","toNode":"i8","toSide":"top"},
-		{"id":"e-q7-i8","fromNode":"q7","fromSide":"bottom","toNode":"i8","toSide":"top"},
-		{"id":"e-i8-d1","fromNode":"i8","fromSide":"bottom","toNode":"d1","toSide":"top","label":"ek veri (INT8)"},
-		{"id":"e-k2-q6","fromNode":"k2","fromSide":"bottom","toNode":"q6","toSide":"right","color":"4","label":"karar verildi"},
-		{"id":"e-k4-d3","fromNode":"k4","fromSide":"right","toNode":"d3","toSide":"left","color":"4","label":"karar verildi"},
-		{"id":"e-k5-n0","fromNode":"k5","fromSide":"right","toNode":"n0","toSide":"left","color":"4","label":"karar verildi"},
-		{"id":"e-k5-p0","fromNode":"k5","fromSide":"bottom","toNode":"p0","toSide":"left","color":"4","label":"karar verildi"},
-		{"id":"e-b3-pilot","fromNode":"b3","fromSide":"right","toNode":"pilot","toSide":"left"},
-		{"id":"e-n7-r0","fromNode":"n7","fromSide":"bottom","toNode":"r0","toSide":"top","label":"danışman: yetersiz"},
-		{"id":"e-r0-r1","fromNode":"r0","fromSide":"right","toNode":"r1","toSide":"left"},
-		{"id":"e-r1-r2","fromNode":"r1","fromSide":"right","toNode":"r2","toSide":"left"},
-		{"id":"e-r2-r3","fromNode":"r2","fromSide":"right","toNode":"r3","toSide":"left","label":"Furkan onayı"},
-		{"id":"e-r3-r5","fromNode":"r3","fromSide":"right","toNode":"r5","toSide":"left"},
-		{"id":"e-r1-r4","fromNode":"r1","fromSide":"bottom","toNode":"r4","toSide":"left","label":"paralel"},
-		{"id":"e-r4-r5","fromNode":"r4","fromSide":"right","toNode":"r5","toSide":"bottom","label":"LUT"},
-		{"id":"e-r5-r6","fromNode":"r5","fromSide":"right","toNode":"r6","toSide":"left"},
-		{"id":"e-r6-r7","fromNode":"r6","fromSide":"right","toNode":"r7","toSide":"left"},
-		{"id":"e-r7-r8","fromNode":"r7","fromSide":"bottom","toNode":"r8","toSide":"right"},
-		{"id":"e-rpi-r5","fromNode":"rpi","fromSide":"top","toNode":"r5","toSide":"bottom","color":"1","label":"RPi gelince"},
-		{"id":"e-r8-t0","fromNode":"r8","fromSide":"bottom","toNode":"t0","toSide":"top","label":"seçilen mimari"},
-		{"id":"e-rcalc-r3","fromNode":"rcalc","fromSide":"right","toNode":"r3","toSide":"bottom","color":"5"},
-		{"id":"e-k6-r0","fromNode":"k6","fromSide":"right","toNode":"r0","toSide":"left","color":"4","label":"karar verildi"},
-		{"id":"e-pilot-n0","fromNode":"pilot","fromSide":"bottom","toNode":"n0","toSide":"top","label":"bütçe hesabı"}
+	"edges": [
+		{
+			"id": "e-s1-s2",
+			"fromNode": "s1",
+			"fromSide": "bottom",
+			"toNode": "s2",
+			"toSide": "top"
+		},
+		{
+			"id": "e-s2-s3",
+			"fromNode": "s2",
+			"fromSide": "bottom",
+			"toNode": "s3",
+			"toSide": "top"
+		},
+		{
+			"id": "e-s3-s4",
+			"fromNode": "s3",
+			"fromSide": "bottom",
+			"toNode": "s4",
+			"toSide": "top"
+		},
+		{
+			"id": "e-s4-b1",
+			"fromNode": "s4",
+			"fromSide": "bottom",
+			"toNode": "b1",
+			"toSide": "top"
+		},
+		{
+			"id": "e-b1-b2",
+			"fromNode": "b1",
+			"fromSide": "right",
+			"toNode": "b2",
+			"toSide": "left"
+		},
+		{
+			"id": "e-b2-b3",
+			"fromNode": "b2",
+			"fromSide": "right",
+			"toNode": "b3",
+			"toSide": "left"
+		},
+		{
+			"id": "e-n0-n1",
+			"fromNode": "n0",
+			"fromSide": "right",
+			"toNode": "n1",
+			"toSide": "left"
+		},
+		{
+			"id": "e-n1-n2",
+			"fromNode": "n1",
+			"fromSide": "right",
+			"toNode": "n2",
+			"toSide": "left"
+		},
+		{
+			"id": "e-n2-n3",
+			"fromNode": "n2",
+			"fromSide": "right",
+			"toNode": "n3",
+			"toSide": "left"
+		},
+		{
+			"id": "e-n3-n4",
+			"fromNode": "n3",
+			"fromSide": "right",
+			"toNode": "n4",
+			"toSide": "left"
+		},
+		{
+			"id": "e-n4-n5",
+			"fromNode": "n4",
+			"fromSide": "right",
+			"toNode": "n5",
+			"toSide": "left"
+		},
+		{
+			"id": "e-n5-n6",
+			"fromNode": "n5",
+			"fromSide": "right",
+			"toNode": "n6",
+			"toSide": "left"
+		},
+		{
+			"id": "e-n6-n2",
+			"fromNode": "n6",
+			"fromSide": "top",
+			"toNode": "n2",
+			"toSide": "top",
+			"label": "Devam → Restart NAS"
+		},
+		{
+			"id": "e-n6-n7",
+			"fromNode": "n6",
+			"fromSide": "bottom",
+			"toNode": "n7",
+			"toSide": "top"
+		},
+		{
+			"id": "e-b1-n0",
+			"fromNode": "b1",
+			"fromSide": "bottom",
+			"toNode": "n0",
+			"toSide": "top"
+		},
+		{
+			"id": "e-t0-t1",
+			"fromNode": "t0",
+			"fromSide": "right",
+			"toNode": "t1",
+			"toSide": "left"
+		},
+		{
+			"id": "e-t1-t2",
+			"fromNode": "t1",
+			"fromSide": "right",
+			"toNode": "t2",
+			"toSide": "left"
+		},
+		{
+			"id": "e-p0-p1",
+			"fromNode": "p0",
+			"fromSide": "right",
+			"toNode": "p1",
+			"toSide": "left"
+		},
+		{
+			"id": "e-p1-p2",
+			"fromNode": "p1",
+			"fromSide": "right",
+			"toNode": "p2",
+			"toSide": "left"
+		},
+		{
+			"id": "e-p3-p4",
+			"fromNode": "p3",
+			"fromSide": "right",
+			"toNode": "p4",
+			"toSide": "left"
+		},
+		{
+			"id": "e-p4-p5",
+			"fromNode": "p4",
+			"fromSide": "right",
+			"toNode": "p5",
+			"toSide": "left"
+		},
+		{
+			"id": "e-p0-p3",
+			"fromNode": "p0",
+			"fromSide": "bottom",
+			"toNode": "p3",
+			"toSide": "top"
+		},
+		{
+			"id": "e-t0-p0",
+			"fromNode": "t0",
+			"fromSide": "bottom",
+			"toNode": "p0",
+			"toSide": "top"
+		},
+		{
+			"id": "e-o0-o1",
+			"fromNode": "o0",
+			"fromSide": "right",
+			"toNode": "o1",
+			"toSide": "left"
+		},
+		{
+			"id": "e-o1-o2",
+			"fromNode": "o1",
+			"fromSide": "right",
+			"toNode": "o2",
+			"toSide": "left"
+		},
+		{
+			"id": "e-p3-o0",
+			"fromNode": "p3",
+			"fromSide": "bottom",
+			"toNode": "o0",
+			"toSide": "top"
+		},
+		{
+			"id": "e-q0-q1",
+			"fromNode": "q0",
+			"fromSide": "right",
+			"toNode": "q1",
+			"toSide": "left"
+		},
+		{
+			"id": "e-q1-q2",
+			"fromNode": "q1",
+			"fromSide": "right",
+			"toNode": "q2",
+			"toSide": "left"
+		},
+		{
+			"id": "e-q2-q3",
+			"fromNode": "q2",
+			"fromSide": "right",
+			"toNode": "q3",
+			"toSide": "left",
+			"label": "hayır"
+		},
+		{
+			"id": "e-q3-q4",
+			"fromNode": "q3",
+			"fromSide": "right",
+			"toNode": "q4",
+			"toSide": "left"
+		},
+		{
+			"id": "e-q2-q7",
+			"fromNode": "q2",
+			"fromSide": "bottom",
+			"toNode": "q7",
+			"toSide": "left",
+			"label": "evet"
+		},
+		{
+			"id": "e-q4-q5",
+			"fromNode": "q4",
+			"fromSide": "bottom",
+			"toNode": "q5",
+			"toSide": "top"
+		},
+		{
+			"id": "e-q4-q6",
+			"fromNode": "q4",
+			"fromSide": "top",
+			"toNode": "q6",
+			"toSide": "bottom"
+		},
+		{
+			"id": "e-q6-q3",
+			"fromNode": "q6",
+			"fromSide": "left",
+			"toNode": "q3",
+			"toSide": "top"
+		},
+		{
+			"id": "e-o0-q0",
+			"fromNode": "o0",
+			"fromSide": "bottom",
+			"toNode": "q0",
+			"toSide": "top"
+		},
+		{
+			"id": "e-c-d1",
+			"fromNode": "c",
+			"fromSide": "right",
+			"toNode": "d1",
+			"toSide": "left"
+		},
+		{
+			"id": "e-d1-m1",
+			"fromNode": "d1",
+			"fromSide": "right",
+			"toNode": "m1",
+			"toSide": "left"
+		},
+		{
+			"id": "e-m1-m2",
+			"fromNode": "m1",
+			"fromSide": "right",
+			"toNode": "m2",
+			"toSide": "left"
+		},
+		{
+			"id": "e-m2-x1",
+			"fromNode": "m2",
+			"fromSide": "right",
+			"toNode": "x1",
+			"toSide": "left"
+		},
+		{
+			"id": "e-m2-m3",
+			"fromNode": "m2",
+			"fromSide": "bottom",
+			"toNode": "m3",
+			"toSide": "top"
+		},
+		{
+			"id": "e-c-d2",
+			"fromNode": "c",
+			"fromSide": "bottom",
+			"toNode": "d2",
+			"toSide": "top"
+		},
+		{
+			"id": "e-d2-d3",
+			"fromNode": "d2",
+			"fromSide": "bottom",
+			"toNode": "d3",
+			"toSide": "top"
+		},
+		{
+			"id": "e-d3-m4",
+			"fromNode": "d3",
+			"fromSide": "right",
+			"toNode": "m4",
+			"toSide": "left"
+		},
+		{
+			"id": "e-m4-m5",
+			"fromNode": "m4",
+			"fromSide": "right",
+			"toNode": "m5",
+			"toSide": "left"
+		},
+		{
+			"id": "e-m5-x2",
+			"fromNode": "m5",
+			"fromSide": "right",
+			"toNode": "x2",
+			"toSide": "left"
+		},
+		{
+			"id": "e-m5-m6",
+			"fromNode": "m5",
+			"fromSide": "bottom",
+			"toNode": "m6",
+			"toSide": "top"
+		},
+		{
+			"id": "e-x1-tbl",
+			"fromNode": "x1",
+			"fromSide": "right",
+			"toNode": "tbl",
+			"toSide": "left"
+		},
+		{
+			"id": "e-x2-tbl",
+			"fromNode": "x2",
+			"fromSide": "right",
+			"toNode": "tbl",
+			"toSide": "bottom"
+		},
+		{
+			"id": "e-k1-c",
+			"fromNode": "k1",
+			"fromSide": "right",
+			"toNode": "c",
+			"toSide": "left",
+			"color": "4",
+			"label": "karar verildi"
+		},
+		{
+			"id": "e-k2-q2",
+			"fromNode": "k2",
+			"fromSide": "left",
+			"toNode": "q2",
+			"toSide": "top",
+			"color": "4",
+			"label": "karar verildi"
+		},
+		{
+			"id": "e-k3-m5",
+			"fromNode": "k3",
+			"fromSide": "left",
+			"toNode": "m5",
+			"toSide": "bottom",
+			"color": "4",
+			"label": "karar verildi"
+		},
+		{
+			"id": "e-k3-m2",
+			"fromNode": "k3",
+			"fromSide": "top",
+			"toNode": "m2",
+			"toSide": "bottom",
+			"color": "4",
+			"label": "karar verildi"
+		},
+		{
+			"id": "e-o2-c",
+			"fromNode": "o2",
+			"fromSide": "bottom",
+			"toNode": "c",
+			"toSide": "top",
+			"label": "FP32 ONNX"
+		},
+		{
+			"id": "e-c-q0",
+			"fromNode": "c",
+			"fromSide": "left",
+			"toNode": "q0",
+			"toSide": "left",
+			"label": "kalibrasyon kaynağı"
+		},
+		{
+			"id": "e-q5-i8",
+			"fromNode": "q5",
+			"fromSide": "bottom",
+			"toNode": "i8",
+			"toSide": "top"
+		},
+		{
+			"id": "e-q7-i8",
+			"fromNode": "q7",
+			"fromSide": "bottom",
+			"toNode": "i8",
+			"toSide": "top"
+		},
+		{
+			"id": "e-i8-d1",
+			"fromNode": "i8",
+			"fromSide": "bottom",
+			"toNode": "d1",
+			"toSide": "top",
+			"label": "ek veri (INT8)"
+		},
+		{
+			"id": "e-k2-q6",
+			"fromNode": "k2",
+			"fromSide": "bottom",
+			"toNode": "q6",
+			"toSide": "right",
+			"color": "4",
+			"label": "karar verildi"
+		},
+		{
+			"id": "e-k4-d3",
+			"fromNode": "k4",
+			"fromSide": "right",
+			"toNode": "d3",
+			"toSide": "left",
+			"color": "4",
+			"label": "karar verildi"
+		},
+		{
+			"id": "e-k5-n0",
+			"fromNode": "k5",
+			"fromSide": "right",
+			"toNode": "n0",
+			"toSide": "left",
+			"color": "4",
+			"label": "karar verildi"
+		},
+		{
+			"id": "e-k5-p0",
+			"fromNode": "k5",
+			"fromSide": "bottom",
+			"toNode": "p0",
+			"toSide": "left",
+			"color": "4",
+			"label": "karar verildi"
+		},
+		{
+			"id": "e-b3-pilot",
+			"fromNode": "b3",
+			"fromSide": "right",
+			"toNode": "pilot",
+			"toSide": "left"
+		},
+		{
+			"id": "e-n7-r0",
+			"fromNode": "n7",
+			"fromSide": "bottom",
+			"toNode": "r0",
+			"toSide": "top",
+			"label": "danışman: yetersiz"
+		},
+		{
+			"id": "e-r0-r1",
+			"fromNode": "r0",
+			"fromSide": "right",
+			"toNode": "r1",
+			"toSide": "left"
+		},
+		{
+			"id": "e-r1-r2",
+			"fromNode": "r1",
+			"fromSide": "right",
+			"toNode": "r2",
+			"toSide": "left"
+		},
+		{
+			"id": "e-r2-r3",
+			"fromNode": "r2",
+			"fromSide": "right",
+			"toNode": "r3",
+			"toSide": "left",
+			"label": "Furkan onayı"
+		},
+		{
+			"id": "e-r3-r5",
+			"fromNode": "r3",
+			"fromSide": "right",
+			"toNode": "r5",
+			"toSide": "left"
+		},
+		{
+			"id": "e-r1-r4",
+			"fromNode": "r1",
+			"fromSide": "bottom",
+			"toNode": "r4",
+			"toSide": "left",
+			"label": "paralel"
+		},
+		{
+			"id": "e-r4-r5",
+			"fromNode": "r4",
+			"fromSide": "right",
+			"toNode": "r5",
+			"toSide": "bottom",
+			"label": "LUT"
+		},
+		{
+			"id": "e-r5-r6",
+			"fromNode": "r5",
+			"fromSide": "right",
+			"toNode": "r6",
+			"toSide": "left"
+		},
+		{
+			"id": "e-r6-r7",
+			"fromNode": "r6",
+			"fromSide": "right",
+			"toNode": "r7",
+			"toSide": "left"
+		},
+		{
+			"id": "e-r7-r8",
+			"fromNode": "r7",
+			"fromSide": "bottom",
+			"toNode": "r8",
+			"toSide": "right"
+		},
+		{
+			"id": "e-rpi-r5",
+			"fromNode": "rpi",
+			"fromSide": "top",
+			"toNode": "r5",
+			"toSide": "bottom",
+			"color": "1",
+			"label": "RPi gelince"
+		},
+		{
+			"id": "e-r8-t0",
+			"fromNode": "r8",
+			"fromSide": "bottom",
+			"toNode": "t0",
+			"toSide": "top",
+			"label": "seçilen mimari"
+		},
+		{
+			"id": "e-rcalc-r3",
+			"fromNode": "rcalc",
+			"fromSide": "right",
+			"toNode": "r3",
+			"toSide": "bottom",
+			"color": "5"
+		},
+		{
+			"id": "e-k6-r0",
+			"fromNode": "k6",
+			"fromSide": "right",
+			"toNode": "r0",
+			"toSide": "left",
+			"color": "4",
+			"label": "karar verildi"
+		},
+		{
+			"id": "e-pilot-n0",
+			"fromNode": "pilot",
+			"fromSide": "bottom",
+			"toNode": "n0",
+			"toSide": "top",
+			"label": "bütçe hesabı"
+		}
 	]
 }

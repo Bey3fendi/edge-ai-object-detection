@@ -1,14 +1,14 @@
-"""Gerçek NAS (Karar 6): süper ağdan alt ağ değerlendirme, gecikme tahmini, evrimsel arama, alt ağ çıkarma.
+﻿"""Gerçek NAS (Karar 6): süper ağdan alt ağ değerlendirme, gecikme tahmini, evrimsel arama, alt ağ çıkarma.
 
 notebooks/03*_gercek_nas_*.ipynb tarafından kullanılır; model tanımı exps/nas/supernet.py.
 
 Alt ağ uygunluk değeri (fitness):
     1. Süper ağ (EMA ağırlıkları) seçili yapılandırmaya ayarlanır.
-    2. BN istatistikleri sıfırlanır ve train2017 ayrımının bn2k kümesinden (2000 görsel, seçili
+    2. BN istatistikleri sıfırlanır ve train2017'nin bn2k kümesinden (2000 görsel, seçili
        çözünürlükte, ValTransform) kümülatif ortalamayla yeniden hesaplanır — paylaşımlı BN farklı
        alt ağların karışık istatistiklerini taşır, kalibrasyonsuz mAP anlamsızdır (OFA/BigNAS).
-    3. fit1k kümesinde (1000 görsel) COCO mAP@[.5:.95], fp16, conf 0,001, NMS 0,65.
-val2017 aramada hiç kullanılmaz (scripts/make_holdout.py).
+    3. val2017-A'nın fit1k kümesinde (1000 görsel) COCO mAP@[.5:.95] (0–100), fp16, conf 0,001, NMS 0,65.
+val2017-B aramada ve hiçbir yöntem kararında kullanılmaz (scripts/make_splits.py, Karar 6).
 
 Arama: NSGA-II (çok amaçlı evrim; amaçlar: mAP ↑, tahmini cihaz gecikmesi ↓). Durum her nesilde atomik
 JSON'a yazılır; kesintiden sonra kaldığı nesilden devam eder, değerlendirilmiş alt ağ tekrar ölçülmez.
@@ -31,9 +31,9 @@ sys.path.insert(0, HERE)
 import supernet as sn  # noqa: E402
 from nas_search import now_utc, read_json, write_json  # noqa: E402
 
-FIT_ANN = "instances_train2017_nas_fit1k.json"
-BN_ANN = "instances_train2017_nas_bn2k.json"
-HOLDOUT_ANN = "instances_train2017_nas5k.json"
+FIT_ANN, FIT_SPLIT = "instances_val2017_A_fit1k.json", "val2017"
+DEV_ANN = "instances_val2017_A.json"            # tam A: geliştirme kararları
+BN_ANN, BN_SPLIT = "instances_train2017_bn2k.json", "train2017"
 
 
 # ---- süper ağ yükleme --------------------------------------------------------------------------
@@ -49,9 +49,9 @@ def load_supernet(ckpt_path, device="cuda"):
 
 # ---- veri ---------------------------------------------------------------------------------------
 
-def make_loader(data_dir, ann, res, batch_size=64, workers=8, limit=None):
+def make_loader(data_dir, ann, res, batch_size=64, workers=8, limit=None, split="train2017"):
     from yolox.data import COCODataset, ValTransform
-    ds = COCODataset(data_dir=data_dir, json_file=ann, name="train2017", img_size=(res, res),
+    ds = COCODataset(data_dir=data_dir, json_file=ann, name=split, img_size=(res, res),
                      preproc=ValTransform(legacy=False))
     if limit is not None:
         ds = torch.utils.data.Subset(ds, range(min(limit, len(ds))))
@@ -63,8 +63,9 @@ class Evaluator:
     """Çözünürlük başına önbellekli BN ve uygunluk yükleyicileri."""
 
     def __init__(self, data_dir, fit_ann=FIT_ANN, bn_ann=BN_ANN, batch_size=64, workers=8,
-                 bn_images=2000, device="cuda", half=True):
+                 bn_images=2000, device="cuda", half=True, fit_split=FIT_SPLIT, bn_split=BN_SPLIT):
         self.data_dir, self.fit_ann, self.bn_ann = data_dir, fit_ann, bn_ann
+        self.fit_split, self.bn_split = fit_split, bn_split
         self.bs, self.workers, self.bn_images = batch_size, workers, bn_images
         self.device, self.half = device, half
         self._fit, self._bn = {}, {}
@@ -72,7 +73,7 @@ class Evaluator:
     def fit_evaluator(self, res):
         if res not in self._fit:
             from yolox.evaluators import COCOEvaluator
-            dl = make_loader(self.data_dir, self.fit_ann, res, self.bs, self.workers)
+            dl = make_loader(self.data_dir, self.fit_ann, res, self.bs, self.workers, split=self.fit_split)
             self._fit[res] = COCOEvaluator(dataloader=dl, img_size=(res, res), confthre=0.001,
                                            nmsthre=0.65, num_classes=80)
         return self._fit[res]
@@ -80,7 +81,7 @@ class Evaluator:
     def bn_loader(self, res):
         if res not in self._bn:
             self._bn[res] = make_loader(self.data_dir, self.bn_ann, res, self.bs, self.workers,
-                                        limit=self.bn_images)
+                                        limit=self.bn_images, split=self.bn_split)
         return self._bn[res]
 
 
@@ -192,6 +193,56 @@ class ProxyLatency:
                 c, h, w = self.shapes[n]
                 mac += c * h * w * k * k
         return 1e-6 * s * mac * (1 + 0.1 * sum(cfg["depth"].values()))
+
+
+# ---- izleme paneli (süper ağ eğitimi boyunca sabit alt ağlar) ---------------------------------------
+
+def make_panel(model, names, n=50, groups=5, pool=2000, seed=2026):
+    """Gecikme vekiline (DW MAC × çözünürlük) göre `groups` eşit dilime ayrılmış havuzdan dilim başına
+    n/groups alt ağ (tohumlu). Eğitimden ÖNCE sabitlenir; LUT henüz yokken vekil kullanılır (yalnız dilimleme)."""
+    rng = random.Random(seed)
+    proxy = ProxyLatency(model, names)
+    seen, cands = set(), []
+    while len(cands) < pool:
+        c = sn.canonical(sn.random_config(len(names), rng), names)
+        k = sn.config_id(c)
+        if k not in seen:
+            seen.add(k)
+            cands.append((proxy(c, names), k))
+    cands.sort()
+    per, out = n // groups, []
+    for g in range(groups):
+        chunk = cands[g * len(cands) // groups:(g + 1) * len(cands) // groups]
+        for _, k in rng.sample(chunk, per):
+            out.append({"config_id": k, "group": g})
+    return out
+
+
+def kendall_tau(a, b):
+    n, s = len(a), 0
+    for i in range(n):
+        for j in range(i + 1, n):
+            s += (1 if (a[i] - a[j]) * (b[i] - b[j]) > 0 else -1 if (a[i] - a[j]) * (b[i] - b[j]) < 0 else 0)
+    return 2 * s / (n * (n - 1)) if n > 1 else float("nan")
+
+
+def panel_stats(prev, cur, panel, drop=0.3):
+    """İki anlık görüntü arası: ortalama değişim, grup ortalamaları, > drop puan düşen aday sayısı, τ (genel ve
+    grup içi). Eşikler önceden seçilmiş mühendislik eşikleridir (Karar 6), literatür yeterlilik eşiği değil."""
+    ids = [p["config_id"] for p in panel if p["config_id"] in prev and p["config_id"] in cur]
+    d = [cur[i] - prev[i] for i in ids]
+    by_g = {}
+    for p in panel:
+        if p["config_id"] in ids:
+            by_g.setdefault(p["group"], []).append(p["config_id"])
+    out = {"n": len(ids), "mean_change": round(sum(d) / len(d), 3) if d else None,
+           "n_drop_gt": sum(1 for x in d if x < -drop), "max_drop": round(min(d), 3) if d else None,
+           "tau_all": round(kendall_tau([prev[i] for i in ids], [cur[i] for i in ids]), 3), "groups": {}}
+    for g, gi in sorted(by_g.items()):
+        gd = [cur[i] - prev[i] for i in gi]
+        out["groups"][g] = {"n": len(gi), "mean_change": round(sum(gd) / len(gd), 3),
+                            "tau": round(kendall_tau([prev[i] for i in gi], [cur[i] for i in gi]), 3)}
+    return out
 
 
 # ---- NSGA-II ------------------------------------------------------------------------------------
