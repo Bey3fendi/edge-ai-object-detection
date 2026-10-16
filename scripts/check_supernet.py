@@ -143,25 +143,28 @@ def main():
         front = ss.pareto(st)
         print(f"6 NSGA-II: geçti (değerlendirilen {len(st['evaluated'])}, cephe {len(front)})")
 
-    # 7
-    try:
-        import onnxruntime as ort
-    except ImportError:
-        print("7 ONNX: onnxruntime yok, atlandı")
-        return
-    cfg = sn.random_config(n, rng)
-    sub = sn.extract_subnet(sup, names, cfg).eval()
-    sub.head.decode_in_inference = True
-    xi = torch.randn(1, 3, cfg["res"], cfg["res"])
-    with tempfile.TemporaryDirectory() as td:
-        f = os.path.join(td, "sub.onnx")
-        torch.onnx.export(sub, xi, f, opset_version=13, input_names=["images"], output_names=["output"],
-                          dynamo=False)
-        s = ort.InferenceSession(f, providers=["CPUExecutionProvider"])
-        o = s.run(None, {"images": xi.numpy()})[0]
-        d = maxdiff(torch.from_numpy(o), outputs(sub, xi))
-        print(f"7 ONNX opset 13 ({sn.config_id(cfg)[:12]}…): fark {d:.2e}")
-        assert d < 1e-2, d   # kod çözülmüş kutu pikselleri; ölçek ~res
+    # 7 — eşdeğerlik ölçütü projeninki (Furkan, 2026-10-09; nas_export.decoded_diff): ham çıktı ONNX'e,
+    # karşılaştırma kod çözülmüş uzayda — kutu ≤ EQ_MAX_BOX_PX piksel, skor ≤ EQ_MAX_SCORE. onnxruntime zorunlu.
+    import onnxruntime as ort
+    import nas_export as nx
+    for _ in range(2):
+        cfg = sn.random_config(n, rng)
+        sub = sn.extract_subnet(sup, names, cfg).eval()
+        sub.head.decode_in_inference = False
+        xi = torch.randn(1, 3, cfg["res"], cfg["res"])
+        with tempfile.TemporaryDirectory() as td:
+            f = os.path.join(td, "sub.onnx")
+            nx.export_onnx(sub, cfg["res"], f)
+            s = ort.InferenceSession(f, providers=["CPUExecutionProvider"])
+            o = s.run(None, {nx.INPUT_NAME: xi.numpy()})[0][0]
+            ref = outputs(sub, xi)[0].numpy()
+            dd = nx.decoded_diff(ref, o, cfg["res"])
+            print(f"7 ONNX opset {nx.OPSET} ({sn.config_id(cfg)[:12]}…): kutu {dd['max_box_px']:.2e} px "
+                  f"(≤ {nx.EQ_MAX_BOX_PX}), skor {dd['max_score_diff']:.2e} (≤ {nx.EQ_MAX_SCORE}), "
+                  f"{dd['n_scored_anchors']} anchor")
+            assert dd["pass"], dd
+            if a.weights:   # önceden eğitilmiş ağırlıkla kutu karşılaştırması boş geçmemeli
+                assert dd["n_scored_anchors"] > 0, dd
     print("TÜM DENETİMLER GEÇTİ")
 
 
