@@ -1,4 +1,4 @@
-﻿"""Kesintiye dayanıklılık öz-denetimi (CPU, sentetik COCO; ~1 dk). GPU'lu uçtan uca test notebook 03 hücre 7'de.
+"""Kesintiye dayanıklılık öz-denetimi (CPU, sentetik COCO; ~1 dk). GPU'lu uçtan uca test notebook 03 hücre 7'de.
 
 Denetimler:
     1. ResumableBatchSampler: (epoch, iter)'den devam eden akış kesintisiz akışla birebir aynı; mosaic bayrağı

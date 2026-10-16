@@ -45,7 +45,7 @@ SMOKE = {"warmup": 10, "duration_s": 5.0, "repeats": 1}
 FINGERPRINT_KEYS = ("device", "protocol", "candidates", "versions", "device_settings")
 SUMMARY_FIELDS = ["candidate_id", "tier", "selectable", "arch_id", "act", "depth", "dw_k", "resolution",
                   "map5095", "delta_vs_control", "gflops", "latency_ms_mean", "latency_ms_std",
-                  "latency_ms_median", "latency_ms_p90", "latency_ms_p99", "fps_model", "n_inferences",
+                  "latency_ms_median", "latency_ms_median_of_rep_medians", "latency_ms_p90", "latency_ms_p95", "latency_ms_p99", "fps_model", "n_inferences",
                   "rss_peak_mb", "temp_c_max", "tegra_vdd_in_mw", "onnx_sha256", "measured_utc"]
 
 
@@ -173,6 +173,7 @@ def run_one(onnx_path, input_path, res, warmup, duration_s, repeats, tegrastats)
         rep = {"n": len(lat), "wall_s": round(wall, 3), "fps": round(len(lat) / wall, 3),
                "mean_ms": round(statistics.mean(lat), 4), "std_ms": round(statistics.pstdev(lat), 4),
                "median_ms": round(statistics.median(lat), 4), "p90_ms": round(pct(lat, 0.90), 4),
+               "p95_ms": round(pct(lat, 0.95), 4),
                "p99_ms": round(pct(lat, 0.99), 4), "min_ms": round(min(lat), 4), "max_ms": round(max(lat), 4),
                "temp_start_c": temp0, "temp_end_c": temperatures(), "cpu_mhz_end": cpu_freqs_mhz()}
         if tg:
@@ -195,6 +196,9 @@ def summarize(rec):
             "latency_ms_std": round(statistics.stdev(means), 3) if len(means) > 1 else 0.0,
             "latency_ms_median": round(statistics.mean(r["median_ms"] for r in reps), 3),
             "latency_ms_p90": round(statistics.mean(r["p90_ms"] for r in reps), 3),
+            "latency_ms_p95": round(statistics.mean(r["p95_ms"] for r in reps), 3) if all("p95_ms" in r for r in reps) else None,
+            "latency_ms_median_of_rep_medians": round(statistics.median(r["median_ms"] for r in reps), 3),
+            "rep_medians_ms": [r["median_ms"] for r in reps],
             "latency_ms_p99": round(statistics.mean(r["p99_ms"] for r in reps), 3),
             "fps_model": round(statistics.mean(r["fps"] for r in reps), 2),
             "n_inferences": sum(r["n"] for r in reps), "rss_peak_mb": rec["rss_peak_mb"],

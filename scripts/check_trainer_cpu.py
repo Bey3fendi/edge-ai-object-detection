@@ -1,4 +1,4 @@
-﻿"""SupernetTrainer'ın CPU'da uçtan uca kesinti testi (sentetik COCO, ~3–5 dk). GPU sürümü notebook 03 hücre 7.
+"""SupernetTrainer'ın CPU'da uçtan uca kesinti testi (sentetik COCO, ~3–5 dk). GPU sürümü notebook 03 hücre 7.
 
 YOLOX Trainer CUDA varsayar; burada yalnız aygıt bağlamaları CPU'ya yönlendirilir (set_device, prefetcher,
 aygıt adı). Eğitim mantığı (sandwich, kayıt deposu, devam, tohumlu veri, lr) değiştirilmeden koşar.

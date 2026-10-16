@@ -1,4 +1,4 @@
-﻿"""Gerçek NAS (Karar 6): cihaz gecikme tablosu (LUT) — paket üretimi, cihazda ölçüm, doğrulama/kalibrasyon.
+"""Gerçek NAS (Karar 6): cihaz gecikme tablosu (LUT) — paket üretimi, cihazda ölçüm, doğrulama/kalibrasyon.
 
 Gecikme modeli (supernet_search.LatencyModel):
     t(alt ağ) = a × [ fixed(res) + Σ_aktif DW (dw(res, katman, k) − dw(res, katman, 3)) + Σ_ek blok block(res) ] + b

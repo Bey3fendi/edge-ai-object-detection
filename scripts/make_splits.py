@@ -1,4 +1,4 @@
-﻿"""Gerçek NAS veri ayrımları (Karar 6, 2026-10-16).
+"""Gerçek NAS veri ayrımları (Karar 6, 2026-10-16).
 
 Neden: önceden eğitilmiş YOLOX-Nano train2017'nin tamamıyla eğitildi; train2017'den ayrılan görseller bu
 ağırlıklar için görülmemiş değildir. Bu yüzden arama/geliştirme val2017'nin yarısında (A), nihai değerlendirme

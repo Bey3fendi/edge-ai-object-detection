@@ -1,4 +1,4 @@
-﻿"""Gerçek NAS (Karar 6): süper ağdan alt ağ değerlendirme, gecikme tahmini, evrimsel arama, alt ağ çıkarma.
+"""Gerçek NAS (Karar 6): süper ağdan alt ağ değerlendirme, gecikme tahmini, evrimsel arama, alt ağ çıkarma.
 
 notebooks/03*_gercek_nas_*.ipynb tarafından kullanılır; model tanımı exps/nas/supernet.py.
 
