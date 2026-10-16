@@ -172,7 +172,8 @@ def time_session(sess, shape, warmup, duration_s, repeats, seed=0):
 def measure(pkg, device, smoke=False, order_seed=0):
     import n4_latency as n4
     idx = read_json(os.path.join(pkg, "lut_index.json"))
-    out = os.path.join(pkg, "measured", device)
+    # deneme ölçümü ayrı klasöre: aksi halde tam ölçüm kısa protokollü deneme değerlerini "ölçülmüş" sayıp atlardı
+    out = os.path.join(pkg, "measured", device + ("_smoke" if smoke else ""))
     os.makedirs(out, exist_ok=True)
     meta_path = os.path.join(out, "session.json")
     meta = read_json(meta_path) or {"device": device, "device_info": n4.device_info(),
