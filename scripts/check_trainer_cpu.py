@@ -7,7 +7,7 @@ Akış: REF kesintisiz (2 epoch) · TEST: 1. deneme kayıt YAZILIRKEN öldürül
 2. deneme son doğrulanmış kayıttan devam → bitiş. İzler birebir; CPU belirlenimli olduğu için son ağırlıklar da
 birebir beklenir.
 
-Kullanım: python scripts/check_trainer_cpu.py            (alt süreçleri kendisi başlatır)
+Kullanım: python scripts/check_trainer_cpu.py [--exp supernet|scratch]   (alt süreçleri kendisi başlatır)
 """
 
 import argparse
@@ -21,7 +21,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.abspath(os.path.join(HERE, ".."))
 
 
-def child(work, tag, max_epoch):
+def child(work, tag, max_epoch, kind="supernet"):
     sys.path[:0] = [HERE, os.path.join(ROOT, "exps", "nas"), os.path.join(ROOT, "YOLOX")]
     import torch
     import yolox.core.trainer as tr
@@ -43,15 +43,23 @@ def child(work, tag, max_epoch):
         self.device = "cpu"
     tr.Trainer.__init__ = init
 
-    import supernet as sn
-    exp = sn.Exp()
+    if kind == "scratch":
+        import scratch_subnet as ss_
+        exp = ss_.Exp()
+        exp.nas_arch = "r320_d23_k" + "357" * 10      # karışık kernel + kesilmiş derinlik
+        exp.nas_seed_init = 7
+    else:
+        import supernet as sn
+        exp = sn.Exp()
     exp.data_dir = os.path.join(work, "coco")
     exp.train_ann = exp.val_ann = "train.json"
     exp.num_classes = 80
     exp.input_size = exp.test_size = (256, 256)
     exp.random_size = (6, 10)
     exp.data_num_workers = 2
-    exp.max_epoch = exp.nas_phase1_epochs = max_epoch
+    exp.max_epoch = max_epoch
+    if kind != "scratch":
+        exp.nas_phase1_epochs = max_epoch
     exp.no_aug_epochs = 0
     exp.warmup_epochs = 1
     exp.enable_mixup = True
@@ -69,10 +77,11 @@ def child(work, tag, max_epoch):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--child", nargs=3)
+    ap.add_argument("--child", nargs=4)
+    ap.add_argument("--exp", choices=("supernet", "scratch"), default="supernet")
     a = ap.parse_args()
     if a.child:
-        child(a.child[0], a.child[1], int(a.child[2]))
+        child(a.child[0], a.child[1], int(a.child[2]), a.child[3])
         return
     sys.path[:0] = [HERE]
     import check_resume as cr
@@ -86,7 +95,7 @@ def main():
         shutil.copytree(os.path.join(coco, "train2017"), os.path.join(coco, "val2017"))
 
         def run(tag, env=None):
-            r = subprocess.run([sys.executable, __file__, "--child", work, tag, "2"], capture_output=True, text=True,
+            r = subprocess.run([sys.executable, __file__, "--child", work, tag, "2", a.exp], capture_output=True, text=True,
                                encoding="utf-8", errors="replace",
                                env={**os.environ, "PYTHONIOENCODING": "utf-8", **(env or {})}, cwd=ROOT)
             return r.returncode, r.stdout + r.stderr
@@ -107,7 +116,7 @@ def main():
         de = max((A["model"][k].float() - B["model"][k].float()).abs().max().item() for k in A["model"])
         print(f"son ağırlık farkı: ham {d:.3e}, EMA {de:.3e}; lr dizisi ve batch hash'leri birebir")
         assert d < 1e-5 and de < 1e-5, "CPU'da devam eden koşu kesintisizden farklı ağırlığa ulaştı"
-        print("CPU TRAINER KESİNTİ TESTİ GEÇTİ")
+        print(f"CPU TRAINER KESİNTİ TESTİ GEÇTİ ({a.exp})")
 
 
 if __name__ == "__main__":
