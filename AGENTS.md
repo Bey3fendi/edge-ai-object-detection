@@ -30,6 +30,15 @@ değişiklik gerekiyorsa söyle.
    DW kernel 3/5. Adaylar pretrained Nano'dan, 10k COCO alt kümesinde 10 epoch. Seçim ölçütü
    **RPi 5 + ONNX Runtime CPU** gecikmesi; tek mimari; en fazla 2 tur. Budama oranı 10/20/30/40 %
    taranır. Ablasyon: baseline · yalnız NAS · yalnız budama · NAS + budama.
+   **Karar 6 ile güncellendi:** bu ızgara araması (nas_r1b, nas_r2) önçalışmadır.
+6. **Gerçek NAS (2026-10-16, danışman görüşmesi):** one-shot ağırlık paylaşımlı süper ağ
+   (`exps/nas/supernet.py`): her DW katmanında kernel {3, 5, 7} (30 katman) · dark3/dark4 derinlik
+   {1, 2, 3} · çözünürlük 320–512 (adım 32). Genişlik aramada yok. Süper ağ train2017 − 5000 görselle
+   sandwich kuralıyla eğitilir; arama uygunluğu train2017'den ayrılan fit1k'da (BN kalibreli) ölçülür —
+   **val2017 aramada kullanılmaz**. Gecikme: cihaz LUT'u (`scripts/latency_lut.py`, uçtan uca doğrulama
+   ρ ≥ 0,9). Arama: NSGA-II (`scripts/supernet_search.py`). Pareto'dan 2–3 alt ağ tam COCO'da nas_r2
+   tarifiyle (12 epoch) ince ayarlanır; seçim cihazında (RPi 5; RPi gelene kadar Jetson ön ölçümü).
+   Hesaplama Colab L4.
 
 ## Teknik kurallar
 - Yalnız **yapısal** kanal budama (Torch-Pruning DepGraph). Başlık koruması
