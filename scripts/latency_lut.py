@@ -185,6 +185,9 @@ def measure(pkg, device, smoke=False, order_seed=0):
     res_path = os.path.join(out, "measurements.json")
     done = read_json(res_path) or {}
     items = list(idx["items"])
+    bad = [it["path"] for it in items if sha256(os.path.join(pkg, it["path"])) != it["sha256"]]
+    assert not bad, f"{len(bad)} paket dosyasının sha256'sı tutmuyor (ör. {bad[:3]}): paketi yeniden aç"
+    print(f"paket doğrulandı: {len(items)} dosya sha256 OK · {meta['device_settings']}", flush=True)
     random.Random(order_seed).shuffle(items)
     if smoke:
         items = items[:12]
