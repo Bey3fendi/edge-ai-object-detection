@@ -21,7 +21,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.abspath(os.path.join(HERE, ".."))
 
 
-def child(work, tag, max_epoch, kind="supernet"):
+def child(work, tag, max_epoch, kind="supernet", phase1=None, no_aug=0):
     sys.path[:0] = [HERE, os.path.join(ROOT, "exps", "nas"), os.path.join(ROOT, "YOLOX")]
     import torch
     import yolox.core.trainer as tr
@@ -59,8 +59,8 @@ def child(work, tag, max_epoch, kind="supernet"):
     exp.data_num_workers = 2
     exp.max_epoch = max_epoch
     if kind != "scratch":
-        exp.nas_phase1_epochs = max_epoch
-    exp.no_aug_epochs = 0
+        exp.nas_phase1_epochs = phase1 or max_epoch
+    exp.no_aug_epochs = no_aug
     exp.warmup_epochs = 1
     exp.enable_mixup = True
     exp.nas_ckpt_every_iters = 2
@@ -77,11 +77,12 @@ def child(work, tag, max_epoch, kind="supernet"):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--child", nargs=4)
+    ap.add_argument("--child", nargs="+")   # work tag max_epoch kind [phase1 no_aug]
     ap.add_argument("--exp", choices=("supernet", "scratch"), default="supernet")
     a = ap.parse_args()
     if a.child:
-        child(a.child[0], a.child[1], int(a.child[2]), a.child[3])
+        c = a.child
+        child(c[0], c[1], int(c[2]), c[3], *(int(x) for x in c[4:6]))
         return
     sys.path[:0] = [HERE]
     import check_resume as cr

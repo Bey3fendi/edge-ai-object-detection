@@ -193,6 +193,39 @@ def check_train_log(text, max_epoch, no_aug_epochs):
     assert f"start train epoch{max_epoch + 1}" not in text
 
 
+def check_extension_log(texts, phase1_epochs, max_epoch, no_aug_epochs):
+    """Uzatma aşaması (Karar 6) logları: check_train_log'un uzatma karşılığı.
+
+    texts: uzatma denemelerinin logları (sırayla; aynı runtime'da log eklenerek büyüdüğü için tekrar eden
+    bölümler sorun değil). Her log süreç başlangıçlarına ("args: Namespace") bölünür; ilk "start train epochN"
+    satırı N > phase1_epochs olan bölümler uzatma bölümüdür (ilk aşamanın kendi kapanışı yok sayılır).
+    Doğrulanan: uzatma bölümü var; son bölüm hatasız; her "No mosaic" satırı epoch ≥ max_epoch − no_aug_epochs
+    içinde (YOLOX numarası, 1'den); en az bir kapanış var; max_epoch'tan sonra epoch başlamamış.
+    """
+    first_no_aug = max_epoch - no_aug_epochs
+    segs = []
+    for text in texts:
+        for seg in text.split("args: Namespace")[1:]:
+            epochs = [int(n) for n in re.findall(r"start train epoch(\d+)", seg)]
+            if epochs and epochs[0] > phase1_epochs:
+                segs.append(seg)
+    assert segs, "uzatma bölümü bulunamadı"
+    assert "Exception in training" not in segs[-1], "uzatma hatayla bitmiş"
+    n_off = 0
+    for seg in segs:
+        epoch = None
+        for line in seg.splitlines():
+            m = re.search(r"start train epoch(\d+)", line)
+            if m:
+                epoch = int(m.group(1))
+                assert epoch <= max_epoch, f"epoch {epoch} > {max_epoch}"
+            elif "No mosaic aug now" in line:
+                assert epoch is not None and epoch >= first_no_aug, (
+                    f"mosaic epoch {epoch}'da kapanmış (beklenen ≥ {first_no_aug})")
+                n_off += 1
+    assert n_off > 0, "uzatmada mosaic hiç kapanmamış"
+
+
 # ---- özet CSV ---------------------------------------------------------------------------------
 
 CSV_FIELDS = ["candidate_id", "run_id", "arch_id", "is_control", "repeat", "act", "depth", "dw_k",
