@@ -226,6 +226,28 @@ def check_extension_log(texts, phase1_epochs, max_epoch, no_aug_epochs):
     assert n_off > 0, "uzatmada mosaic hiç kapanmamış"
 
 
+def log_time_stats(texts):
+    """Eğitim loglarından süre: her başlatma bölümü ("args: Namespace") için ilk–son zaman damgası farkı
+    (aynı bölüm birden çok logda varsa bir kez) ve logdaki iter_time ortalamalarının medyanı. Kopan
+    denemelerin wall_s'i yazılmadığı için status'taki toplam alt sınırdır; bu ölçüm onu tamamlar."""
+    segs = {}   # bölümün ilk zaman damgası → (süre, iter_time listesi)
+    for text in texts:
+        ts = it = None
+        for line in text.splitlines():
+            m = re.match(r"(\d{4}-\d\d-\d\d \d\d:\d\d:\d\d)", line)
+            if "args: Namespace" in line:
+                ts, it = [], []
+            if ts is None or not m:
+                continue
+            ts.append(dt.datetime.strptime(m.group(1), "%Y-%m-%d %H:%M:%S"))
+            it += [float(x) for x in re.findall(r"iter_time: ([\d.]+)s", line)]
+            if len(it) >= len(segs.get(ts[0], (0, []))[1]):
+                segs[ts[0]] = ((ts[-1] - ts[0]).total_seconds(), list(it))
+    iters = sorted(x for _, i in segs.values() for x in i)
+    return {"n_segments": len(segs), "span_s": round(sum(s for s, _ in segs.values()), 1),
+            "iter_time_median_s": iters[len(iters) // 2] if iters else None, "n_iter_lines": len(iters)}
+
+
 # ---- özet CSV ---------------------------------------------------------------------------------
 
 CSV_FIELDS = ["candidate_id", "run_id", "arch_id", "is_control", "repeat", "act", "depth", "dw_k",
