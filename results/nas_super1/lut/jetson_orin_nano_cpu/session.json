@@ -1,0 +1,41 @@
+{
+  "device": "jetson_orin_nano_cpu",
+  "device_info": {
+    "hostname": "iqmine-jetson",
+    "platform": "Linux-5.15.148-tegra-aarch64-with-glibc2.35",
+    "machine": "aarch64",
+    "python": "3.13.9",
+    "cpu_model": "Model name:                         Cortex-A78AE",
+    "mem_total": "MemTotal:        7802752 kB",
+    "board": "NVIDIA Jetson Orin Nano Engineering Reference Developer Kit Super\u0000",
+    "l4t": "# R36 (release), REVISION: 4.7, GCID: 42132812, BOARD: generic, EABI: aarch64, DATE: Thu Sep 18 22:54:44 UTC 2025\n# KERNEL_VARIANT: oot\nTARGET_USERSPACE_LIB_DIR=nvidia\nTARGET_USERSPACE_LIB_DIR_PATH=usr/lib/aarch64-linux-gnu/nvidia",
+    "jetson_clocks": "SOC family:tegra234  Machine:NVIDIA Jetson Orin Nano Engineering Reference Developer Kit Super\nError: Run this script(/usr/bin/jetson_clocks) as a root user"
+  },
+  "device_settings": {
+    "cpu_governor": [
+      "schedutil"
+    ],
+    "cpu_count": 6,
+    "nvpmodel": "NV Power Mode: MAXN_SUPER\n2"
+  },
+  "versions": {
+    "onnxruntime": "1.31.0",
+    "numpy": "2.5.4",
+    "python": "3.13.9"
+  },
+  "protocol": {
+    "micro": {
+      "warmup": 30,
+      "duration_s": 1.0,
+      "repeats": 3
+    },
+    "full": {
+      "warmup": 50,
+      "duration_s": 3.0,
+      "repeats": 3
+    },
+    "threads": 4
+  },
+  "started_utc": "2026-10-31T10:19:25+00:00",
+  "finished_utc": "2026-10-31T11:02:30+00:00"
+}

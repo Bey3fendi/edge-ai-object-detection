@@ -1,0 +1,2 @@
+paket doğrulandı: 713 dosya sha256 OK · {'cpu_governor': ['schedutil'], 'cpu_count': 6, 'nvpmodel': 'NV Power Mode: MAXN_SUPER\n2'}
+[12/12] 4 sn · son dw|384|backbone.C3_n3.m.0.conv2.dconv.conv|7 0.30135 ms

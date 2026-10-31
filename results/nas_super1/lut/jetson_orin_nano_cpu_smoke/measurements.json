@@ -1,0 +1,122 @@
+{
+  "dw|352|head.reg_convs.0.0.dconv.conv|7": {
+    "ms": 0.74918,
+    "rep_medians": [
+      0.74918
+    ],
+    "sha256": "eb0923d1dba378a5441d6a6a791daccec315ca61cfa60b9b2d2173d26284df07",
+    "kind": "micro",
+    "utc": "2026-10-31T10:19:08+00:00",
+    "temp_c": 39.187
+  },
+  "dw|320|backbone.backbone.dark5.2.m.0.conv2.dconv.conv|5": {
+    "ms": 0.11242,
+    "rep_medians": [
+      0.11242
+    ],
+    "sha256": "b2a92ce25d7f0c60d90e19d316981d83d77ee0ab49a969e4b15ece12174486f5",
+    "kind": "micro",
+    "utc": "2026-10-31T10:19:08+00:00",
+    "temp_c": 39.062
+  },
+  "block|480|dark4.1": {
+    "ms": 0.48997,
+    "rep_medians": [
+      0.48997
+    ],
+    "sha256": "78c7bfa5ff067c68f14ef407401f250028f458ae18b34a25e83541b3f064aa0f",
+    "kind": "micro",
+    "utc": "2026-10-31T10:19:08+00:00",
+    "temp_c": 39.406
+  },
+  "dw|416|head.reg_convs.0.1.dconv.conv|5": {
+    "ms": 0.57327,
+    "rep_medians": [
+      0.57327
+    ],
+    "sha256": "511b576c93b552b130e4d894419ac7d097d7c88a527bf53f2e405a231506711a",
+    "kind": "micro",
+    "utc": "2026-10-31T10:19:09+00:00",
+    "temp_c": 39.625
+  },
+  "dw|480|backbone.backbone.dark3.1.m.2.conv2.dconv.conv|7": {
+    "ms": 0.64473,
+    "rep_medians": [
+      0.64473
+    ],
+    "sha256": "d0efb7d6f777a91b1d7838317535ffa41e99706c37e7f59885d67da72cad0d84",
+    "kind": "micro",
+    "utc": "2026-10-31T10:19:09+00:00",
+    "temp_c": 39.218
+  },
+  "dw|416|backbone.backbone.dark2.0.dconv.conv|5": {
+    "ms": 1.06148,
+    "rep_medians": [
+      1.06148
+    ],
+    "sha256": "e8155cf04d1afb6e5993995b543110b10145c3b0356e165e10cf8e5ef2ee95b4",
+    "kind": "micro",
+    "utc": "2026-10-31T10:19:09+00:00",
+    "temp_c": 39.468
+  },
+  "dw|320|backbone.backbone.dark3.1.m.2.conv2.dconv.conv|7": {
+    "ms": 0.3311,
+    "rep_medians": [
+      0.3311
+    ],
+    "sha256": "ddc2791ce9aae90d976513f78998783059a7de69223008216937d81e91418c68",
+    "kind": "micro",
+    "utc": "2026-10-31T10:19:10+00:00",
+    "temp_c": 39.312
+  },
+  "dw|512|head.reg_convs.2.0.dconv.conv|3": {
+    "ms": 0.05648,
+    "rep_medians": [
+      0.05648
+    ],
+    "sha256": "0f900a678077f526b7ce5dfd445f4a061169eb25816cb8119f45f0ed1069c5d4",
+    "kind": "micro",
+    "utc": "2026-10-31T10:19:10+00:00",
+    "temp_c": 39.281
+  },
+  "dw|448|head.cls_convs.0.1.dconv.conv|5": {
+    "ms": 0.65317,
+    "rep_medians": [
+      0.65317
+    ],
+    "sha256": "5be131da8ef9b7175a77bdeaa10272b261371c4b583ed45459591fb236fddfb6",
+    "kind": "micro",
+    "utc": "2026-10-31T10:19:10+00:00",
+    "temp_c": 39.593
+  },
+  "val|r448_d31_k353373333373373355773753737755": {
+    "ms": 38.33708,
+    "rep_medians": [
+      38.33708
+    ],
+    "sha256": "f6be9ecffb3eb7d6cedacf431d58e5d2f63c45b7897a1210fad0a818886da908",
+    "kind": "full",
+    "utc": "2026-10-31T10:19:11+00:00",
+    "temp_c": 39.562
+  },
+  "dw|512|backbone.backbone.dark4.1.m.0.conv2.dconv.conv|5": {
+    "ms": 0.26404,
+    "rep_medians": [
+      0.26404
+    ],
+    "sha256": "d842b84412edc0d79c67f13f78a6bb76ff3d985d38fa85071e7e0d4fa7e63f15",
+    "kind": "micro",
+    "utc": "2026-10-31T10:19:11+00:00",
+    "temp_c": 39.625
+  },
+  "dw|384|backbone.C3_n3.m.0.conv2.dconv.conv|7": {
+    "ms": 0.30135,
+    "rep_medians": [
+      0.30135
+    ],
+    "sha256": "9f5ad9c2d0c682865a1bb8d979276456ab20731e7eb1cb70b07a0626548d3174",
+    "kind": "micro",
+    "utc": "2026-10-31T10:19:11+00:00",
+    "temp_c": 39.656
+  }
+}
